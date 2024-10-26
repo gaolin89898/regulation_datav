@@ -3,7 +3,7 @@
       <div class="bigscreen_rt">
         <div class="bigscreen_rt_top">
           <div class="bigscreen_rt_top_l">
-            <img src="/src/assets/img/光标.png" alt="" />
+            <img src="/public/img/光标.png" alt="" />
             <span>监控报告</span>
           </div>
           <el-input
@@ -16,7 +16,7 @@
         <!-- <BorderBox1 class="bigscreen_rt_bottom"> -->
         <div class="bigscreen_rt_bottom">
           <div class="bigscreen_rt_bottom_nei">
-            <img src="/src/assets/img/监控报告图标.png" alt="" />
+            <img src="/public/img/监控报告图标.png" alt="" />
             <div class="bigscreen_rt_bottom_r">
               <div><span>JK218 科学大道点位1</span></div>
               <div><span>JK218 科学大道点位1</span></div>
@@ -29,7 +29,7 @@
       <div class="bigscreen_rc">
         <div class="bigscreen_rc_top">
           <div class="bigscreen_rc_top_l">
-            <img src="/src/assets/img/光标.png" alt="" />
+            <img src="/public/img/光标.png" alt="" />
             <span>政策法规</span>
           </div>
           <el-input
@@ -46,7 +46,7 @@
               style="
                 width: 20px;
                 height: 207px;
-                background: url('/src/assets/img/线.png') no-repeat;
+                background: url('/public/img/线.png') no-repeat;
                 background-size: 2px 100%;
                 background-position: center;
                 display: flex;
@@ -54,15 +54,15 @@
                 align-items: center;
               "
             >
-              <img src="/src/assets/img/圆形标记.png" alt="" />
+              <img src="/public/img/圆形标记.png" alt="" />
               <img
                 style="margin-top: 70px"
-                src="/src/assets/img/圆形标记.png"
+                src="/public/img/圆形标记.png"
                 alt=""
               />
               <img
                 style="margin-top: 70px"
-                src="/src/assets/img/圆形标记.png"
+                src="/public/img/圆形标记.png"
                 alt=""
               />
             </div>
@@ -91,7 +91,7 @@
                     <span>{{ item.text }}</span>
                     <img
                       style="margin-right: 18px"
-                      src="/src/assets/img/查看详情.png"
+                      src="/public/img/查看详情.png"
                       alt=""
                     />
                   </div>
@@ -105,7 +105,7 @@
       <div class="bigscreen_rb">
         <div class="bigscreen_rb_top">
           <div class="bigscreen_rb_top_l">
-            <img src="/src/assets/img/光标.png" alt="" />
+            <img src="/public/img/光标.png" alt="" />
             <span>安全生产曲线</span>
           </div>
           <div
@@ -159,48 +159,22 @@
   import { ref, onMounted, onUnmounted } from "vue";
   import dayjs from "dayjs";
   import * as echarts from "echarts";
-  import { BorderBox1 } from "@dataview/datav-vue3/es";
   import { Search } from "@element-plus/icons-vue";
-  import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
   
   const count1 = ref(321);
   const count2 = ref(45671);
   const radio1 = ref("zhou");
-  
-  const list = ref([
-    {
-      name: "物料A库存异常",
-      img: "/src/assets/img/黄色.png",
-      status: "物料报警",
-    },
-    {
-      name: "设备一监测数据异常",
-      img: "/src/assets/img/绿色.png",
-      status: "设备报警",
-    },
-    {
-      name: "XXX产品出现质量问题",
-      img: "/src/assets/img/红色.png",
-      status: "质量问题",
-    },
-    {
-      name: "XXX发生安全事故",
-      img: "/src/assets/img/蓝色.png",
-      status: "事故问题",
-    },
-  ]);
-  
   const list2 = ref([
     {
-      background: "/src/assets/img/红色背景框.png",
+      background: "/public/img/红色背景框.png",
       text: "《WHO实验室生物安全手册 (第四版)》",
     },
     {
-      background: "/src/assets/img/绿色背景框.png",
+      background: "/public/img/绿色背景框.png",
       text: "《WHO实验室生物安全手册 (第四版)》",
     },
     {
-      background: "/src/assets/img/黄色背景框.png",
+      background: "/public/img/黄色背景框.png",
       text: "《WHO实验室生物安全手册 (第四版)》",
     },
   ]);
@@ -428,34 +402,34 @@
     const img = ref<string>("");
     switch (val) {
       case "0":
-        img.value = "/src/assets/img/0.png";
+        img.value = "/public/img/0.png";
         break;
       case "1":
-        img.value = "/src/assets/img/1.png";
+        img.value = "/public/img/1.png";
         break;
       case "2":
-        img.value = "/src/assets/img/2.png";
+        img.value = "/public/img/2.png";
         break;
       case "3":
-        img.value = "/src/assets/img/3.png";
+        img.value = "/public/img/3.png";
         break;
       case "4":
-        img.value = "/src/assets/img/4.png";
+        img.value = "/public/img/4.png";
         break;
       case "5":
-        img.value = "/src/assets/img/5.png";
+        img.value = "/public/img/5.png";
         break;
       case "6":
-        img.value = "/src/assets/img/6.png";
+        img.value = "/public/img/6.png";
         break;
       case "7":
-        img.value = "/src/assets/img/7.png";
+        img.value = "/public/img/7.png";
         break;
       case "8":
-        img.value = "/src/assets/img/8.png";
+        img.value = "/public/img/8.png";
         break;
       case "9":
-        img.value = "/src/assets/img/9.png";
+        img.value = "/public/img/9.png";
         break;
       default:
         break;
@@ -497,7 +471,7 @@
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -530,7 +504,7 @@
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
   }
   .bigscreen_rt_bottom_nei {
@@ -555,7 +529,7 @@
   .bigscreen_rt_bottom_r div {
     width: 100%;
     height: 41px;
-    background: url("/src/assets/img/半透明背景1.png") no-repeat;
+    background: url("/public/img/半透明背景1.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -574,7 +548,7 @@
   .bigscreen_rc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -607,7 +581,7 @@
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
   }
   .bigscreen_rc_bottom_nei {
@@ -653,7 +627,7 @@
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -691,7 +665,7 @@
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
   }
   .bigscreen_rb_bottom_nei {
@@ -726,7 +700,7 @@
   .bigscreen_ct_lb div {
     width: 63px;
     height: 72px;
-    background: url("/src/assets/img/数字背景.png") no-repeat;
+    background: url("/public/img/数字背景.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -744,7 +718,7 @@
     width: 100%;
     height: 72px;
     margin-top: 12px;
-    background: url("/src/assets/img/左边数字背景.png") no-repeat;
+    background: url("/public/img/左边数字背景.png") no-repeat;
     background-size: 100% 100%;
   } */
   .bigscreen_ct_rb {
@@ -757,7 +731,7 @@
   .bigscreen_ct_rb div {
     width: 63px;
     height: 72px;
-    background: url("/src/assets/img/数字背景.png") no-repeat;
+    background: url("/public/img/数字背景.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -766,7 +740,7 @@
   .bigscreen_cb {
     width: 996px;
     height: 665px;
-    background: url("/src/assets/img/网格背景.png") no-repeat;
+    background: url("/public/img/网格背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     bottom: 140px;
@@ -779,13 +753,13 @@
   .bigscreen_cb_nei {
     width: 840px;
     height: 642px;
-    background: url("/src/assets/img/主体图片.png") no-repeat;
+    background: url("/public/img/主体图片.png") no-repeat;
     background-size: 100% 100%;
   }
   .bigscreen_bottom {
     width: 100%;
     height: 112px;
-    background: url("/src/assets/img/底座背景.png") no-repeat;
+    background: url("/public/img/底座背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     bottom: 0;

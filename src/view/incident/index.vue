@@ -2,12 +2,32 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>报警信息</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <img src="/src/assets/img/xujian.png" alt="" />
+      <div
+        style="
+          width: 100px;
+          height: 218px;
+          background: url('/img/报警图标底座.png') no-repeat;
+          background-position: 0 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-direction: column;
+        "
+      >
+        <img src="/public/img/报警信息图标.png" alt="" />
+        <div style="color: #ffffff; margin-bottom: 20px">
+          <div style="text-align: center">
+            <span style="font-size: 32px">98</span>
+            <span style="font-size: 16px">%</span>
+          </div>
+          <div style="font-size: 16px">当前数据</div>
+        </div>
+      </div>
       <div class="bigscreen_lt_bottom_r">
         <div class="bigscreen_lt_bottom_r_nei" v-for="(item, index) in list3">
           <div
@@ -38,40 +58,33 @@
   <div class="bigscreen_lc">
     <div class="bigscreen_lc_top">
       <div class="bigscreen_lc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>区域统计</span>
       </div>
-      <el-input
-        class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
-        placeholder="请输入事件类型"
-        :prefix-icon="Search"
-      />
+      <div class="pickerCss">
+        <img src="/public/img/zuo.svg" alt="" style="margin-left: 5px" />
+        <span>7月21日</span>
+        <span>-</span>
+        <span>7月27日</span>
+        <img src="/public/img/you.svg" alt="" style="margin-right: 5px" />
+      </div>
     </div>
-    <div class="bigscreen_lc_bottom"></div>
+    <div class="bigscreen_lc_bottom">
+      <div class="bigscreen_lc_bottom_nei" ref="bigscreenLCRef"></div>
+    </div>
   </div>
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>报警历史</span>
       </div>
-      <div
-        style="
-          width: 65px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="日" value="ri" />
-        </el-radio-group>
-      </div>
+      <el-input
+        class="inputcss"
+        style="width: 148px; height: 24px; margin-right: 11px"
+        placeholder="请输入报警类型"
+        :prefix-icon="Search"
+      />
     </div>
     <!-- <BorderBox1 class="bigscreen_lb_bottom"> -->
     <div class="bigscreen_lb_bottom">
@@ -84,7 +97,7 @@
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>事件报告</span>
       </div>
       <el-input
@@ -98,7 +111,7 @@
       <div class="bigscreen_rt_bottom_nei">
         <img
           style="width: 163px; height: 159px"
-          src="/src/assets/img/事件报告图标.png"
+          src="/public/img/事件报告图标.png"
           alt=""
         />
         <div class="bigscreen_rt_bottom_r">
@@ -132,7 +145,7 @@
   <div class="bigscreen_rc">
     <div class="bigscreen_rc_top">
       <div class="bigscreen_rc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>SOP管理</span>
       </div>
       <el-input
@@ -162,7 +175,7 @@
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>政策法规</span>
       </div>
       <el-input
@@ -178,7 +191,7 @@
           style="
             width: 20px;
             height: 207px;
-            background: url('/src/assets/img/线.png') no-repeat;
+            background: url('/img/线.png') no-repeat;
             background-size: 2px 100%;
             background-position: center;
             display: flex;
@@ -186,17 +199,9 @@
             align-items: center;
           "
         >
-          <img src="/src/assets/img/圆形标记.png" alt="" />
-          <img
-            style="margin-top: 70px"
-            src="/src/assets/img/圆形标记.png"
-            alt=""
-          />
-          <img
-            style="margin-top: 70px"
-            src="/src/assets/img/圆形标记.png"
-            alt=""
-          />
+          <img src="/public/img/圆形标记.png" alt="" />
+          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
+          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
         </div>
         <div class="bigscreen_rb_bottom_r">
           <Vue3SeamlessScroll
@@ -223,7 +228,7 @@
                 <span>{{ item.text }}</span>
                 <img
                   style="margin-right: 18px"
-                  src="/src/assets/img/查看详情.png"
+                  src="/public/img/查看详情.png"
                   alt=""
                 />
               </div>
@@ -240,44 +245,43 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 
-const radio1 = ref("zhou");
 const list = ref([
   {
     name: "物料A库存异常",
-    img: "/src/assets/img/黄色.png",
+    img: "/img/黄色.png",
     status: "物料报警",
   },
   {
     name: "设备一监测数据异常",
-    img: "/src/assets/img/绿色.png",
+    img: "/img/绿色.png",
     status: "设备报警",
   },
   {
     name: "XXX产品出现质量问题",
-    img: "/src/assets/img/红色.png",
+    img: "/img/红色.png",
     status: "质量问题",
   },
   {
     name: "XXX发生安全事故",
-    img: "/src/assets/img/蓝色.png",
+    img: "/img/蓝色.png",
     status: "事故问题",
   },
 ]);
 
 const list2 = ref([
   {
-    background: "/src/assets/img/红色背景框.png",
+    background: "/img/红色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/绿色背景框.png",
+    background: "/img/绿色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/黄色背景框.png",
+    background: "/img/黄色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
 ]);
@@ -290,92 +294,130 @@ const list3 = ref([
   { code: "编号1", time: "2024-10-11", name: "徐凯品" },
 ]);
 
-const active = ref(1);
 const list4 = ref([
   {
-    code: "001",
-    time: "2024-10-09",
-    name: "王凯",
+    code: "《综合应急预案SOP》",
+    time: "安全生产部",
+    name: "车间应急方案",
   },
   {
-    code: "002",
-    time: "2024-10-09",
-    name: "王凯",
+    code: "《危险化学品事故专项SOP》",
+    time: "安全生产部",
+    name: "物料管理",
   },
   {
-    code: "003",
-    time: "2024-10-09",
-    name: "王凯",
+    code: "《综合应急预案SOP》",
+    time: "安全生产部",
+    name: "车间应急方案",
   },
   {
-    code: "004",
-    time: "2024-10-09",
-    name: "王凯",
+    code: "《危险化学品事故专项SOP》",
+    time: "安全生产部",
+    name: "物料管理",
   },
   {
-    code: "005",
-    time: "2024-10-09",
-    name: "王凯",
+    code: "《综合应急预案SOP》",
+    time: "安全生产部",
+    name: "车间应急方案",
   },
 ]);
 
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
   },
-
   xAxis: {
     type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    data: [
+      "1月",
+      "2月",
+      "3月",
+      "4月",
+      "5月",
+      "6月",
+      "7月",
+      "8月",
+      "9月",
+      "10月",
+      "11月",
+      "12月",
+    ],
+    axisLabel: {
+      color: "#ffffff",
+    },
   },
   yAxis: {
     type: "value",
     splitLine: {
-      show: true, //让网格显示
       lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        width: 2, //网格的宽度
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
       },
+    },
+    axisLabel: {
+      color: "#ffffff",
     },
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
+      data: [2, 0.5, 1, 0.7, 3, 3.5, 1, 5, 3, 2, 2, 5],
+      type: "bar",
+      itemStyle: {
+        color: "#68B1A6", // 线条颜色
+      },
+    },
+  ],
+};
+
+const bigscreenLCRef = ref();
+const bigscreenLCoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "24%",
+    containLabel: true,
+  },
+
+  tooltip: {
+    trigger: "item",
+  },
+  series: [
+    {
+      // name: "Access From",
+      type: "pie",
+      radius: ["40%", "70%"],
+      avoidLabelOverlap: false,
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: "bold",
         },
       },
+      labelLine: {
+        show: false,
+      },
+      data: [
+        { value: 1048, name: "Search Engine" },
+        { value: 735, name: "Direct" },
+        { value: 580, name: "Email" },
+        { value: 484, name: "Union Ads" },
+      ],
     },
   ],
 };
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
-
 const bigscreenRBoption = {
   grid: {
     left: "60px",
@@ -511,6 +553,11 @@ onMounted(() => {
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 
+  if (bigscreenLCRef.value) {
+    const bigscreenLCChart = echarts.init(bigscreenLCRef.value);
+    bigscreenLCChart.setOption(bigscreenLCoption);
+  }
+
   if (bigscreenRBRef.value) {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     bigscreenRBChart.setOption(bigscreenRBoption);
@@ -535,7 +582,7 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     // background-position: ;
     display: flex;
@@ -568,7 +615,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -603,7 +650,7 @@ onMounted(() => {
   .bigscreen_lc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -631,13 +678,31 @@ onMounted(() => {
         padding-left: 10px;
       }
     }
+    .pickerCss {
+      width: 135px;
+      height: 24px;
+      border: 1px solid rgba(227, 233, 243, 0.2);
+      border-radius: 5px;
+      margin-right: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        color: #ffffff;
+        font-size: 12px;
+      }
+    }
   }
   .bigscreen_lc_bottom {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+    .bigscreen_lc_bottom_nei {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -648,7 +713,7 @@ onMounted(() => {
   .bigscreen_lb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -681,7 +746,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
       width: 100%;
@@ -697,7 +762,7 @@ onMounted(() => {
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -730,7 +795,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
       width: 100%;
@@ -748,7 +813,7 @@ onMounted(() => {
         .bigscreen_rt_bottom_rnei {
           width: 100%;
           height: 45px;
-          background: url("/src/assets/img/背景1.png") no-repeat;
+          background: url("/public/img/背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -781,7 +846,7 @@ onMounted(() => {
   .bigscreen_rc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -814,7 +879,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
@@ -824,14 +889,18 @@ onMounted(() => {
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
         height: 30px;
-        background: url("/src/assets/img/equipment/tabletop.png") no-repeat;
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
         span {
-          width: 33%;
+          &:nth-child(1) {
+            width: 43%;
+          }
+          width: 28%;
           color: #9eabb7;
+          font-size: 14px;
           text-align: center;
         }
       }
@@ -842,15 +911,19 @@ onMounted(() => {
         align-items: center;
         margin-top: 15px;
         span {
-          width: 33%;
+          &:nth-child(1) {
+            width: 43%;
+          }
+          width: 28%;
           color: #ffffff;
+          font-size: 12px;
           text-align: center;
         }
       }
       .bigscreen_rc_bottom_nei_active {
         width: 100%;
         height: 33px;
-        background: url("/src/assets/img/equipment/tableactive.png") no-repeat;
+        background: url("/public/img/equipment/tableactive.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
@@ -881,7 +954,7 @@ onMounted(() => {
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -914,7 +987,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
       width: 100%;

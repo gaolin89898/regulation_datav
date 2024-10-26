@@ -2,13 +2,13 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>门禁记录</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
       <div class="bigscreen_lt_bottom_nei" v-for="item in list">
-        <img src="/src/assets/img/personnel/人物图标.png" alt="" />
+        <img src="/public/img/personnel/人物图标.png" alt="" />
         <div
           class="bigscreen_lt_bottom_nei_r"
           :style="{
@@ -34,7 +34,7 @@
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>特征指标</span>
       </div>
       <el-input
@@ -89,16 +89,22 @@
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>视频监控</span>
       </div>
     </div>
-    <div class="bigscreen_rt_bottom"></div>
+    <div class="bigscreen_rt_bottom">
+      <swiper :slides-per-view="1" :space-between="10" pagination>
+        <swiper-slide v-for="(item, index) in slides" :key="index">
+          <img :src="item.image" alt="" />
+        </swiper-slide>
+      </swiper>
+    </div>
   </div>
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>异常健康指标统计</span>
       </div>
       <div
@@ -129,31 +135,37 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
 
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
+import img1 from "../../../public/img/视频监控尺寸.png";
+
 const radio1 = ref("zhou");
+
+const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
+
 const list = ref([
   {
     name: "张建坤",
     code: "YG005",
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/红色背景.png",
+    img: "/img/personnel/红色背景.png",
   },
   {
     name: "张建坤",
     code: "YG005",
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/绿色背景.png",
+    img: "/img/personnel/绿色背景.png",
   },
   {
     name: "张建坤",
     code: "YG005",
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/黄色背景.png",
+    img: "/img/personnel/黄色背景.png",
   },
 ]);
 
@@ -166,7 +178,7 @@ const list2 = ref([
     xuya1: 100,
     xueya2: 145,
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/名字绿色背景.png",
+    img: "/img/personnel/名字绿色背景.png",
   },
   {
     name: "张建坤",
@@ -176,7 +188,7 @@ const list2 = ref([
     xuya1: 100,
     xueya2: 145,
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/名字蓝色背景.png",
+    img: "/img/personnel/名字蓝色背景.png",
   },
   {
     name: "张建坤",
@@ -186,7 +198,7 @@ const list2 = ref([
     xuya1: 100,
     xueya2: 145,
     time: "2024-07-20 20:23:06",
-    img: "/src/assets/img/personnel/名字棕色背景.png",
+    img: "/img/personnel/名字棕色背景.png",
   },
 ]);
 
@@ -371,7 +383,7 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     align-items: center;
@@ -403,7 +415,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
@@ -478,7 +490,7 @@ onMounted(() => {
   .bigscreen_lb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -511,7 +523,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
@@ -556,7 +568,7 @@ onMounted(() => {
       .bigscreen_lb_bottom_nei_dizuo {
         position: absolute;
         bottom: 0;
-        background: url("/src/assets/img/personnel/特质指标底座.png") no-repeat;
+        background: url("/public/img/personnel/特质指标底座.png") no-repeat;
         background-size: 100% 100%;
         width: 100%;
         height: 49px;
@@ -572,7 +584,7 @@ onMounted(() => {
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -605,7 +617,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
       display: flex;
@@ -627,7 +639,7 @@ onMounted(() => {
         div {
           width: 100%;
           height: 41px;
-          background: url("/src/assets/img/半透明背景1.png") no-repeat;
+          background: url("/public/img/半透明背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -650,7 +662,7 @@ onMounted(() => {
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -688,7 +700,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;

@@ -2,16 +2,34 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>监测数据</span>
       </div>
     </div>
-    <div class="bigscreen_lt_bottom"></div>
+    <div class="bigscreen_lt_bottom">
+      <div class="bigscreen_lt_bottom_nei" v-for="item in list4">
+        <img :src="item.img" alt="" />
+        <div
+          :style="{
+            background: `url('${item.back}') no-repeat`,
+            backgroundSize: '100% 100%',
+          }"
+        >
+          <span>设备编号：{{ item.code }}</span>
+          <span
+            :style="{
+              color: item.status ? '#00FFF9' : '#FFBCC0',
+            }"
+            >{{ item.name }}</span
+          >
+        </div>
+      </div>
+    </div>
   </div>
   <div class="bigscreen_lc">
     <div class="bigscreen_lc_top">
       <div class="bigscreen_lc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>设备台账</span>
       </div>
       <el-input
@@ -30,7 +48,10 @@
           <span>安装时间</span>
         </div>
         <div class="bigscreen_lc_bottom_nei_b" v-for="item in list">
-          <span>{{ item.code }}</span>
+          <span>
+            <img :src="item.img" alt="" style="margin: 0 15px 0 15px" />
+            {{ item.code }}
+          </span>
           <span>{{ item.name }}</span>
           <span>{{ item.status }}</span>
           <span>{{ item.time }}</span>
@@ -41,38 +62,32 @@
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>设备运行状态</span>
       </div>
-      <div
-        style="
-          width: 65px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+      <el-select
+        size="small"
+        class="selectcss"
+        v-model="selectval"
+        style="width: 80px; margin-right: 11px"
       >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="日" value="ri" />
-        </el-radio-group>
-      </div>
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </div>
-    <!-- <BorderBox1 class="bigscreen_lb_bottom"> -->
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
-
-    <!-- </BorderBox1> -->
   </div>
   <center></center>
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>监控视频</span>
       </div>
       <el-input
@@ -84,7 +99,7 @@
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei">
-        <img src="/src/assets/img/监控报告图标.png" alt="" />
+        <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
           <div><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
@@ -96,7 +111,7 @@
   <div class="bigscreen_rc">
     <div class="bigscreen_rc_top">
       <div class="bigscreen_rc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>维修记录</span>
       </div>
       <el-input
@@ -123,7 +138,7 @@
         >
           <span>
             <img
-              src="/src/assets/img/equipment/tableicon.png"
+              src="/public/img/equipment/tableicon.png"
               alt=""
               v-if="active == index"
             />
@@ -138,12 +153,12 @@
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>巡检记录</span>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
-      <img src="/src/assets/img/xujian.png" alt="" />
+      <img src="/public/img/xujian.png" alt="" />
       <div class="bigscreen_rb_bottom_r">
         <div class="bigscreen_rb_bottom_r_nei" v-for="(item, index) in list2">
           <div
@@ -196,40 +211,79 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
 
-const radio1 = ref("zhou");
 const list = ref([
   {
     code: "001",
     name: "隔离器",
     time: "2024-10-09",
     status: "型号1",
+    img: "/img/红色标记-圆.png",
   },
   {
     code: "002",
     name: "隔离器",
     time: "2024-10-09",
     status: "型号2",
+    img: "/img/绿色标记-圆.png",
   },
   {
     code: "003",
     name: "隔离器",
     time: "2024-10-09",
     status: "型号3",
+    img: "/img/黄色标记-圆.png",
   },
   {
     code: "004",
     name: "隔离器",
     time: "2024-10-09",
     status: "型号4",
+    img: "/img/蓝色标记-圆.png",
   },
   {
     code: "005",
     name: "隔离器",
     time: "2024-10-09",
     status: "型号5",
+    img: "/img/紫色标记-圆.png",
+  },
+]);
+
+const list4 = ref([
+  {
+    img: "/img/正常状态.png",
+    back: "/img/绿色背景.png",
+    code: "001",
+    name: "生物反应器",
+    status: true,
+  },
+  {
+    img: "/img/异常状态.png",
+    back: "/img/红色背景.png",
+    code: "002",
+    name: "隔离器",
+    status: false,
+  },
+  {
+    img: "/img/正常状态.png",
+    back: "/img/绿色背景.png",
+    code: "003",
+    name: "生物反应器",
+    status: true,
+  },
+]);
+
+const selectval = ref("dian");
+const options = ref([
+  {
+    label: "设备一",
+    value: "dian",
+  },
+  {
+    label: "设备二",
+    value: "shui",
   },
 ]);
 
@@ -273,14 +327,19 @@ const list3 = ref([
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "15%",
+    containLabel: true,
   },
 
   xAxis: {
     type: "category",
     data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
+    },
   },
   yAxis: {
     type: "value",
@@ -289,9 +348,11 @@ const bigscreenLBoption = {
       lineStyle: {
         //网格样式
         color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        width: 2, //网格的宽度
         type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
       },
+    },
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
     },
   },
   series: [
@@ -349,7 +410,7 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     align-items: center;
@@ -381,8 +442,38 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .bigscreen_lt_bottom_nei {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      div {
+        width: 324px;
+        height: 39px;
+        display: flex;
+        align-items: center;
+        &:nth-child(2) {
+          margin: 18px 0;
+        }
+        span {
+          &:nth-child(1) {
+            font-size: 12px;
+            color: #ffffff;
+            padding: 0 32px;
+          }
+          &:nth-child(2) {
+            font-family: youshe;
+            font-size: 20px;
+            // color: #ffffff;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -396,7 +487,7 @@ onMounted(() => {
   .bigscreen_lc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -429,7 +520,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
@@ -439,7 +530,7 @@ onMounted(() => {
       .bigscreen_lc_bottom_nei_t {
         width: 100%;
         height: 30px;
-        background: url("/src/assets/img/equipment/tabletop.png") no-repeat;
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
@@ -447,6 +538,7 @@ onMounted(() => {
         span {
           width: 25%;
           color: #9eabb7;
+          font-size: 14px;
           text-align: center;
         }
       }
@@ -459,7 +551,12 @@ onMounted(() => {
         span {
           width: 25%;
           color: #ffffff;
-          text-align: center;
+          font-size: 12px;
+          &:nth-child(2),
+          &:nth-child(3),
+          &:nth-child(4) {
+            text-align: center;
+          }
         }
       }
     }
@@ -472,8 +569,8 @@ onMounted(() => {
   left: 26px;
   .bigscreen_lb_top {
     width: 100%;
-    height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    height: 40px;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -506,7 +603,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
       width: 100%;
@@ -522,7 +619,7 @@ onMounted(() => {
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -555,7 +652,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
       display: flex;
@@ -577,7 +674,7 @@ onMounted(() => {
         div {
           width: 100%;
           height: 41px;
-          background: url("/src/assets/img/半透明背景1.png") no-repeat;
+          background: url("/public/img/半透明背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -600,7 +697,7 @@ onMounted(() => {
   .bigscreen_rc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -633,7 +730,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
@@ -643,7 +740,7 @@ onMounted(() => {
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
         height: 30px;
-        background: url("/src/assets/img/equipment/tabletop.png") no-repeat;
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
@@ -651,6 +748,7 @@ onMounted(() => {
         span {
           width: 33%;
           color: #9eabb7;
+          font-size: 14px;
           text-align: center;
         }
       }
@@ -663,13 +761,14 @@ onMounted(() => {
         span {
           width: 33%;
           color: #ffffff;
+          font-size: 12px;
           text-align: center;
         }
       }
       .bigscreen_rc_bottom_nei_active {
         width: 100%;
         height: 33px;
-        background: url("/src/assets/img/equipment/tableactive.png") no-repeat;
+        background: url("/public/img/equipment/tableactive.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
@@ -678,13 +777,13 @@ onMounted(() => {
         span {
           width: 33%;
           color: #58a4cb;
+          font-size: 12px;
           text-align: center;
           position: relative;
           &:nth-child(1) {
             img {
               position: absolute;
               left: 25px;
-              top: 2px;
             }
           }
         }
@@ -700,7 +799,7 @@ onMounted(() => {
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -738,7 +837,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/背景下层.png") no-repeat;
+    background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -760,6 +859,20 @@ onMounted(() => {
         align-items: center;
       }
     }
+  }
+}
+
+:deep(.selectcss) {
+  .el-select__wrapper {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2)  !important;
+  }
+  .el-select__placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .el-select__selected-item {
+    color: rgba(255, 255, 255, 0.6) !important;
   }
 }
 

@@ -24,41 +24,52 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import img from "../../public/img/0.png";
+import img1 from "../../public/img/1.png";
+import img2 from "../../public/img/2.png";
+import img3 from "../../public/img/3.png";
+import img4 from "../../public/img/4.png";
+import img5 from "../../public/img/5.png";
+import img6 from "../../public/img/6.png";
+import img7 from "../../public/img/7.png";
+import img8 from "../../public/img/8.png";
+import img9 from "../../public/img/9.png";
+
 const count1 = ref(321);
 const count2 = ref(45671);
 
 function shuimg(val: string) {
-  const img = ref<string>("");
+  const img = ref("");
   switch (val) {
     case "0":
-      img.value = "/src/assets/img/0.png";
+      img.value = img;
       break;
     case "1":
-      img.value = "/src/assets/img/1.png";
+      img.value = img1;
       break;
     case "2":
-      img.value = "/src/assets/img/2.png";
+      img.value = img2;
       break;
     case "3":
-      img.value = "/src/assets/img/3.png";
+      img.value = img3;
       break;
     case "4":
-      img.value = "/src/assets/img/4.png";
+      img.value = img4;
       break;
     case "5":
-      img.value = "/src/assets/img/5.png";
+      img.value = img5;
       break;
     case "6":
-      img.value = "/src/assets/img/6.png";
+      img.value = img6;
       break;
     case "7":
-      img.value = "/src/assets/img/7.png";
+      img.value = img7;
       break;
     case "8":
-      img.value = "/src/assets/img/8.png";
+      img.value = img8;
       break;
     case "9":
-      img.value = "/src/assets/img/9.png";
+      img.value = img9;
       break;
     default:
       break;
@@ -94,7 +105,7 @@ function shuimg(val: string) {
       div {
         width: 63px;
         height: 72px;
-        background: url("/src/assets/img/数字背景.png") no-repeat;
+        background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         align-items: center;
@@ -118,7 +129,7 @@ function shuimg(val: string) {
       div {
         width: 63px;
         height: 72px;
-        background: url("/src/assets/img/数字背景.png") no-repeat;
+        background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         align-items: center;
@@ -131,7 +142,7 @@ function shuimg(val: string) {
 .bigscreen_cb {
   width: 996px;
   height: 665px;
-  background: url("/src/assets/img/网格背景.png") no-repeat;
+  background: url("/public/img/网格背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
   bottom: 140px;
@@ -143,7 +154,7 @@ function shuimg(val: string) {
   .bigscreen_cb_nei {
     width: 840px;
     height: 642px;
-    background: url("/src/assets/img/主体图片.png") no-repeat;
+    background: url("/public/img/主体图片.png") no-repeat;
     background-size: 100% 100%;
   }
 }

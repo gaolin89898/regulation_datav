@@ -26,6 +26,9 @@ importers:
       element-plus:
         specifier: ^2.8.4
         version: 2.8.4(vue@3.5.10(typescript@5.6.2))
+      swiper:
+        specifier: ^11.1.14
+        version: 11.1.14
       vue:
         specifier: ^3.4.37
         version: 3.5.10(typescript@5.6.2)
@@ -836,6 +839,10 @@ packages:
 
   strip-literal@2.1.0:
     resolution: {integrity: sha512-Op+UycaUt/8FbN/Z2TWPBLge3jWrP3xj10f3fnYxf052bKuS3EKs1ZQcVGjnEMdsNVAM+plXRdmjrZ/KgG3Skw==}
+
+  swiper@11.1.14:
+    resolution: {integrity: sha512-VbQLQXC04io6AoAjIUWuZwW4MSYozkcP9KjLdrsG/00Q/yiwvhz9RQyt0nHXV10hi9NVnDNy1/wv7Dzq1lkOCQ==}
+    engines: {node: '>= 4.7.0'}
 
   throttle-debounce@5.0.0:
     resolution: {integrity: sha512-2iQTSgkkc1Zyk0MeVrt/3BvuOXYPl/R8Z0U2xxo9rjwNciaHDG3R+Lm6dh4EeUci49DanvBnuqI6jshoQQRGEg==}
@@ -1657,6 +1664,8 @@ snapshots:
   strip-literal@2.1.0:
     dependencies:
       js-tokens: 9.0.0
+
+  swiper@11.1.14: {}
 
   throttle-debounce@5.0.0: {}
 

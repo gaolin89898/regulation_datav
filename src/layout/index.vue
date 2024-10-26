@@ -3,18 +3,14 @@
     <div class="bigscreen_header">
       <img
         style="position: absolute; top: 18px; left: 50%; margin-left: -241px"
-        src="/src/assets/img/高生物安全动态监管平台.png"
+        src="/public/img/高生物安全动态监管平台.png"
         alt=""
       />
       <div class="bigscreen_header_r">
         <span>{{ time }}</span>
         <span style="padding-left: 30px">{{ dayOfWeek }}</span>
-        <img
-          style="padding-left: 25px"
-          src="/src/assets/img/天气图标.png"
-          alt=""
-        />
-        <img style="margin-left: 6px" src="/src/assets/img/温度计.png" alt="" />
+        <img style="padding-left: 25px" src="/public/img/天气图标.png" alt="" />
+        <img style="margin-left: 6px" src="/public/img/温度计.png" alt="" />
         <span style="padding-right: 40px">26℃</span>
       </div>
     </div>
@@ -34,7 +30,7 @@
             style="
               width: 112px;
               height: 56px;
-              background: url('/src/assets/img/底座文案框.png') no-repeat;
+              background: url('/img/dbwenan.png') no-repeat;
               background-size: 100% 100%;
               display: flex;
               justify-content: center;
@@ -50,7 +46,7 @@
           <img
             v-if="$route.path === item.path"
             style="position: absolute; bottom: 0"
-            src="/src/assets/img/切换图标.png"
+            src="/public/img/切换图标.png"
             alt=""
           />
         </div>
@@ -171,7 +167,7 @@ onUnmounted(() => {
   .bigscreen_header {
     width: 100%;
     height: 251px;
-    background: url("/src/assets/img/标题背景.png") no-repeat;
+    background: url("/public/img/标题背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     top: 0;
@@ -194,7 +190,7 @@ onUnmounted(() => {
   .bigscreen_bottom {
     width: 100%;
     height: 112px;
-    background: url("/src/assets/img/底座背景.png") no-repeat;
+    background: url("/public/img/底座背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     bottom: 0;

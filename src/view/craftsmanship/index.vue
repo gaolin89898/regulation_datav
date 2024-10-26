@@ -2,32 +2,92 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>报警信息</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
       <div class="bigscreen_lt_bottom_t">
-        <img src="/src/assets/img/craftsmanship/infoIcon.png" alt="" />
-        <div>
+        <img src="/public/img/craftsmanship/infoIcon.png" alt="" />
+        <div class="bigscreen_lt_bottom_tdiv">
           <span>报警信息</span>
           <br />
           <span>Alarm message</span>
         </div>
-        <div>
-          <span>一级</span>
-          <br />
-          <span>262</span>
+        <div class="bigscreen_lt_bottom_tdiv">
+          <div class="bigscreen_lt_bottom_tdiv_l">
+            <div
+              style="
+                width: 7px;
+                height: 7px;
+                background: #42c38f;
+                border-radius: 50%;
+              "
+            ></div>
+            <div
+              style="
+                width: 10px;
+                height: 20px;
+                border-left: 1px solid #42c38f;
+                border-bottom: 1px solid #42c38f;
+                margin-left: 3px;
+              "
+            ></div>
+          </div>
+          <div class="bigscreen_lt_bottom_tdiv_r">
+            <span>一级</span>
+            <span>262</span>
+          </div>
         </div>
-        <div>
-          <span>二级</span>
-          <br />
-          <span>68</span>
+        <div class="bigscreen_lt_bottom_tdiv">
+          <div class="bigscreen_lt_bottom_tdiv_l">
+            <div
+              style="
+                width: 7px;
+                height: 7px;
+                background: #0574cb;
+                border-radius: 50%;
+              "
+            ></div>
+            <div
+              style="
+                width: 10px;
+                height: 20px;
+                border-left: 1px solid #0574cb;
+                border-bottom: 1px solid #0574cb;
+                margin-left: 3px;
+              "
+            ></div>
+          </div>
+          <div class="bigscreen_lt_bottom_tdiv_r">
+            <span>二级</span>
+            <span>68</span>
+          </div>
         </div>
-        <div>
-          <span>三级</span>
-          <br />
-          <span>102</span>
+        <div class="bigscreen_lt_bottom_tdiv">
+          <div class="bigscreen_lt_bottom_tdiv_l">
+            <div
+              style="
+                width: 7px;
+                height: 7px;
+                background: #f96168;
+                border-radius: 50%;
+              "
+            ></div>
+            <div
+              style="
+                width: 10px;
+                height: 20px;
+                border-left: 1px solid #f96168;
+                border-bottom: 1px solid #f96168;
+                margin-left: 3px;
+              "
+            ></div>
+          </div>
+          <div class="bigscreen_lt_bottom_tdiv_r">
+            <span>三级</span>
+            <span>102</span>
+          </div>
         </div>
       </div>
       <div class="bigscreen_lt_bottom_b">
@@ -45,13 +105,13 @@
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>工艺节点</span>
       </div>
       <el-input
         class="inputcss"
         style="width: 148px; height: 24px; margin-right: 11px"
-        placeholder="请输入员工姓名"
+        placeholder="请输入节点名称"
         :prefix-icon="Search"
       />
     </div>
@@ -80,34 +140,42 @@
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>工艺要素</span>
       </div>
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_count">
         <img
-          src="/src/assets/img/craftsmanship/yaosuicon.png"
-          style="margin-right: 25px"
+          src="/public/img/craftsmanship/yaosuicon.png"
+          style="margin: 0 20px 0 28px"
           alt=""
         />
-        <div style="color: #ffffff">
+        <div
+          style="
+            height: 67px;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          "
+        >
           <div style="display: flex; align-items: center">
-            <span style="font-size: 20px">工艺要素</span>
-            <span style="font-size: 30px; padding-left: 25px">30</span>
+            <span style="font-size: 18px">工艺要素</span>
+            <span style="font-size: 28px; padding-left: 25px">30</span>
           </div>
-          <div style="margin-top: 5px">
+          <div>
             <span>
-              <img src="/src/assets/img/craftsmanship/lanshang.png" alt="" />
-              <span style="padding-left: 10px">人力要素</span>
+              <img src="/public/img/craftsmanship/lanshang.png" alt="" />
+              <span style="padding-left: 10px; font-size: 14px">人力要素</span>
             </span>
             <span style="padding-left: 15px">
-              <img src="/src/assets/img/craftsmanship/lvshang.png" alt="" />
-              <span style="padding-left: 10px">原料要素</span>
+              <img src="/public/img/craftsmanship/lvshang.png" alt="" />
+              <span style="padding-left: 10px; font-size: 14px">原料要素</span>
             </span>
             <span style="padding-left: 15px">
-              <img src="/src/assets/img/craftsmanship/huangshang.png" alt="" />
-              <span style="padding-left: 10px">设备要素</span>
+              <img src="/public/img/craftsmanship/huangshang.png" alt="" />
+              <span style="padding-left: 10px; font-size: 14px">设备要素</span>
             </span>
           </div>
         </div>
@@ -135,12 +203,51 @@
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>工艺档案</span>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei">
+        <div
+          style="
+            width: 100%;
+            height: 30px;
+            background: url('/img/equipment/tabletop.png') no-repeat;
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <span
+            style="
+              width: 33%;
+              color: #ffffff;
+              text-align: center;
+              font-size: 14px;
+            "
+            >工艺名称</span
+          >
+          <span
+            style="
+              width: 33%;
+              color: #ffffff;
+              text-align: center;
+              font-size: 14px;
+            "
+            >版本号</span
+          >
+          <span
+            style="
+              width: 33%;
+              color: #ffffff;
+              text-align: center;
+              font-size: 14px;
+            "
+            >工艺制定人员</span
+          >
+        </div>
         <div
           class="bigscreen_rb_bottom_nei_item"
           v-for="(item, index) in list2"
@@ -171,7 +278,6 @@
           <div
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-              marginRight: '15px',
             }"
           >
             {{ item.name }}
@@ -187,77 +293,76 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
 
 const radio1 = ref("zhou");
 const list = ref([
   {
     name: "病毒加工工艺",
-    img: "/src/assets/img/craftsmanship/erjilan.png",
+    img: "/img/craftsmanship/erjilan.png",
     status: "二级报警",
     type: "节点故障",
   },
   {
     name: "病毒加工工艺",
-    img: "/src/assets/img/craftsmanship/yijilv.png",
+    img: "/img/craftsmanship/yijilv.png",
     status: "一级报警",
     type: "工艺异常",
   },
   {
     name: "病毒加工工艺",
-    img: "/src/assets/img/craftsmanship/erjilan.png",
+    img: "/img/craftsmanship/erjilan.png",
     status: "二级报警",
     type: "节点故障",
   },
   {
     name: "病毒加工工艺",
-    img: "/src/assets/img/craftsmanship/sanjihong.png",
+    img: "/img/craftsmanship/sanjihong.png",
     status: "三级报警",
     type: "工艺异常",
   },
 ]);
 
 const list2 = ref([
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
+  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
+  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
+  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
+  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
+  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
 ]);
 const list3 = ref([
   {
-    img: "/src/assets/img/craftsmanship/1.png",
+    img: "/img/craftsmanship/1.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
   },
   {
-    img: "/src/assets/img/craftsmanship/2.png",
+    img: "/img/craftsmanship/2.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
   },
   {
-    img: "/src/assets/img/craftsmanship/3.png",
+    img: "/img/craftsmanship/3.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
   },
   {
-    img: "/src/assets/img/craftsmanship/4.png",
+    img: "/img/craftsmanship/4.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
   },
   {
-    img: "/src/assets/img/craftsmanship/1.png",
+    img: "/img/craftsmanship/1.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
   },
   {
-    img: "/src/assets/img/craftsmanship/2.png",
+    img: "/img/craftsmanship/2.png",
     name: "隔离器工艺",
     type: "病毒加工工艺",
     status: "进行中",
@@ -478,7 +583,7 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     align-items: center;
@@ -510,7 +615,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
@@ -519,25 +624,46 @@ onMounted(() => {
     .bigscreen_lt_bottom_t {
       width: 399px;
       height: 88px;
-      background: url("/src/assets/img/craftsmanship/infoback.png") no-repeat;
+      background: url("/public/img/craftsmanship/infoback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
-      div {
+      .bigscreen_lt_bottom_tdiv {
         text-align: center;
         span {
           color: #ffffff;
         }
         &:nth-child(2) {
-          padding: 0 20px;
-          border-right: 2px solid #1f4268;
+          padding: 0 15px;
+          border-right: 1px solid #3e607e;
           margin-right: 20px;
           span {
             &:nth-child(1) {
-              font-size: 20px;
+              font-size: 18px;
             }
             &:nth-child(3) {
-              font-size: 10px;
+              font-size: 8px;
+            }
+          }
+        }
+        &:nth-child(3),
+        &:nth-child(4),
+        &:nth-child(5) {
+          display: flex;
+          align-items: center;
+          .bigscreen_lt_bottom_tdiv_r {
+            display: flex;
+            flex-direction: column;
+            margin-left: 5px;
+            span {
+              &:nth-child(1) {
+                margin-top: 3px;
+                font-size: 10px;
+              }
+              &:nth-child(2) {
+                font-size: 13px;
+                margin-top: 10px;
+              }
             }
           }
         }
@@ -551,15 +677,15 @@ onMounted(() => {
       margin-top: 20px;
       .bigscreen_lt_bottom_b_nei {
         display: flex;
+        align-items: center;
         img {
           margin-left: 10px;
         }
         div {
           width: 305px;
-          height: 35px;
-          margin-top: 20px;
-          // border: 1px solid red;
-          background: url("/src/assets/img/back.png") no-repeat;
+          height: 28px;
+          // margin-top: 20px;
+          background: url("/public/img/back.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           justify-content: space-between;
@@ -567,6 +693,7 @@ onMounted(() => {
           color: #ffffff;
           margin-left: 15px;
           span {
+            font-size: 14px;
             &:nth-child(3) {
               font-size: 20px;
               font-family: youshe;
@@ -595,7 +722,7 @@ onMounted(() => {
   .bigscreen_lb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -628,7 +755,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
@@ -645,6 +772,7 @@ onMounted(() => {
           align-items: center;
           span {
             width: 33%;
+            font-size: 16px;
             text-align: center;
           }
         }
@@ -653,7 +781,7 @@ onMounted(() => {
         width: 100%;
         height: 40px;
         // border: 1px solid red;
-        background: url("/src/assets/img/craftsmanship/jidianback.png")
+        background: url("/public/img/craftsmanship/jidianback.png")
           no-repeat;
         background-position: 30px 0;
         margin-top: 15px;
@@ -682,7 +810,7 @@ onMounted(() => {
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -715,7 +843,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
@@ -724,16 +852,15 @@ onMounted(() => {
     .bigscreen_rt_bottom_count {
       width: 393px;
       height: 127px;
-      background: url("/src/assets/img/yaosuback.png") no-repeat;
+      background: url("/public/img/yaosuback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
-      justify-content: center;
       align-items: center;
     }
     .bigscreen_rt_bottom_nei {
       width: 393px;
       height: 50px;
-      background: url("/src/assets/img/craftsmanship/yaosuback.png") no-repeat;
+      background: url("/public/img/craftsmanship/yaosuback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
       justify-content: space-between;
@@ -759,7 +886,7 @@ onMounted(() => {
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -792,7 +919,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
@@ -806,11 +933,16 @@ onMounted(() => {
       margin: auto;
       .bigscreen_rb_bottom_nei_item {
         width: 100%;
-        height: 60px;
+        height: 50px;
         background: rgba(4, 30, 62);
         display: flex;
         justify-content: space-between;
         align-items: center;
+        div {
+          width: 33%;
+          text-align: center;
+          font-size: 14px;
+        }
       }
     }
   }

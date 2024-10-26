@@ -2,8 +2,11 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>数据展示</span>
+      </div>
+      <div style="color: #ffffff; font-size: 14px; margin-right: 11px">
+        <span>环境数据分析</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
@@ -23,35 +26,8 @@
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>当前总功耗</span>
-      </div>
-      <el-input
-        class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
-        placeholder="请输入监控报告"
-        :prefix-icon="Search"
-      />
-    </div>
-    <div class="bigscreen_lb_bottom">
-      <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
-    </div>
-  </div>
-  <center></center>
-  <div class="bigscreen_rt">
-    <div class="bigscreen_rt_top">
-      <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
-        <span>历史功耗</span>
-      </div>
-    </div>
-    <div class="bigscreen_rt_bottom"></div>
-  </div>
-  <div class="bigscreen_rb">
-    <div class="bigscreen_rb_top">
-      <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
-        <span>趋势变化</span>
       </div>
       <div
         style="
@@ -65,10 +41,76 @@
         "
       >
         <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="日" value="ri" />
+          <el-radio-button label="电" value="zhou" />
+          <el-radio-button label="水" value="ri" />
         </el-radio-group>
       </div>
+    </div>
+    <div class="bigscreen_lb_bottom">
+      <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
+    </div>
+  </div>
+  <center></center>
+  <div class="bigscreen_rt">
+    <div class="bigscreen_rt_top">
+      <div class="bigscreen_rt_top_l">
+        <img src="/public/img/光标.png" alt="" />
+        <span>历史功耗</span>
+      </div>
+      <div
+        style="
+          width: 95px;
+          height: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          margin-right: 11px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <el-radio-group v-model="radio1" class="group">
+          <el-radio-button label="周" value="zhou" />
+          <el-radio-button label="月" value="ri" />
+          <el-radio-button label="年" value="nian" />
+        </el-radio-group>
+      </div>
+    </div>
+    <div class="bigscreen_rt_bottom">
+      <el-select
+        size="small"
+        class="selectcss"
+        v-model="selectval2"
+        style="width: 80px; position: absolute; right: 20px; top: 15px"
+      >
+        <el-option
+          v-for="item in options2"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+      <div class="bigscreen_rt_bottom_nei" ref="bigscreenRTRef"></div>
+    </div>
+  </div>
+  <div class="bigscreen_rb">
+    <div class="bigscreen_rb_top">
+      <div class="bigscreen_rb_top_l">
+        <img src="/public/img/光标.png" alt="" />
+        <span>趋势变化</span>
+      </div>
+      <el-select
+        size="small"
+        class="selectcss"
+        v-model="selectval"
+        style="width: 80px; margin-bottom: 5px; margin-right: 11px"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
@@ -79,15 +121,35 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
-// import { BorderBox1 } from "@dataview/datav-vue3/es";
-import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
 
 const radio1 = ref("zhou");
+
+const selectval = ref("wendu");
+const options = ref([
+  {
+    label: "温度",
+    value: "wendu",
+  },
+  {
+    label: "湿度",
+    value: "shudu",
+  },
+]);
+const selectval2 = ref("shui");
+const options2 = ref([
+  {
+    label: "电",
+    value: "dian",
+  },
+  {
+    label: "水",
+    value: "shui",
+  },
+]);
 const list = ref([
   {
-    img: "/src/assets/img/environment/温度.png",
+    img: "/img/environment/温度.png",
     type: "温度",
     value: "19.28",
     unit: "℃",
@@ -95,7 +157,7 @@ const list = ref([
     model: "EMSNS-BX1-TT01",
   },
   {
-    img: "/src/assets/img/environment/湿度.png",
+    img: "/img/environment/湿度.png",
     type: "湿度",
     value: "55",
     unit: "%",
@@ -103,7 +165,7 @@ const list = ref([
     model: "EMSNS-BX1-TT01",
   },
   {
-    img: "/src/assets/img/environment/压差.png",
+    img: "/img/environment/压差.png",
     type: "压差",
     value: "110",
     unit: "Pa",
@@ -111,7 +173,7 @@ const list = ref([
     model: "EMSNS-BX1-TT01",
   },
   {
-    img: "/src/assets/img/environment/温度.png",
+    img: "/img/environment/温度.png",
     type: "温度",
     value: "51.7",
     unit: "℃",
@@ -122,15 +184,15 @@ const list = ref([
 
 const list2 = ref([
   {
-    background: "/src/assets/img/红色背景框.png",
+    background: "/public/img/红色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/绿色背景框.png",
+    background: "/public/img/绿色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/黄色背景框.png",
+    background: "/public/img/黄色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
 ]);
@@ -138,30 +200,41 @@ const list2 = ref([
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
   },
 
   xAxis: {
     type: "category",
     data: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00"],
+    axisLabel: {
+      color: "#ffffff",
+    },
   },
   yAxis: {
     type: "value",
+    name: "km/h",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 40, 5, 0],
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
     splitLine: {
       show: true, //让网格显示
       lineStyle: {
         //网格样式
         color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        width: 2, //网格的宽度
         type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
       },
     },
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [50, 100, 160, 60, 200, 90, 250],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -192,30 +265,85 @@ const bigscreenLBoption = {
   ],
 };
 
+const bigscreenRTRef = ref();
+const bigscreenRToption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
+  },
+  xAxis: {
+    type: "category",
+    data: [
+      "7月21日",
+      "7月22日",
+      "7月23日",
+      "7月24日",
+      "7月25日",
+      "7月26日",
+      "7月27日",
+    ],
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  yAxis: {
+    type: "value",
+    name: "吨",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 30, 5, 0],
+    },
+    splitLine: {
+      lineStyle: {
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
+      },
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    {
+      data: [2, 0.5, 1, 0.7, 3, 3.5, 1],
+      type: "bar",
+      itemStyle: {
+        color: "#68B1A6", // 线条颜色
+      },
+    },
+  ],
+};
+
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
 
 const bigscreenRBoption = {
   grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
   },
 
   xAxis: {
     type: "category",
     data: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00"],
+    axisLabel: {
+      color: "#ffffff",
+    },
   },
   yAxis: {
     type: "value",
     splitLine: {
-      show: true, //让网格显示
       lineStyle: {
-        //网格样式
         color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        width: 2, //网格的宽度
         type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
       },
+    },
+    axisLabel: {
+      color: "#ffffff",
     },
   },
   series: [
@@ -261,6 +389,11 @@ onMounted(() => {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
+
+  if (bigscreenRTRef.value) {
+    const bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart.setOption(bigscreenRToption);
+  }
 });
 </script>
 
@@ -279,9 +412,10 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     .bigscreen_lt_top_l {
       display: flex;
@@ -311,7 +445,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     .bigscreen_lt_bottom_nei {
@@ -343,7 +477,7 @@ onMounted(() => {
         height: 115px;
         position: absolute;
         bottom: 0;
-        background: url("/src/assets/img/environment/底座.png") no-repeat;
+        background: url("/public/img/environment/底座.png") no-repeat;
         background-position: 0 39px;
         z-index: 1;
       }
@@ -399,8 +533,8 @@ onMounted(() => {
   left: 26px;
   .bigscreen_lb_top {
     width: 100%;
-    height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    height: 40px;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -433,7 +567,7 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
       width: 100%;
@@ -448,8 +582,8 @@ onMounted(() => {
   right: 26px;
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    height: 40px;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
     justify-content: space-between;
@@ -482,40 +616,12 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
+    position: relative;
     .bigscreen_rt_bottom_nei {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       width: 100%;
       height: 100%;
-      img {
-        width: 126px;
-        height: 176px;
-        margin-right: 28px;
-      }
-      .bigscreen_rt_bottom_r {
-        width: 218px;
-        height: 167px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        div {
-          width: 100%;
-          height: 41px;
-          background: url("/src/assets/img/半透明背景1.png") no-repeat;
-          background-size: 100% 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          span {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 1);
-            margin-left: 10px;
-          }
-        }
-      }
     }
   }
 }
@@ -526,8 +632,8 @@ onMounted(() => {
   right: 26px;
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
-    background: url("/src/assets/img/背景-上层(1).gif") no-repeat;
+    height: 40px;
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -555,6 +661,7 @@ onMounted(() => {
         padding-left: 10px;
       }
     }
+
     .bigscreen_rb_top_r {
       display: flex;
       align-items: center;
@@ -565,12 +672,25 @@ onMounted(() => {
     width: 100%;
     height: 406px;
     margin-top: 5px;
-    background: url("/src/assets/img/bigback.png") no-repeat;
+    background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
       width: 100%;
       height: 100%;
     }
+  }
+}
+
+:deep(.selectcss) {
+  .el-select__wrapper {
+    background-color: transparent !important;
+  }
+  .el-select__placeholder {
+    color: #ffffff !important;
+  }
+
+  .el-select__selected-item {
+    color: #ffffff !important;
   }
 }
 

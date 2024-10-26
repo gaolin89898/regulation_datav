@@ -2,7 +2,7 @@
   <div class="bigscreen_lt">
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>报警信息</span>
       </div>
     </div>
@@ -34,7 +34,7 @@
   <div class="bigscreen_lc">
     <div class="bigscreen_lc_top">
       <div class="bigscreen_lc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>事件报告</span>
       </div>
       <el-input
@@ -48,7 +48,7 @@
       <div class="bigscreen_lc_bottom_nei">
         <img
           style="width: 163px; height: 159px"
-          src="/src/assets/img/事件报告图标.png"
+          src="/public/img/事件报告图标.png"
           alt=""
         />
         <div class="bigscreen_lc_bottom_r">
@@ -82,7 +82,7 @@
   <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>报警历史</span>
       </div>
       <div
@@ -113,7 +113,7 @@
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>监控报告</span>
       </div>
       <el-input
@@ -125,7 +125,7 @@
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei">
-        <img src="/src/assets/img/监控报告图标.png" alt="" />
+        <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
           <div><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
@@ -137,7 +137,7 @@
   <div class="bigscreen_rc">
     <div class="bigscreen_rc_top">
       <div class="bigscreen_rc_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>政策法规</span>
       </div>
       <el-input
@@ -153,7 +153,7 @@
           style="
             width: 20px;
             height: 207px;
-            background: url('/src/assets/img/线.png') no-repeat;
+            background: url('/img/线.png') no-repeat;
             background-size: 2px 100%;
             background-position: center;
             display: flex;
@@ -161,17 +161,9 @@
             align-items: center;
           "
         >
-          <img src="/src/assets/img/圆形标记.png" alt="" />
-          <img
-            style="margin-top: 70px"
-            src="/src/assets/img/圆形标记.png"
-            alt=""
-          />
-          <img
-            style="margin-top: 70px"
-            src="/src/assets/img/圆形标记.png"
-            alt=""
-          />
+          <img src="/public/img/圆形标记.png" alt="" />
+          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
+          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
         </div>
         <div class="bigscreen_rc_bottom_r">
           <Vue3SeamlessScroll
@@ -198,7 +190,7 @@
                 <span>{{ item.text }}</span>
                 <img
                   style="margin-right: 18px"
-                  src="/src/assets/img/查看详情.png"
+                  src="/public/img/查看详情.png"
                   alt=""
                 />
               </div>
@@ -211,7 +203,7 @@
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
-        <img src="/src/assets/img/光标.png" alt="" />
+        <img src="/public/img/光标.png" alt="" />
         <span>安全生产曲线</span>
       </div>
       <div
@@ -240,7 +232,7 @@
     style="
       width: 440px;
       height: 280px;
-      background: url('/src/assets/img/弹窗背景.png') no-repeat;
+      background: url('/img/弹窗背景.png') no-repeat;
       background-size: 100% 100%;
       position: absolute;
       top: 70px;
@@ -261,7 +253,7 @@
       >
       <img
         style="padding-right: 10px"
-        src="/src/assets/img/叉号.png"
+        src="/public/img/叉号.png"
         alt=""
         srcset=""
       />
@@ -275,7 +267,7 @@
         justify-content: center;
       "
     >
-      <img src="/src/assets/img/一级.png" alt="" />
+      <img src="/public/img/一级.png" alt="" />
       <div style="margin-left: 20px">
         <div>
           <span style="color: #687f92">报警级别：</span>
@@ -307,44 +299,44 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
-import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center2 from "../../components/center2.vue";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 
 const radio1 = ref("zhou");
 const list = ref([
   {
     name: "物料A库存异常",
-    img: "/src/assets/img/黄色.png",
+    img: "/img/黄色.png",
     status: "物料报警",
   },
   {
     name: "设备一监测数据异常",
-    img: "/src/assets/img/绿色.png",
+    img: "/img/绿色.png",
     status: "设备报警",
   },
   {
     name: "XXX产品出现质量问题",
-    img: "/src/assets/img/红色.png",
+    img: "/img/红色.png",
     status: "质量问题",
   },
   {
     name: "XXX发生安全事故",
-    img: "/src/assets/img/蓝色.png",
+    img: "/img/蓝色.png",
     status: "事故问题",
   },
 ]);
 
 const list2 = ref([
   {
-    background: "/src/assets/img/红色背景框.png",
+    background: "/img/红色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/绿色背景框.png",
+    background: "/img/绿色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
   {
-    background: "/src/assets/img/黄色背景框.png",
+    background: "/img/黄色背景框.png",
     text: "《WHO实验室生物安全手册 (第四版)》",
   },
 ]);
@@ -566,7 +558,7 @@ onMounted(() => {
   .bigscreen_lt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     background-size: 100% 100%;
     // background-position: 10px;
     display: flex;
@@ -599,7 +591,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lt_bottom_nei {
       width: 100%;
@@ -637,20 +629,20 @@ onMounted(() => {
         }
       }
       .bigscreen_lt_nei1 {
-        background: url("/src/assets/img/设备报警.png") no-repeat;
+        background: url("/public/img/设备报警.png") no-repeat;
         background-size: 100% 100%;
         margin-left: 18px;
       }
       .bigscreen_lt_nei2 {
-        background: url("/src/assets/img/环境数据.png") no-repeat;
+        background: url("/public/img/环境数据.png") no-repeat;
         background-size: 100% 100%;
       }
       .bigscreen_lt_nei3 {
-        background: url("/src/assets/img/物料报警.png") no-repeat;
+        background: url("/public/img/物料报警.png") no-repeat;
         background-size: 100% 100%;
       }
       .bigscreen_lt_nei4 {
-        background: url("/src/assets/img/工艺节点.png") no-repeat;
+        background: url("/public/img/工艺节点.png") no-repeat;
         background-size: 100% 100%;
         margin-right: 18px;
       }
@@ -668,7 +660,7 @@ onMounted(() => {
   .bigscreen_lc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -701,7 +693,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lc_bottom_nei {
       width: 100%;
@@ -719,7 +711,7 @@ onMounted(() => {
         .bigscreen_lc_bottom_rnei {
           width: 100%;
           height: 45px;
-          background: url("/src/assets/img/背景1.png") no-repeat;
+          background: url("/public/img/背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -752,7 +744,7 @@ onMounted(() => {
   .bigscreen_lb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -785,7 +777,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
       width: 100%;
@@ -801,7 +793,7 @@ onMounted(() => {
   .bigscreen_rt_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -834,7 +826,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
       display: flex;
@@ -856,7 +848,7 @@ onMounted(() => {
         div {
           width: 100%;
           height: 41px;
-          background: url("/src/assets/img/半透明背景1.png") no-repeat;
+          background: url("/public/img/半透明背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
@@ -879,7 +871,7 @@ onMounted(() => {
   .bigscreen_rc_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: space-between;
@@ -912,7 +904,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rc_bottom_nei {
       width: 100%;
@@ -958,7 +950,7 @@ onMounted(() => {
   .bigscreen_rb_top {
     width: 100%;
     height: 34px;
-    background: url("/src/assets/img/shen1.png") no-repeat;
+    background: url("/public/img/shen1.png") no-repeat;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -996,7 +988,7 @@ onMounted(() => {
     width: 100%;
     height: 251px;
     margin-top: 5px;
-    background: url("/src/assets/img/shen2.png") no-repeat;
+    background: url("/public/img/shen2.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
       width: 100%;
