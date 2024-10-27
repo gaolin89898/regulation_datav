@@ -369,20 +369,31 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
 .bigscreen_lt,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rb {
-  width: 443px;
-  height: 445px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(445);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveWidth(91);
+  left: adaptiveHeight(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -391,7 +402,7 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
@@ -413,8 +424,8 @@ onMounted(() => {
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top:adaptiveHeight(5) 5px;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -485,11 +496,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom: adaptiveHeight(85);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -521,8 +532,8 @@ onMounted(() => {
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -530,8 +541,8 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     .bigscreen_lb_bottom_nei {
-      width: 394px;
-      height: 85px;
+      width: adaptiveWidth(394);
+      height: adaptiveHeight(85);
       position: relative;
       &:nth-child(1) {
         margin-top: 40px;
@@ -579,11 +590,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top: adaptiveWidth(91);
+  right: adaptiveHeight(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -615,7 +626,7 @@ onMounted(() => {
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 406px;
+    height: adaptiveHeight(406);
     margin-top: 5px;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
@@ -698,7 +709,7 @@ onMounted(() => {
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 406px;
+    height: adaptiveHeight(406);
     margin-top: 5px;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;

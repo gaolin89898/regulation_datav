@@ -166,7 +166,7 @@ onUnmounted(() => {
   position: relative;
   .bigscreen_header {
     width: 100%;
-    height: 251px;
+    height: calc(251 / 1080 * 100vh);
     background: url("/public/img/标题背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
