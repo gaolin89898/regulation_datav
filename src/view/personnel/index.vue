@@ -425,7 +425,7 @@ $design-height: 1080;
   .bigscreen_lt_bottom {
     width: 100%;
     height: adaptiveHeight(406);
-    margin-top:adaptiveHeight(5) 5px;
+    margin-top: adaptiveHeight(5) 5px;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -497,7 +497,7 @@ $design-height: 1080;
 .bigscreen_lb {
   position: absolute;
   bottom: adaptiveHeight(85);
-  left: adaptiveWidth(26);
+  left: adaptiveHeight(26);
   .bigscreen_lb_top {
     width: 100%;
     height: adaptiveHeight(34);

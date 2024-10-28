@@ -80,31 +80,45 @@ function shuimg(val: string) {
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
 .bigscreen_ct {
-  width: 840px;
-  height: 119px;
+  width: adaptiveWidth(840);
+  height: adaptiveHeight(119);
   position: absolute;
-  top: 132px;
+  top: adaptiveHeight(132);
   left: 50%;
-  margin-left: -420px;
+  margin-left: adaptiveWidth(-420);
   display: flex;
   justify-content: space-between;
   .bigscreen_ct_l {
-    width: 208px;
+    width: adaptiveWidth(208);
     height: 100%;
     span {
       color: rgba(242, 242, 242, 1);
-      font-size: 24px;
+      font-size: adaptiveFontSize(24);
     }
     .bigscreen_ct_lb {
       width: 100%;
-      height: 72px;
-      margin-top: 12px;
+      height: adaptiveHeight(72);
+      margin-top: adaptiveHeight(12);
       display: flex;
       justify-content: space-between;
       div {
-        width: 63px;
-        height: 72px;
+        width: adaptiveWidth(63);
+        height: adaptiveHeight(72);
         background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -114,21 +128,21 @@ function shuimg(val: string) {
     }
   }
   .bigscreen_ct_r {
-    width: 353px;
+    width: adaptiveWidth(353);
     height: 100%;
     span {
       color: rgba(242, 242, 242, 1);
-      font-size: 24px;
+      font-size: adaptiveFontSize(24);
     }
     .bigscreen_ct_rb {
       width: 100%;
-      height: 72px;
-      margin-top: 12px;
+      height: adaptiveHeight(72);
+      margin-top: adaptiveHeight(12);
       display: flex;
       justify-content: space-between;
       div {
-        width: 63px;
-        height: 72px;
+        width:adaptiveWidth(63);
+        height: adaptiveHeight(72);
         background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -140,20 +154,20 @@ function shuimg(val: string) {
 }
 
 .bigscreen_cb {
-  width: 996px;
-  height: 665px;
+  width: adaptiveWidth(996);
+  height: adaptiveHeight(665);
   background: url("/public/img/网格背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
-  bottom: 140px;
+  bottom: adaptiveHeight(140);
   left: 50%;
-  margin-left: -498px;
+  margin-left: adaptiveWidth(-498);
   display: flex;
   align-items: center;
   justify-content: center;
   .bigscreen_cb_nei {
-    width: 840px;
-    height: 642px;
+    width: adaptiveWidth(840);
+    height: adaptiveHeight(642);
     background: url("/public/img/主体图片.png") no-repeat;
     background-size: 100% 100%;
   }

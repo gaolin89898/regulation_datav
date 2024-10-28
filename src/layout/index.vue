@@ -158,6 +158,21 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen {
   width: 100vw;
   height: 100vh;
@@ -166,7 +181,7 @@ onUnmounted(() => {
   position: relative;
   .bigscreen_header {
     width: 100%;
-    height: calc(251 / 1080 * 100vh);
+    height:adaptiveHeight(251);
     background: url("/public/img/标题背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
@@ -178,7 +193,7 @@ onUnmounted(() => {
       position: absolute;
       right: 0;
       span {
-        font-size: 20px;
+        font-size:adaptiveFontSize(20);
         color: rgba(255, 255, 255, 1);
       }
     }
@@ -189,30 +204,29 @@ onUnmounted(() => {
   }
   .bigscreen_bottom {
     width: 100%;
-    height: 112px;
+    height:adaptiveHeight(112);
     background: url("/public/img/底座背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     bottom: 0;
     .bigscreen_bottom_nei {
-      width: 860px;
-      height: 75px;
+      width:adaptiveWidth(860);
+      height:adaptiveHeight(75);
       position: absolute;
-      top: 15px;
+      top:adaptiveHeight(15);
       left: 50%;
-      margin-left: -430px;
+      margin-left:adaptiveWidth(-430);
       display: flex;
       align-items: center;
       justify-content: space-between;
       .bigscreen_bottom_neis {
-        width: 112px;
+        width:adaptiveWidth(112);
         height: 100%;
         display: flex;
         flex-direction: column;
-        /* justify-content: center; */
         align-items: center;
         color: rgba(255, 255, 255, 1);
-        font-size: 20px;
+        font-size:adaptiveFontSize(20);
       }
     }
   }
