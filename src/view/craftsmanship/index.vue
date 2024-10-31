@@ -16,21 +16,11 @@
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
           <div class="bigscreen_lt_bottom_tdiv_l">
+            <div style="background: #42c38f"></div>
             <div
               style="
-                width: 7px;
-                height: 7px;
-                background: #42c38f;
-                border-radius: 50%;
-              "
-            ></div>
-            <div
-              style="
-                width: 10px;
-                height: 20px;
                 border-left: 1px solid #42c38f;
                 border-bottom: 1px solid #42c38f;
-                margin-left: 3px;
               "
             ></div>
           </div>
@@ -41,21 +31,11 @@
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
           <div class="bigscreen_lt_bottom_tdiv_l">
+            <div style="background: #0574cb"></div>
             <div
               style="
-                width: 7px;
-                height: 7px;
-                background: #0574cb;
-                border-radius: 50%;
-              "
-            ></div>
-            <div
-              style="
-                width: 10px;
-                height: 20px;
                 border-left: 1px solid #0574cb;
                 border-bottom: 1px solid #0574cb;
-                margin-left: 3px;
               "
             ></div>
           </div>
@@ -66,21 +46,11 @@
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
           <div class="bigscreen_lt_bottom_tdiv_l">
+            <div style="background: #f96168"></div>
             <div
               style="
-                width: 7px;
-                height: 7px;
-                background: #f96168;
-                border-radius: 50%;
-              "
-            ></div>
-            <div
-              style="
-                width: 10px;
-                height: 20px;
                 border-left: 1px solid #f96168;
                 border-bottom: 1px solid #f96168;
-                margin-left: 3px;
               "
             ></div>
           </div>
@@ -291,11 +261,9 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
-// import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 
-const radio1 = ref("zhou");
 const list = ref([
   {
     name: "病毒加工工艺",
@@ -569,20 +537,35 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rb {
-  width: 443px;
-  height: 445px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(445);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -591,12 +574,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -607,14 +589,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -622,27 +604,31 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     .bigscreen_lt_bottom_t {
-      width: 399px;
-      height: 88px;
+      width: adaptiveWidth(399);
+      height: adaptiveHeight(88);
       background: url("/public/img/craftsmanship/infoback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
+      img {
+        width: adaptiveWidth(88);
+        height: adaptiveHeight(88);
+      }
       .bigscreen_lt_bottom_tdiv {
         text-align: center;
         span {
           color: #ffffff;
         }
         &:nth-child(2) {
-          padding: 0 15px;
+          padding: 0 adaptiveWidth(15);
           border-right: 1px solid #3e607e;
-          margin-right: 20px;
+          margin-right: adaptiveWidth(20);
           span {
             &:nth-child(1) {
-              font-size: 18px;
+              font-size: adaptiveFontSize(18);
             }
             &:nth-child(3) {
-              font-size: 8px;
+              font-size: adaptiveFontSize(8);
             }
           }
         }
@@ -651,39 +637,55 @@ onMounted(() => {
         &:nth-child(5) {
           display: flex;
           align-items: center;
+          .bigscreen_lt_bottom_tdiv_l {
+            div {
+              &:nth-child(1) {
+                width: adaptiveWidth(7);
+                height: adaptiveHeight(7);
+                border-radius: 50%;
+              }
+              &:nth-child(2) {
+                width: adaptiveWidth(10);
+                height: adaptiveHeight(20);
+                margin-left: adaptiveWidth(3);
+              }
+            }
+          }
           .bigscreen_lt_bottom_tdiv_r {
             display: flex;
             flex-direction: column;
-            margin-left: 5px;
+            margin-left: adaptiveHeight(5);
             span {
               &:nth-child(1) {
-                margin-top: 3px;
-                font-size: 10px;
+                margin-top: adaptiveHeight(3);
+                font-size: adaptiveFontSize(10);
               }
               &:nth-child(2) {
-                font-size: 13px;
-                margin-top: 10px;
+                font-size: adaptiveFontSize(13);
+                margin-top: adaptiveHeight(10);
               }
             }
           }
         }
         &:nth-child(4) {
-          margin: 0 20px;
+          margin: 0 adaptiveWidth(20);
         }
       }
     }
     .bigscreen_lt_bottom_b {
-      width: 399px;
-      margin-top: 20px;
+      width: adaptiveWidth(399);
+      margin-top: adaptiveHeight(20);
       .bigscreen_lt_bottom_b_nei {
         display: flex;
         align-items: center;
         img {
-          margin-left: 10px;
+          width: adaptiveWidth(52);
+          height: adaptiveHeight(59);
+          margin-left: adaptiveWidth(10);
         }
         div {
-          width: 305px;
-          height: 28px;
+          width: adaptiveWidth(305);
+          height: adaptiveHeight(28);
           // margin-top: 20px;
           background: url("/public/img/back.png") no-repeat;
           background-size: 100% 100%;
@@ -691,11 +693,11 @@ onMounted(() => {
           justify-content: space-between;
           align-items: center;
           color: #ffffff;
-          margin-left: 15px;
+          margin-left: adaptiveWidth(15);
           span {
-            font-size: 14px;
+            font-size: adaptiveFontSize(14);
             &:nth-child(3) {
-              font-size: 20px;
+              font-size: adaptiveFontSize(20);
               font-family: youshe;
               text-align: center;
               font-style: normal;
@@ -717,11 +719,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom: adaptiveHeight(85);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -731,12 +733,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -747,47 +748,46 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     .bigscreen_lb_bottom_nei {
-      width: 377px;
+      width: adaptiveWidth(377);
       .bigscreen_lb_bottom_nei_t {
         display: flex;
         color: #ffffff;
         .bigscreen_lb_bottom_nei_t_r {
-          width: calc(100% - 38px);
+          width: calc(100% - adaptiveHeight(38));
           display: flex;
           justify-content: space-between;
           align-items: center;
           span {
             width: 33%;
-            font-size: 16px;
+            font-size: adaptiveFontSize(16);
             text-align: center;
           }
         }
       }
       .bigscreen_lb_bottom_neis {
         width: 100%;
-        height: 40px;
+        height: adaptiveHeight(40);
         // border: 1px solid red;
-        background: url("/public/img/craftsmanship/jidianback.png")
-          no-repeat;
+        background: url("/public/img/craftsmanship/jidianback.png") no-repeat;
         background-position: 30px 0;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         display: flex;
         .bigscreen_lb_bottom_neis_r {
-          width: calc(100% - 38px);
+          width: calc(100% - adaptiveHeight(38));
           height: 100%;
           display: flex;
           justify-content: space-between;
@@ -805,11 +805,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top: adaptiveHeight(91);
+  right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -819,12 +819,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveHeight(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -835,14 +834,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -850,29 +849,29 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     .bigscreen_rt_bottom_count {
-      width: 393px;
-      height: 127px;
+      width: adaptiveWidth(393);
+      height: adaptiveHeight(127);
       background: url("/public/img/yaosuback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
     }
     .bigscreen_rt_bottom_nei {
-      width: 393px;
-      height: 50px;
+      width: adaptiveWidth(393);
+      height: adaptiveHeight(50);
       background: url("/public/img/craftsmanship/yaosuback.png") no-repeat;
       background-size: 100% 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: #ffffff;
-      margin-top: 20px;
+      margin-top: adaptiveHeight(20);
       span {
         &:nth-child(1) {
-          padding-left: 20px;
+          padding-left: adaptiveWidth(20);
         }
         &:nth-child(4) {
-          padding-right: 20px;
+          padding-right: adaptiveWidth(20);
         }
       }
     }
@@ -881,11 +880,11 @@ onMounted(() => {
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom: adaptiveHeight(85);
+  right: adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
@@ -895,12 +894,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -911,29 +909,29 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     .bigscreen_rb_bottom_nei {
-      width: 393px;
-      height: 346px;
+      width: adaptiveWidth(393);
+      height: adaptiveHeight(346);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       margin: auto;
       .bigscreen_rb_bottom_nei_item {
         width: 100%;
-        height: 50px;
+        height: adaptiveHeight(50);
         background: rgba(4, 30, 62);
         display: flex;
         justify-content: space-between;
@@ -941,7 +939,7 @@ onMounted(() => {
         div {
           width: 33%;
           text-align: center;
-          font-size: 14px;
+          font-size: adaptiveFontSize(14);
         }
       }
     }
@@ -954,7 +952,7 @@ onMounted(() => {
   box-shadow: none;
 }
 .scroll {
-  height: 195px;
+  height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
 }

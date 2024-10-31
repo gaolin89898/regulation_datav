@@ -261,6 +261,7 @@ const list3 = ref([
   },
 ]);
 
+let bigscreenLCChart: any = null;
 const bigscreenLCRef = ref();
 const bigscreenLCoption = {
   grid: {
@@ -324,6 +325,7 @@ const bigscreenLCoption = {
   ],
 };
 
+let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
@@ -367,6 +369,7 @@ const bigscreenLBoption = {
   ],
 };
 
+let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
 const bigscreenRToption = {
   grid: {
@@ -457,6 +460,7 @@ const bigscreenRToption = {
   ],
 };
 
+let bigscreenRCChart: any = null;
 const bigscreenRCRef = ref();
 const bigscreenRCoption = {
   grid: {
@@ -517,43 +521,65 @@ const bigscreenRCoption = {
   ],
 };
 
+window.onresize = function () {
+  bigscreenLCChart.resize();
+  bigscreenLBChart.resize();
+  bigscreenRTChart.resize();
+  bigscreenRCChart.resize();
+};
+
 onMounted(() => {
   if (bigscreenLCRef.value) {
-    const bigscreenLCChart = echarts.init(bigscreenLCRef.value);
+    bigscreenLCChart = echarts.init(bigscreenLCRef.value);
     bigscreenLCChart.setOption(bigscreenLCoption);
   }
   if (bigscreenLBRef.value) {
-    const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
   if (bigscreenRTRef.value) {
-    const bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
     bigscreenRTChart.setOption(bigscreenRToption);
   }
   if (bigscreenRCRef.value) {
-    const bigscreenRCChart = echarts.init(bigscreenRCRef.value);
+    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
     bigscreenRCChart.setOption(bigscreenRCoption);
   }
 });
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lc,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rc,
 .bigscreen_rb {
-  width: 443px;
-  height: 292px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(292);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -562,12 +588,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -578,14 +603,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -596,23 +621,27 @@ onMounted(() => {
       display: flex;
       justify-content: center;
       align-items: center;
+      img {
+        width: adaptiveWidth(52);
+        height: adaptiveHeight(59);
+      }
 
       &:nth-child(2) {
-        margin: 15px 0;
+        margin: adaptiveHeight(15) 0;
       }
       .bigscreen_lt_bottom_nei_r {
-        margin-left: 20px;
+        margin-left: adaptiveWidth(20);
         background: url("/public/img/back.png") no-repeat;
         background-size: 100% 100%;
-        height: 33px;
+        height: adaptiveHeight(33);
         span {
           color: #ffffff;
-          font-size: 14px;
+          font-size: adaptiveFontSize(14);
           &:nth-child(2) {
-            padding: 0 10px;
+            padding: 0 adaptiveWidth(10);
           }
           &:nth-child(3) {
-            font-size: 20px;
+            font-size: adaptiveFontSize(20);
             font-family: youshe;
             text-align: center;
             font-style: normal;
@@ -633,14 +662,14 @@ onMounted(() => {
 
 .bigscreen_lc {
   position: absolute;
-  top: 395px;
-  left: 26px;
+  top: adaptiveHeight(395);
+  left: adaptiveWidth(26);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .bigscreen_lc_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -650,12 +679,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -666,14 +694,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     position: relative;
@@ -686,11 +714,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom: adaptiveHeight(85);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -700,11 +728,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
+        font-size: adaptiveFontSize(16);
         line-height: 19px;
         text-align: center;
         font-style: normal;
@@ -716,14 +744,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
@@ -735,11 +763,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top: adaptiveHeight(91);
+  right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -749,12 +777,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -765,14 +792,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
@@ -784,11 +811,11 @@ onMounted(() => {
 
 .bigscreen_rc {
   position: absolute;
-  top: 395px;
-  right: 26px;
+  top: adaptiveHeight(395);
+  right: adaptiveWidth(26);
   .bigscreen_rc_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -798,12 +825,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -814,61 +840,31 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     position: relative;
     .bigscreen_rc_bottom_nei {
       width: 100%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .bigscreen_rc_bottom_r {
-        width: 381px;
-        height: 207px;
-        margin-left: 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
-        .bigscreen_rc_bottom_rnei {
-          width: 100%;
-          height: 57px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          div {
-            width: 100%;
-            height: 38px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            span {
-              color: rgba(255, 255, 255, 1);
-              font-size: 14px;
-            }
-          }
-        }
-      }
     }
   }
 }
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom: adaptiveHeight(85);
+  right: adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
@@ -878,12 +874,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -894,29 +889,29 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
     .bigscreen_rb_top_r {
       display: flex;
       align-items: center;
-      margin-right: 11px;
+      margin-right: adaptiveWidth(11);
     }
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .bigscreen_rb_bottom_nei {
-      width: 407px;
+      width: adaptiveWidth(407);
       .bigscreen_rb_bottom_nei_t {
         width: 100%;
-        height: 30px;
+        height: adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -924,7 +919,7 @@ onMounted(() => {
         align-items: center;
         span {
           width: 25%;
-          font-size: 14px;
+          font-size: adaptiveFontSize(14);
           color: #9eabb7;
           text-align: center;
         }
@@ -934,33 +929,35 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         span {
           width: 25%;
           color: #ffffff;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           text-align: center;
         }
       }
       .bigscreen_rb_bottom_nei_active {
         width: 100%;
-        height: 33px;
+        height: adaptiveHeight(33);
         background: url("/public/img/equipment/tableactive.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         span {
           width: 25%;
           color: #58a4cb;
           text-align: center;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           position: relative;
           &:nth-child(1) {
             img {
               position: absolute;
-              left: 10px;
+              left: adaptiveWidth(10);
+              width: adaptiveWidth(18);
+              height: adaptiveHeight(17);
             }
           }
         }

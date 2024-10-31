@@ -5,7 +5,7 @@
         <img src="/public/img/光标.png" alt="" />
         <span>数据展示</span>
       </div>
-      <div style="color: #ffffff; font-size: 14px; margin-right: 11px">
+      <div class="bigscreen_lt_top_r">
         <span>环境数据分析</span>
       </div>
     </div>
@@ -197,6 +197,7 @@ const list2 = ref([
   },
 ]);
 
+let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
@@ -265,6 +266,7 @@ const bigscreenLBoption = {
   ],
 };
 
+let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
 const bigscreenRToption = {
   grid: {
@@ -379,9 +381,15 @@ const bigscreenRBoption = {
   ],
 };
 
+window.onresize = function () {
+  bigscreenLBChart.resize();
+  bigscreenRBChart.resize();
+  bigscreenRTChart.resize();
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
-    const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 
@@ -391,27 +399,42 @@ onMounted(() => {
   }
 
   if (bigscreenRTRef.value) {
-    const bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
     bigscreenRTChart.setOption(bigscreenRToption);
   }
 });
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rb {
-  width: 443px;
-  height: 445px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(445);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -421,12 +444,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -437,20 +459,25 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
+    }
+    .bigscreen_lt_top_r {
+      color: #ffffff;
+      font-size:adaptiveFontSize(14);
+      margin-right:adaptiveWidth(11);
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     .bigscreen_lt_bottom_nei {
-      width: 95px;
-      height: 300px;
+      width: adaptiveWidth(95);
+      height: adaptiveHeight(300);
 
       position: relative;
       background: linear-gradient(
@@ -474,7 +501,7 @@ onMounted(() => {
       }
       .bigscreen_lt_bottom_nei_xia {
         width: 100%;
-        height: 115px;
+        height: adaptiveHeight(115);
         position: absolute;
         bottom: 0;
         background: url("/public/img/environment/底座.png") no-repeat;
@@ -482,45 +509,45 @@ onMounted(() => {
         z-index: 1;
       }
       &:nth-child(1) {
-        margin-top: 37px;
-        margin-left: 15px;
+        margin-top: adaptiveHeight(37);
+        margin-left: adaptiveWidth(15);
       }
       &:nth-child(2) {
-        margin-top: 77px;
-        margin-left: 10px;
+        margin-top: adaptiveHeight(77);
+        margin-left: adaptiveWidth(10);
       }
       &:nth-child(3) {
-        margin-top: 37px;
-        margin-left: 10px;
+        margin-top: adaptiveWidth(37);
+        margin-left: adaptiveWidth(10);
       }
       &:nth-child(4) {
-        margin-top: 77px;
-        margin-left: 10px;
+        margin-top: adaptiveHeight(77);
+        margin-left: adaptiveWidth(10);
       }
       span {
         color: #ffffff;
         &:nth-child(2) {
-          font-size: 23px;
-          padding-top: 32px;
+          font-size: adaptiveFontSize(23);
+          padding-top: adaptiveHeight(32);
         }
         &:nth-child(3) {
-          font-size: 20px;
-          padding-top: 5px;
+          font-size: adaptiveFontSize(20);
+          padding-top: adaptiveHeight(5);
           color: #f96168;
         }
         &:nth-child(4) {
-          font-size: 20px;
-          padding-top: 5px;
+          font-size: adaptiveFontSize(20);
+          padding-top: adaptiveHeight(5);
         }
         &:nth-child(5) {
-          font-size: 15px;
-          padding-top: 20px;
+          font-size: adaptiveFontSize(15);
+          padding-top: adaptiveHeight(20);
         }
         &:nth-child(6) {
           text-align: center;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           // padding-top: 10px;
-          padding: 5px 10px 0;
+          padding: adaptiveHeight(5) adaptiveWidth(10) 0;
         }
       }
     }
@@ -529,11 +556,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom: adaptiveHeight(85);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -543,12 +570,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -559,14 +585,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
@@ -578,11 +604,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top: adaptiveHeight(91);
+  right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -592,12 +618,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -608,14 +633,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     position: relative;
@@ -628,11 +653,11 @@ onMounted(() => {
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom: adaptiveHeight(85);
+  right: adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
@@ -646,8 +671,7 @@ onMounted(() => {
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -658,7 +682,7 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
 
@@ -670,8 +694,8 @@ onMounted(() => {
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 406px;
-    margin-top: 5px;
+    height: adaptiveHeight(406);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
@@ -700,7 +724,7 @@ onMounted(() => {
   box-shadow: none;
 }
 .scroll {
-  height: 195px;
+  height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
 }
@@ -714,13 +738,13 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.8);
   color: rgba(7, 36, 57, 1);
   border-color: rgba(255, 255, 255, 0);
-  font-size: 12px;
+  font-size: adaptiveFontSize(12);
 }
 .group :deep(.el-radio-button .el-radio-button__inner) {
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
-  font-size: 12px;
+  font-size: adaptiveFontSize(12);
   border-radius: 2px;
 }
 </style>

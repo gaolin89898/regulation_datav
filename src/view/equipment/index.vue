@@ -34,7 +34,6 @@
       </div>
       <el-input
         class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入设备名称"
         :prefix-icon="Search"
       />
@@ -92,7 +91,6 @@
       </div>
       <el-input
         class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入监控点位"
         :prefix-icon="Search"
       />
@@ -116,7 +114,6 @@
       </div>
       <el-input
         class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入设备编号"
         :prefix-icon="Search"
       />
@@ -324,6 +321,7 @@ const list3 = ref([
   },
 ]);
 
+let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
@@ -385,31 +383,50 @@ const bigscreenLBoption = {
   ],
 };
 
+window.onresize = function () {
+  bigscreenLBChart.resize();
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
-    const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+   bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 });
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lc,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rc,
 .bigscreen_rb {
-  width: 443px;
-  height: 292px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(292);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -418,12 +435,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -434,14 +450,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -452,24 +468,27 @@ onMounted(() => {
       display: flex;
       justify-content: center;
       align-items: center;
+      img {
+        width: adaptiveWidth(66);
+        height: adaptiveHeight(60);
+      }
       div {
-        width: 324px;
-        height: 39px;
+        width: adaptiveWidth(324);
+        height: adaptiveHeight(39);
         display: flex;
         align-items: center;
         &:nth-child(2) {
-          margin: 18px 0;
+          margin: adaptiveHeight(18) 0;
         }
         span {
           &:nth-child(1) {
-            font-size: 12px;
+            font-size: adaptiveFontSize(12);
             color: #ffffff;
-            padding: 0 32px;
+            padding: 0 adaptiveWidth(32);
           }
           &:nth-child(2) {
             font-family: youshe;
-            font-size: 20px;
-            // color: #ffffff;
+            font-size: adaptiveFontSize(20);
           }
         }
       }
@@ -479,14 +498,14 @@ onMounted(() => {
 
 .bigscreen_lc {
   position: absolute;
-  top: 395px;
-  left: 26px;
+  top: adaptiveHeight(395);
+  left: adaptiveWidth(26);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .bigscreen_lc_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -496,12 +515,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -512,24 +530,24 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .bigscreen_lc_bottom_nei {
-      width: 407px;
+      width: adaptiveWidth(407);
       .bigscreen_lc_bottom_nei_t {
         width: 100%;
-        height: 30px;
+        height: adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -538,7 +556,7 @@ onMounted(() => {
         span {
           width: 25%;
           color: #9eabb7;
-          font-size: 14px;
+          font-size: adaptiveFontSize(14);
           text-align: center;
         }
       }
@@ -547,11 +565,11 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         span {
           width: 25%;
           color: #ffffff;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           &:nth-child(2),
           &:nth-child(3),
           &:nth-child(4) {
@@ -565,11 +583,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom: adaptiveHeight(85);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 40px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -579,12 +597,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -595,14 +612,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
@@ -614,11 +631,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top: adaptiveHeight(91);
+  right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -628,12 +645,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -644,14 +660,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
@@ -661,28 +677,28 @@ onMounted(() => {
       width: 100%;
       height: 100%;
       img {
-        width: 126px;
-        height: 176px;
-        margin-right: 28px;
+        width: adaptiveWidth(126);
+        height: adaptiveHeight(176);
+        margin-right: adaptiveWidth(28);
       }
       .bigscreen_rt_bottom_r {
-        width: 218px;
-        height: 167px;
+        width: adaptiveWidth(218);
+        height: adaptiveHeight(167);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         div {
           width: 100%;
-          height: 41px;
+          height: adaptiveHeight(41);
           background: url("/public/img/半透明背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
           justify-content: center;
           span {
-            font-size: 14px;
+            font-size: adaptiveFontSize(14);
             color: rgba(255, 255, 255, 1);
-            margin-left: 10px;
+            margin-left: adaptiveWidth(10);
           }
         }
       }
@@ -692,11 +708,11 @@ onMounted(() => {
 
 .bigscreen_rc {
   position: absolute;
-  top: 395px;
-  right: 26px;
+  top: adaptiveHeight(395);
+  right: adaptiveWidth(26);
   .bigscreen_rc_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -706,12 +722,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -722,24 +737,24 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .bigscreen_rc_bottom_nei {
-      width: 407px;
+      width: adaptiveWidth(407);
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
-        height: 30px;
+        height: adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -748,7 +763,7 @@ onMounted(() => {
         span {
           width: 33%;
           color: #9eabb7;
-          font-size: 14px;
+          font-size: adaptiveFontSize(14);
           text-align: center;
         }
       }
@@ -757,33 +772,35 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         span {
           width: 33%;
           color: #ffffff;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           text-align: center;
         }
       }
       .bigscreen_rc_bottom_nei_active {
         width: 100%;
-        height: 33px;
+        height: adaptiveHeight(33);
         background: url("/public/img/equipment/tableactive.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top: adaptiveHeight(15);
         span {
           width: 33%;
           color: #58a4cb;
-          font-size: 12px;
+          font-size: adaptiveFontSize(12);
           text-align: center;
           position: relative;
           &:nth-child(1) {
             img {
               position: absolute;
-              left: 25px;
+              width: adaptiveWidth(18);
+              height: adaptiveHeight(17);
+              left: adaptiveWidth(25);
             }
           }
         }
@@ -794,11 +811,11 @@ onMounted(() => {
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom: adaptiveHeight(85);
+  right: adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
@@ -808,12 +825,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -824,35 +840,39 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
     .bigscreen_rb_top_r {
       display: flex;
       align-items: center;
-      margin-right: 11px;
+      margin-right: adaptiveWidth(11);
     }
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    img {
+      width: adaptiveWidth(99);
+      height: adaptiveHeight(211);
+    }
     .bigscreen_rb_bottom_r {
-      width: 290px;
-      height: 211px;
-      margin-left: 15px;
+      width: adaptiveWidth(290);
+      height: adaptiveHeight(211);
+      margin-left: adaptiveWidth(15);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       .bigscreen_rb_bottom_r_nei {
         width: 100%;
-        height: 35px;
+        height: adaptiveHeight(35);
         background: rgba(4, 30, 62);
         display: flex;
         justify-content: space-between;
@@ -865,7 +885,7 @@ onMounted(() => {
 :deep(.selectcss) {
   .el-select__wrapper {
     background-color: transparent !important;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2)  !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
   }
   .el-select__placeholder {
     color: rgba(255, 255, 255, 0.6) !important;
@@ -876,13 +896,18 @@ onMounted(() => {
   }
 }
 
+.inputcss {
+  width: adaptiveWidth(148);
+  height: adaptiveHeight(24);
+  margin-right: adaptiveWidth(11);
+}
 .inputcss :deep(.el-input__wrapper) {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
 }
 .scroll {
-  height: 195px;
+  height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
 }
@@ -896,13 +921,13 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.8);
   color: rgba(7, 36, 57, 1);
   border-color: rgba(255, 255, 255, 0);
-  font-size: 12px;
+  font-size: adaptiveFontSize(12);
 }
 .group :deep(.el-radio-button .el-radio-button__inner) {
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
-  font-size: 12px;
+  font-size: adaptiveFontSize(12);
   border-radius: 2px;
 }
 </style>

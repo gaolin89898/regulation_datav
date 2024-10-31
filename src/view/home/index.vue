@@ -1002,7 +1002,7 @@ $design-height: 1080;
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: adaptiveWidth(251);
+    height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;

@@ -2,16 +2,16 @@
   <div class="bigscreen">
     <div class="bigscreen_header">
       <img
-        style="position: absolute; top: 18px; left: 50%; margin-left: -241px"
+        class="bigscreen_header_l"
         src="/public/img/高生物安全动态监管平台.png"
         alt=""
       />
       <div class="bigscreen_header_r">
         <span>{{ time }}</span>
-        <span style="padding-left: 30px">{{ dayOfWeek }}</span>
-        <img style="padding-left: 25px" src="/public/img/天气图标.png" alt="" />
-        <img style="margin-left: 6px" src="/public/img/温度计.png" alt="" />
-        <span style="padding-right: 40px">26℃</span>
+        <span>{{ dayOfWeek }}</span>
+        <img src="/public/img/天气图标.png" alt="" />
+        <img src="/public/img/温度计.png" alt="" />
+        <span>26℃</span>
       </div>
     </div>
     <div class="bigscreen_center">
@@ -27,16 +27,6 @@
           @click="bigscreenBtn(item.path)"
         >
           <div
-            style="
-              width: 112px;
-              height: 56px;
-              background: url('/img/dbwenan.png') no-repeat;
-              background-size: 100% 100%;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              cursor: pointer;
-            "
             :style="{
               color: $route.path === item.path ? '#ffffff' : '#00ABFF',
             }"
@@ -181,20 +171,44 @@ $design-height: 1080;
   position: relative;
   .bigscreen_header {
     width: 100%;
-    height:adaptiveHeight(251);
+    height: adaptiveHeight(251);
     background: url("/public/img/标题背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     top: 0;
+    .bigscreen_header_l {
+      position: absolute;
+      top: adaptiveHeight(18);
+      left: 50%;
+      margin-left: adaptiveWidth(-241);
+      width: adaptiveWidth(482);
+      height: adaptiveHeight(63);
+    }
     .bigscreen_header_r {
-      height: 100px;
+      height: adaptiveHeight(100);
       display: flex;
       align-items: center;
       position: absolute;
       right: 0;
       span {
-        font-size:adaptiveFontSize(20);
+        font-size: adaptiveFontSize(20);
         color: rgba(255, 255, 255, 1);
+        &:nth-child(2) {
+          padding-left: adaptiveWidth(30);
+        }
+        &:nth-child(5) {
+          padding-right: adaptiveWidth(40);
+        }
+      }
+      img {
+        &:nth-child(3) {
+          width: adaptiveWidth(44);
+          height: adaptiveHeight(44);
+          padding-left: adaptiveWidth(25);
+        }
+        &:nth-child(4) {
+          padding-left: adaptiveWidth(6);
+        }
       }
     }
   }
@@ -204,29 +218,43 @@ $design-height: 1080;
   }
   .bigscreen_bottom {
     width: 100%;
-    height:adaptiveHeight(112);
+    height: adaptiveHeight(112);
     background: url("/public/img/底座背景.png") no-repeat;
     background-size: 100% 100%;
     position: absolute;
     bottom: 0;
     .bigscreen_bottom_nei {
-      width:adaptiveWidth(860);
-      height:adaptiveHeight(75);
+      width: adaptiveWidth(860);
+      height: adaptiveHeight(75);
       position: absolute;
-      top:adaptiveHeight(15);
+      top: adaptiveHeight(15);
       left: 50%;
-      margin-left:adaptiveWidth(-430);
+      margin-left: adaptiveWidth(-430);
       display: flex;
       align-items: center;
       justify-content: space-between;
       .bigscreen_bottom_neis {
-        width:adaptiveWidth(112);
+        div {
+          width: adaptiveWidth(112);
+          height: adaptiveHeight(56);
+          background: url("/img/dbwenan.png") no-repeat;
+          background-size: 100% 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+        }
+        img {
+          width: adaptiveWidth(34);
+          height: adaptiveHeight(21);
+        }
+        width: adaptiveWidth(112);
         height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         color: rgba(255, 255, 255, 1);
-        font-size:adaptiveFontSize(20);
+        font-size: adaptiveFontSize(20);
       }
     }
   }

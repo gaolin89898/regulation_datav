@@ -94,7 +94,12 @@
       </div>
     </div>
     <div class="bigscreen_rt_bottom">
-      <swiper :slides-per-view="1" :space-between="10" pagination>
+      <swiper
+        :slides-per-view="1"
+        :space-between="10"
+        pagination
+        style="width: 100%; height: 100%"
+      >
         <swiper-slide v-for="(item, index) in slides" :key="index">
           <img :src="item.image" alt="" />
         </swiper-slide>
@@ -355,6 +360,10 @@ const bigscreenRBoption = {
   ],
 };
 
+window.onresize = function () {
+  bigscreenRBChart.resize();
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
     const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
@@ -380,6 +389,10 @@ $design-height: 1080;
   @return #{$px / $design-height * 100}vh;
 }
 
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lb,
 .bigscreen_rt,
@@ -389,11 +402,11 @@ $design-height: 1080;
 }
 .bigscreen_lt {
   position: absolute;
-  top: adaptiveWidth(91);
-  left: adaptiveHeight(26);
+  top:adaptiveHeight(91);
+  left:adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -406,8 +419,7 @@ $design-height: 1080;
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -418,14 +430,14 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
     height: adaptiveHeight(406);
-    margin-top: adaptiveHeight(5) 5px;
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
@@ -433,59 +445,59 @@ $design-height: 1080;
     justify-content: space-between;
     align-items: center;
     .bigscreen_lt_bottom_nei {
-      height: 92px;
+      height: adaptiveHeight(92);
       display: flex;
       align-items: center;
       &:nth-child(1) {
-        margin-top: 30px;
+        margin-top: adaptiveHeight(30);
       }
       &:nth-child(3) {
-        margin-bottom: 30px;
+        margin-bottom: adaptiveHeight(30);
       }
       .bigscreen_lt_bottom_nei_r {
-        width: 276px;
-        height: 82px;
-        margin-left: 15px;
+        width: adaptiveWidth(276);
+        height: adaptiveHeight(82);
+        margin-left: adaptiveWidth(15);
         position: relative;
         div {
           display: flex;
           &:nth-child(1) {
             position: absolute;
-            top: -5px;
-            left: 15px;
+            top: adaptiveHeight(-5);
+            left: adaptiveWidth(15);
             span {
               &:nth-child(1) {
                 color: #ffffff;
-                font-size: 13px;
+                font-size: adaptiveFontSize(13);
               }
               &:nth-child(2) {
-                font-size: 10px;
+                font-size: adaptiveFontSize(10);
                 color: #00fff9;
                 border: 1px solid #00fff9;
-                padding: 0 3px;
-                margin-left: 10px;
+                padding: 0 adaptiveHeight(3);
+                margin-left: adaptiveWidth(10);
               }
             }
           }
           &:nth-child(2),
           &:nth-child(3) {
             color: #ffffff;
-            font-size: 13px;
+            font-size:adaptiveFontSize(13);
             display: flex;
             justify-content: space-between;
           }
           &:nth-child(2) {
-            margin-top: 25px;
+            margin-top:adaptiveHeight(25);
             span {
               &:nth-child(1) {
-                margin-left: 15px;
+                margin-left:adaptiveWidth(15);
               }
             }
           }
           &:nth-child(3) {
-            margin-top: 5px;
+            margin-top:adaptiveHeight(5);
             span {
-              margin-left: 15px;
+              margin-left:adaptiveWidth(15);
             }
           }
         }
@@ -497,7 +509,7 @@ $design-height: 1080;
 .bigscreen_lb {
   position: absolute;
   bottom: adaptiveHeight(85);
-  left: adaptiveHeight(26);
+  left:adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
     height: adaptiveHeight(34);
@@ -510,12 +522,11 @@ $design-height: 1080;
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -526,7 +537,7 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveHeight(10);
       }
     }
   }
@@ -545,10 +556,10 @@ $design-height: 1080;
       height: adaptiveHeight(85);
       position: relative;
       &:nth-child(1) {
-        margin-top: 40px;
+        margin-top: adaptiveHeight(40);
       }
       &:nth-child(3) {
-        margin-bottom: 60px;
+        margin-bottom: adaptiveHeight(60);
       }
       .bigscreen_lb_bottom_nei_count {
         height: 100%;
@@ -556,22 +567,22 @@ $design-height: 1080;
         position: absolute;
         z-index: 100;
         .left {
-          width: 79px;
+          width:adaptiveWidth(79);
           height: 100%;
-          margin-left: 30px;
+          margin-left: adaptiveWidth(30);
           display: flex;
           flex-direction: column;
           align-items: center;
         }
         .right {
-          margin-left: 30px;
-          height: 50px;
+          margin-left: adaptiveWidth(30);
+          height: adaptiveHeight(50);
           display: flex;
           flex-direction: column;
           .right_text {
             span {
               color: #ffffff;
-              font-size: 13px;
+              font-size: adaptiveFontSize(13);
             }
           }
         }
@@ -582,7 +593,7 @@ $design-height: 1080;
         background: url("/public/img/personnel/特质指标底座.png") no-repeat;
         background-size: 100% 100%;
         width: 100%;
-        height: 49px;
+        height: adaptiveHeight(49);
       }
     }
   }
@@ -590,11 +601,11 @@ $design-height: 1080;
 
 .bigscreen_rt {
   position: absolute;
-  top: adaptiveWidth(91);
-  right: adaptiveHeight(26);
+  top:adaptiveHeight(91);
+  right:adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -604,12 +615,11 @@ $design-height: 1080;
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -620,14 +630,14 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveHeight(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
     height: adaptiveHeight(406);
-    margin-top: 5px;
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
@@ -637,28 +647,28 @@ $design-height: 1080;
       width: 100%;
       height: 100%;
       img {
-        width: 126px;
-        height: 176px;
-        margin-right: 28px;
+        width: adaptiveWidth(126);
+        height: adaptiveHeight(176);
+        margin-right: adaptiveWidth(28);
       }
       .bigscreen_rt_bottom_r {
-        width: 218px;
-        height: 167px;
+        width: adaptiveWidth(218);
+        height: adaptiveHeight(167);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         div {
           width: 100%;
-          height: 41px;
+          height: adaptiveHeight(41);
           background: url("/public/img/半透明背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
           align-items: center;
           justify-content: center;
           span {
-            font-size: 14px;
+            font-size: adaptiveFontSize(14);
             color: rgba(255, 255, 255, 1);
-            margin-left: 10px;
+            margin-left: adaptiveWidth(10);
           }
         }
       }
@@ -668,11 +678,11 @@ $design-height: 1080;
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom: adaptiveHeight(85);
+  right: adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     display: flex;
     justify-content: space-between;
@@ -682,12 +692,11 @@ $design-height: 1080;
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left: adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -698,7 +707,7 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left: adaptiveWidth(10);
       }
     }
     .bigscreen_rb_top_r {
@@ -710,15 +719,15 @@ $design-height: 1080;
   .bigscreen_rb_bottom {
     width: 100%;
     height: adaptiveHeight(406);
-    margin-top: 5px;
+    margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .bigscreen_rb_bottom_nei {
-      width: 403px;
-      height: 366px;
+      width: adaptiveWidth(403);
+      height: adaptiveHeight(366);
     }
   }
 }

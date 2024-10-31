@@ -322,6 +322,7 @@ const list4 = ref([
   },
 ]);
 
+let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
   grid: {
@@ -373,6 +374,7 @@ const bigscreenLBoption = {
   ],
 };
 
+let bigscreenLCChart: any = null;
 const bigscreenLCRef = ref();
 const bigscreenLCoption = {
   grid: {
@@ -416,172 +418,56 @@ const bigscreenLCoption = {
   ],
 };
 
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
-const bigscreenRBoption = {
-  grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
-  },
-  legend: {
-    data: [
-      {
-        name: "设备报警",
-        itemStyle: { color: "RGBA(255, 169, 19, 1)" },
-      },
-      {
-        name: "环境数据",
-        itemStyle: { color: "RGBA(225, 110, 122, 1)" },
-      },
-      {
-        name: "物料数据",
-        itemStyle: { color: "RGBA(65, 195, 142, 1)" },
-      },
-      {
-        name: "工艺节点",
-        itemStyle: { color: "RGBA(210, 114, 255, 1)" },
-      },
-    ],
-    top: "10px",
-    textStyle: {
-      color: "#ffffff",
-    },
-  },
-  xAxis: {
-    type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
-  },
-  yAxis: {
-    type: "value",
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: ["rgba(255, 255, 255, 0.15)"],
-        width: 2,
-        type: "dashed",
-      },
-    },
-  },
-  series: [
-    {
-      name: "设备报警",
-      data: [50, 60, 90, 200, 120, 140, 80],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(255, 169, 19, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(255, 169, 19, 0.5)",
-        "rgba(255, 169, 19, 0)"
-      ),
-    },
-    {
-      name: "环境数据",
-      data: [20, 40, 60, 210, 90, 140, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(225, 110, 122, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(225, 110, 122, 0.5)",
-        "rgba(225, 110, 122, 0)"
-      ),
-    },
-    {
-      name: "物料数据",
-      data: [200, 20, 21, 30, 200, 170, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(65, 195, 142, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(65, 195, 142, 0.5)",
-        "rgba(65, 195, 142, 0)"
-      ),
-    },
-    {
-      name: "工艺节点",
-      data: [200, 180, 40, 30, 50, 170, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(210, 114, 255, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(210, 114, 255, 0.5)",
-        "rgba(210, 114, 255, 0)"
-      ),
-    },
-  ],
+window.onresize = function () {
+  bigscreenLCChart.resize();
+  bigscreenLBChart.resize();
 };
-
-// 创建 areaStyle 的函数
-function createAreaStyle(startColor: string, endColor: string) {
-  return {
-    color: {
-      type: "linear",
-      x: 0,
-      y: 0,
-      x2: 0,
-      y2: 1,
-      colorStops: [
-        {
-          offset: 0,
-          color: startColor,
-        },
-        {
-          offset: 1,
-          color: endColor,
-        },
-      ],
-      global: false,
-    },
-  };
-}
 
 onMounted(() => {
   if (bigscreenLBRef.value) {
-    const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 
   if (bigscreenLCRef.value) {
-    const bigscreenLCChart = echarts.init(bigscreenLCRef.value);
+    bigscreenLCChart = echarts.init(bigscreenLCRef.value);
     bigscreenLCChart.setOption(bigscreenLCoption);
-  }
-
-  if (bigscreenRBRef.value) {
-    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    bigscreenRBChart.setOption(bigscreenRBoption);
   }
 });
 </script>
 
 <style lang="scss" scoped>
+$design-width: 1920;
+$design-height: 1080;
+
+@function adaptiveWidth($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
+@function adaptiveHeight($px) {
+  @return #{$px / $design-height * 100}vh;
+}
+
+@function adaptiveFontSize($px) {
+  @return #{$px / $design-width * 100}vw;
+}
+
 .bigscreen_lt,
 .bigscreen_lc,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rc,
 .bigscreen_rb {
-  width: 443px;
-  height: 292px;
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(292);
 }
 .bigscreen_lt {
   position: absolute;
-  top: 91px;
-  left: 26px;
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: 34px;
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     // background-position: ;
@@ -591,12 +477,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left:adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -607,30 +492,30 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     .bigscreen_lt_bottom_r {
-      width: 290px;
-      height: 211px;
-      margin-left: 15px;
+      width:adaptiveWidth(290);
+      height:adaptiveHeight(211);
+      margin-left:adaptiveWidth(15);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
       .bigscreen_lt_bottom_r_nei {
         width: 100%;
-        height: 35px;
+        height:adaptiveHeight(35);
         background: rgba(4, 30, 62);
         display: flex;
         justify-content: space-between;
@@ -642,14 +527,14 @@ onMounted(() => {
 
 .bigscreen_lc {
   position: absolute;
-  top: 395px;
-  left: 26px;
+  top:adaptiveHeight(395);
+  left:adaptiveWidth(26);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   .bigscreen_lc_top {
     width: 100%;
-    height: 34px;
+    height:adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -659,12 +544,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left:adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -675,28 +559,28 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
     .pickerCss {
-      width: 135px;
-      height: 24px;
+      width:adaptiveWidth(135);
+      height:adaptiveHeight(24);
       border: 1px solid rgba(227, 233, 243, 0.2);
       border-radius: 5px;
-      margin-right: 11px;
+      margin-right:adaptiveWidth(11);
       display: flex;
       justify-content: space-between;
       align-items: center;
       span {
         color: #ffffff;
-        font-size: 12px;
+        font-size:adaptiveFontSize(12);
       }
     }
   }
   .bigscreen_lc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lc_bottom_nei {
@@ -708,11 +592,11 @@ onMounted(() => {
 
 .bigscreen_lb {
   position: absolute;
-  bottom: 85px;
-  left: 26px;
+  bottom:adaptiveHeight(85);
+  left:adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: 34px;
+    height:adaptiveHeight(34);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -722,12 +606,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left:adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -738,14 +621,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
   }
   .bigscreen_lb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_lb_bottom_nei {
@@ -757,11 +640,11 @@ onMounted(() => {
 
 .bigscreen_rt {
   position: absolute;
-  top: 91px;
-  right: 26px;
+  top:adaptiveHeight(91);
+  right:adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: 34px;
+    height:adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -771,12 +654,11 @@ onMounted(() => {
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left:adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -787,14 +669,14 @@ onMounted(() => {
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rt_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5) ;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rt_bottom_nei {
@@ -804,15 +686,15 @@ onMounted(() => {
       justify-content: center;
       align-items: center;
       .bigscreen_rt_bottom_r {
-        width: 265px;
-        height: 195px;
+        width:adaptiveWidth(265);
+        height:adaptiveHeight(195);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
         .bigscreen_rt_bottom_rnei {
           width: 100%;
-          height: 45px;
+          height:adaptiveHeight(45);
           background: url("/public/img/背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
@@ -820,18 +702,18 @@ onMounted(() => {
           justify-content: space-between;
           span {
             color: rgba(244, 249, 255, 1);
-            font-size: 11px;
-            margin-left: 20px;
+            font-size:adaptiveFontSize(11);
+            margin-left:adaptiveWidth(20);
           }
           div {
-            width: 67px;
-            height: 31px;
+            width:adaptiveWidth(67);
+            height:adaptiveHeight(31);
             color: rgba(244, 249, 255, 1);
-            font-size: 12px;
+            font-size:adaptiveFontSize(12);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 22px;
+            margin-right:adaptiveWidth(22);
           }
         }
       }
