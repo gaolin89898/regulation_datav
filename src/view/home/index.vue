@@ -39,7 +39,6 @@
       </div>
       <el-input
         class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入事件类型"
         :prefix-icon="Search"
       />
@@ -265,6 +264,7 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import '../../assets/scss/index.scss'
 
 import img1 from "../../../public/img/黄色.png";
 import img2 from "../../../public/img/绿色.png";
@@ -538,6 +538,7 @@ window.onresize = function () {
 </script>
 
 <style lang="scss" scoped>
+
 $design-width: 1920;
 $design-height: 1080;
 
@@ -568,10 +569,9 @@ $design-height: 1080;
   left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
-    // background-position: 10px 0;
     display: flex;
     align-items: center;
     .bigscreen_lt_top_l {
@@ -708,7 +708,7 @@ $design-height: 1080;
       justify-content: center;
       align-items: center;
       img {
-        width: adaptiveWidth(163);
+        width: adaptiveWidth(164);
         height: adaptiveHeight(159);
       }
       .bigscreen_lc_bottom_r {
@@ -718,9 +718,11 @@ $design-height: 1080;
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
+
         .bigscreen_lc_bottom_rnei {
           width: 100%;
           height: adaptiveHeight(45);
+          margin-top: adaptiveHeight(10);
           background: url("/public/img/背景1.png") no-repeat;
           background-size: 100% 100%;
           display: flex;
@@ -753,7 +755,7 @@ $design-height: 1080;
   left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -801,7 +803,7 @@ $design-height: 1080;
   right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -878,7 +880,7 @@ $design-height: 1080;
   right: adaptiveWidth(26);
   .bigscreen_rc_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -1014,7 +1016,7 @@ $design-height: 1080;
 }
 
 .inputcss {
-  width: adaptiveWidth(178);
+  width: adaptiveWidth(148);
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
 }

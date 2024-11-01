@@ -723,11 +723,11 @@ $design-height: 1080;
 
 .bigscreen_rc {
   position: absolute;
-  top: 395px;
-  right: 26px;
+  top:adaptiveHeight(395);
+  right:adaptiveWidth(26);
   .bigscreen_rc_top {
     width: 100%;
-    height: 34px;
+    height:adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -737,12 +737,11 @@ $design-height: 1080;
       display: flex;
       align-items: center;
       img {
-        margin-left: 11px;
+        margin-left:adaptiveWidth(11);
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -753,24 +752,24 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rc_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     .bigscreen_rc_bottom_nei {
-      width: 407px;
+      width:adaptiveWidth(407);
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
-        height: 30px;
+        height:adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -782,7 +781,7 @@ $design-height: 1080;
           }
           width: 28%;
           color: #9eabb7;
-          font-size: 14px;
+          font-size:adaptiveFontSize(14);
           text-align: center;
         }
       }
@@ -791,7 +790,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top:adaptiveHeight(15);
         span {
           &:nth-child(1) {
             width: 43%;
@@ -804,13 +803,13 @@ $design-height: 1080;
       }
       .bigscreen_rc_bottom_nei_active {
         width: 100%;
-        height: 33px;
+        height:adaptiveHeight(33);
         background: url("/public/img/equipment/tableactive.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 15px;
+        margin-top:adaptiveHeight(15);
         span {
           width: 33%;
           color: #58a4cb;
@@ -819,8 +818,8 @@ $design-height: 1080;
           &:nth-child(1) {
             img {
               position: absolute;
-              left: 25px;
-              top: 2px;
+              left:adaptiveWidth(25);
+              top:adaptiveHeight(2);
             }
           }
         }
@@ -831,11 +830,11 @@ $design-height: 1080;
 
 .bigscreen_rb {
   position: absolute;
-  bottom: 85px;
-  right: 26px;
+  bottom:adaptiveHeight(85);
+  right:adaptiveWidth(26);
   .bigscreen_rb_top {
     width: 100%;
-    height: 34px;
+    height:adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
     background-size: 110% 100%;
     display: flex;
@@ -849,8 +848,7 @@ $design-height: 1080;
       }
       span {
         font-weight: 600;
-        font-size: 16px;
-        line-height: 19px;
+        font-size:adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
@@ -861,14 +859,14 @@ $design-height: 1080;
         ); /* 渐变背景 */
         background-clip: text; /* 让背景应用到文本 */
         -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
-        padding-left: 10px;
+        padding-left:adaptiveWidth(10);
       }
     }
   }
   .bigscreen_rb_bottom {
     width: 100%;
-    height: 251px;
-    margin-top: 5px;
+    height:adaptiveHeight(251);
+    margin-top:adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
@@ -878,28 +876,28 @@ $design-height: 1080;
       justify-content: center;
       align-items: center;
       .bigscreen_rb_bottom_r {
-        width: 381px;
-        height: 207px;
-        margin-left: 15px;
+        width:adaptiveWidth(381);
+        height:adaptiveHeight(207);
+        margin-left:adaptiveWidth(15);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
         .bigscreen_rb_bottom_rnei {
           width: 100%;
-          height: 57px;
+          height:adaptiveHeight(57);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           div {
             width: 100%;
-            height: 38px;
+            height:adaptiveHeight(38);
             display: flex;
             align-items: center;
             justify-content: space-between;
             span {
               color: rgba(255, 255, 255, 1);
-              font-size: 14px;
+              font-size:adaptiveFontSize(14);
             }
           }
         }
@@ -914,7 +912,7 @@ $design-height: 1080;
   box-shadow: none;
 }
 .scroll {
-  height: 195px;
+  height:adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
 }
@@ -934,7 +932,7 @@ $design-height: 1080;
   padding: 2px 8px;
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
-  font-size: 12px;
+  font-size:adaptiveFontSize(12);
   border-radius: 2px;
 }
 </style>
