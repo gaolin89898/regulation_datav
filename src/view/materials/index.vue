@@ -153,17 +153,18 @@
         </div>
         <div
           :class="
-            active == index
+            item.status
               ? 'bigscreen_rb_bottom_nei_active'
               : 'bigscreen_rb_bottom_nei_b'
           "
           v-for="(item, index) in list3"
+          @click="rbClick(item)"
         >
           <span>
             <img
               src="/public/img/equipment/tableicon.png"
               alt=""
-              v-if="active == index"
+              v-if="item.status"
             />
             {{ item.code }}
           </span>
@@ -174,12 +175,61 @@
       </div>
     </div>
   </div>
+
+  <template v-for="item in list3">
+    <div v-if="item.status" class="rbDialog">
+      <div class="rbDialog_top">
+        <span>领用统计分析</span>
+        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
+      </div>
+      <div class="rbDialog_bottom">
+        <div class="bigscreen_rc_bottom_nei">
+          <div class="bigscreen_rc_bottom_l">
+            <img src="/public/img/圆形标记.png" alt="" />
+            <img src="/public/img/圆形标记.png" alt="" />
+            <img src="/public/img/圆形标记.png" alt="" />
+          </div>
+          <div class="bigscreen_rc_bottom_r">
+            <Vue3SeamlessScroll
+              :list="list3"
+              :class-option="{
+                step: 5,
+              }"
+              class="scrool"
+            >
+              <div
+                v-for="(item, index) in list3"
+                :key="index"
+                class="bigscreen_rc_bottom_rnei"
+              >
+                <span style="color: rgba(172, 223, 255, 1); font-size: 11px"
+                  >2024年09月23日 22:15:53</span
+                >
+                <div
+                  :style="{
+                    background: `url(${item.background}) no-repeat`,
+                    'background-size': '100% 100%',
+                  }"
+                >
+                  <span>领用人员：{{ item.name }}</span>
+                  <span>领用数量：{{ item.danwei }}</span>
+                </div>
+              </div>
+            </Vue3SeamlessScroll>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import center from "../../components/center.vue";
+import img9 from "../../../public/img/叉号.png";
+import img7 from "../../../public/img/弹窗文案背景.png";
 
 const radio1 = ref("zhou");
 const list = ref([
@@ -227,37 +277,46 @@ const options2 = ref([
   },
 ]);
 
-const active = ref(1);
 const list3 = ref([
   {
     code: "物料一",
     time: "2024-10-09",
     name: "王凯",
     danwei: "1mg",
+    status: false,
+    background: img7,
   },
   {
     code: "物料二",
     time: "2024-10-09",
     name: "王凯",
     danwei: "1mg",
+    status: false,
+    background: img7,
   },
   {
     code: "物料三",
     time: "2024-10-09",
     name: "王凯",
     danwei: "1mg",
+    status: false,
+    background: img7,
   },
   {
     code: "物料四",
     time: "2024-10-09",
     name: "王凯",
     danwei: "1mg",
+    status: false,
+    background: img7,
   },
   {
     code: "物料五",
     time: "2024-10-09",
     name: "王凯",
     danwei: "1mg",
+    status: false,
+    background: img7,
   },
 ]);
 
@@ -519,6 +578,19 @@ const bigscreenRCoption = {
       },
     },
   ],
+};
+
+const rbClick = (item) => {
+  list3.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rbcanleClick = (item) => {
+  item.status = false;
 };
 
 window.onresize = function () {
@@ -926,10 +998,12 @@ $design-height: 1080;
       }
       .bigscreen_rb_bottom_nei_b {
         width: 100%;
+        height: adaptiveHeight(33);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(15);
+        margin-top: adaptiveHeight(8);
+        cursor: pointer;
         span {
           width: 25%;
           color: #ffffff;
@@ -945,7 +1019,8 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(15);
+        margin-top: adaptiveHeight(8);
+        cursor: pointer;
         span {
           width: 25%;
           color: #58a4cb;
@@ -958,6 +1033,99 @@ $design-height: 1080;
               left: adaptiveWidth(10);
               width: adaptiveWidth(18);
               height: adaptiveHeight(17);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.rbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(90);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-family: youshe;
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rbDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(200);
+    margin: adaptiveHeight(10) auto;
+    .bigscreen_rc_bottom_nei {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .bigscreen_rc_bottom_l {
+        width: adaptiveWidth(20);
+        height: adaptiveHeight(207);
+        background: url("/img/线.png") no-repeat;
+        background-size: 2px 100%;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        img {
+          width: adaptiveWidth(8);
+          height: adaptiveHeight(8);
+          &:nth-child(2),
+          &:nth-child(3) {
+            margin-top: adaptiveHeight(70);
+          }
+        }
+      }
+      .bigscreen_rc_bottom_r {
+        width: adaptiveWidth(381);
+        height: adaptiveHeight(207);
+        margin-left: adaptiveFontSize(15);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        .bigscreen_rc_bottom_rnei {
+          width: 100%;
+          height: adaptiveHeight(57);
+          margin-top: adaptiveHeight(5);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          div {
+            width: 100%;
+            height: adaptiveHeight(38);
+            display: flex;
+            align-items: center;
+            span {
+              color: rgba(255, 255, 255, 1);
+              font-size: adaptiveFontSize(14);
+              &:nth-child(1) {
+                margin-left: adaptiveWidth(10);
+              }
+              &:nth-child(2) {
+                margin-left: adaptiveWidth(20);
+              }
             }
           }
         }

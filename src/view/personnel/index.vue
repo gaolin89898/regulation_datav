@@ -7,7 +7,11 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div class="bigscreen_lt_bottom_nei" v-for="item in list">
+      <div
+        class="bigscreen_lt_bottom_nei"
+        v-for="item in list"
+        @click="ltClick(item)"
+      >
         <img src="/public/img/personnel/人物图标.png" alt="" />
         <div
           class="bigscreen_lt_bottom_nei_r"
@@ -45,7 +49,11 @@
       />
     </div>
     <div class="bigscreen_lb_bottom">
-      <div class="bigscreen_lb_bottom_nei" v-for="item in list2">
+      <div
+        class="bigscreen_lb_bottom_nei"
+        v-for="item in list2"
+        @click="lbClick(item)"
+      >
         <div class="bigscreen_lb_bottom_nei_count">
           <div class="left">
             <div
@@ -133,10 +141,71 @@
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
     </div>
   </div>
+
+  <template v-for="item in list">
+    <div v-if="item.status" class="ltDialog">
+      <div class="ltDialog_top">
+        <span>查看人员信息</span>
+        <img :src="img9" alt="" srcset="" @click="ltcanleClick(item)" />
+      </div>
+      <div class="ltDialog_bottom">
+        <img src="/public/img/弹窗头像图标.png" alt="" />
+        <div class="ltDialog_bottomr">
+          <div>
+            <span>员工编号：</span>
+            <span>{{ item.code }}</span>
+          </div>
+          <div>
+            <span>姓名：</span>
+            <span>{{ item.name }}</span>
+          </div>
+          <div>
+            <span>性别：</span>
+            <span>{{ item.sex }}</span>
+          </div>
+          <div>
+            <span>部门：</span>
+            <span>{{ item.bumen }}</span>
+          </div>
+          <div>
+            <span>岗位：</span>
+            <span>{{ item.gangwei }}</span>
+          </div>
+          <div>
+            <span>联系方式：</span>
+            <span>{{ item.phone }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template v-for="item in list2">
+    <div v-show="item.status" class="lbDialog">
+      <div class="lbDialog_top">
+        <span>趋势分析</span>
+        <img :src="img9" alt="" srcset="" @click="lbcanleClick(item)" />
+      </div>
+      <div class="lbDialog_bottom" id="lbDialogBottom"></div>
+      <el-select
+        size="small"
+        class="selectcss"
+        v-model="selectval"
+        style="width: 80px; margin-right: 11px"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 // import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
@@ -145,6 +214,7 @@ import center from "../../components/center.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
 import img1 from "../../../public/img/视频监控尺寸.png";
+import img9 from "../../../public/img/叉号.png";
 
 const radio1 = ref("zhou");
 
@@ -157,20 +227,35 @@ const list = ref([
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/红色背景.png",
+    sex: "男",
+    bumen: "产品研发部",
+    gangwei: "药理学家",
+    phone: "18546521548",
+    status: false,
   },
   {
     name: "张建坤",
-    code: "YG005",
+    code: "YG006",
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/绿色背景.png",
+    sex: "男",
+    bumen: "产品研发部",
+    gangwei: "药理学家",
+    phone: "18546521548",
+    status: false,
   },
   {
     name: "张建坤",
-    code: "YG005",
+    code: "YG007",
     didian: "公司大门",
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/黄色背景.png",
+    sex: "男",
+    bumen: "产品研发部",
+    gangwei: "药理学家",
+    phone: "18546521548",
+    status: false,
   },
 ]);
 
@@ -184,26 +269,29 @@ const list2 = ref([
     xueya2: 145,
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/名字绿色背景.png",
+    status: false,
   },
   {
     name: "张建坤",
-    code: "YG001",
+    code: "YG002",
     tiwen: 36.5,
     xinlv: 75,
     xuya1: 100,
     xueya2: 145,
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/名字蓝色背景.png",
+    status: false,
   },
   {
     name: "张建坤",
-    code: "YG001",
+    code: "YG003",
     tiwen: 36.5,
     xinlv: 75,
     xuya1: 100,
     xueya2: 145,
     time: "2024-07-20 20:23:06",
     img: "/img/personnel/名字棕色背景.png",
+    status: false,
   },
 ]);
 
@@ -360,8 +448,118 @@ const bigscreenRBoption = {
   ],
 };
 
+let lbDialogBottomChart: any = null;
+const lbDialogBottomoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "20%",
+    containLabel: true,
+  },
+
+  xAxis: {
+    type: "category",
+    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
+    },
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: true, //让网格显示
+      lineStyle: {
+        //网格样式
+        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
+        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
+      },
+    },
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
+    },
+  },
+  series: [
+    {
+      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      areaStyle: {
+        color: {
+          type: "linear",
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
+            },
+          ],
+          global: false, // 缺省为 false
+        },
+      },
+    },
+  ],
+};
+
+const ltClick = (item) => {
+  list.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+
+const ltcanleClick = (item) => {
+  item.status = false;
+};
+
+const selectval = ref("dian");
+const options = ref([
+  {
+    label: "湿度",
+    value: "dian",
+  },
+  {
+    label: "温度",
+    value: "shui",
+  },
+]);
+const lbClick = (item) => {
+  list2.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+  nextTick(() => {
+    const lbDialogBottomElement = document.getElementById("lbDialogBottom");
+    console.log(lbDialogBottomElement);
+    if (lbDialogBottomChart) {
+      lbDialogBottomChart.dispose();
+    }
+    // 初始化新的图表实例
+    lbDialogBottomChart = echarts.init(lbDialogBottomElement);
+    lbDialogBottomChart.setOption(lbDialogBottomoption);
+  });
+};
+const lbcanleClick = (item) => {
+  item.status = false;
+};
+
 window.onresize = function () {
   bigscreenRBChart.resize();
+  lbDialogBottomChart.resize();
 };
 
 onMounted(() => {
@@ -402,8 +600,8 @@ $design-height: 1080;
 }
 .bigscreen_lt {
   position: absolute;
-  top:adaptiveHeight(91);
-  left:adaptiveWidth(26);
+  top: adaptiveHeight(91);
+  left: adaptiveWidth(26);
   .bigscreen_lt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -482,22 +680,22 @@ $design-height: 1080;
           &:nth-child(2),
           &:nth-child(3) {
             color: #ffffff;
-            font-size:adaptiveFontSize(13);
+            font-size: adaptiveFontSize(13);
             display: flex;
             justify-content: space-between;
           }
           &:nth-child(2) {
-            margin-top:adaptiveHeight(25);
+            margin-top: adaptiveHeight(25);
             span {
               &:nth-child(1) {
-                margin-left:adaptiveWidth(15);
+                margin-left: adaptiveWidth(15);
               }
             }
           }
           &:nth-child(3) {
-            margin-top:adaptiveHeight(5);
+            margin-top: adaptiveHeight(5);
             span {
-              margin-left:adaptiveWidth(15);
+              margin-left: adaptiveWidth(15);
             }
           }
         }
@@ -509,7 +707,7 @@ $design-height: 1080;
 .bigscreen_lb {
   position: absolute;
   bottom: adaptiveHeight(85);
-  left:adaptiveWidth(26);
+  left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
     height: adaptiveHeight(34);
@@ -567,7 +765,7 @@ $design-height: 1080;
         position: absolute;
         z-index: 100;
         .left {
-          width:adaptiveWidth(79);
+          width: adaptiveWidth(79);
           height: 100%;
           margin-left: adaptiveWidth(30);
           display: flex;
@@ -601,8 +799,8 @@ $design-height: 1080;
 
 .bigscreen_rt {
   position: absolute;
-  top:adaptiveHeight(91);
-  right:adaptiveWidth(26);
+  top: adaptiveHeight(91);
+  right: adaptiveWidth(26);
   .bigscreen_rt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -729,6 +927,119 @@ $design-height: 1080;
       width: adaptiveWidth(403);
       height: adaptiveHeight(366);
     }
+  }
+}
+
+.ltDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .ltDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .ltDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(230);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: adaptiveWidth(98);
+      height: adaptiveHeight(98);
+      margin-right: adaptiveWidth(20);
+    }
+    .ltDialog_bottomr {
+      margin-left: adaptiveWidth(20);
+      div {
+        margin-top: adaptiveHeight(10);
+        &:nth-child(1) {
+          margin-top: 0;
+        }
+        span {
+          font-size: adaptiveFontSize(14);
+          &:nth-child(1) {
+            color: #687f92;
+          }
+          &:nth-child(2) {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.lbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(297);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(150);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .lbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .lbDialog_bottom {
+    width: adaptiveWidth(440);
+    height: adaptiveHeight(230);
+  }
+  .selectcss {
+    position: absolute;
+    top: adaptiveHeight(55);
+    right: adaptiveWidth(10);
+  }
+}
+
+:deep(.selectcss) {
+  .el-select__wrapper {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  }
+  .el-select__placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .el-select__selected-item {
+    color: rgba(255, 255, 255, 0.6) !important;
   }
 }
 

@@ -99,7 +99,7 @@
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <div><span>JK218 科学大道点位1</span></div>
+          <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
         </div>
@@ -127,17 +127,18 @@
         </div>
         <div
           :class="
-            active == index
+            item.status
               ? 'bigscreen_rc_bottom_nei_active'
               : 'bigscreen_rc_bottom_nei_b'
           "
           v-for="(item, index) in list3"
+          @click="rcClick(item)"
         >
           <span>
             <img
               src="/public/img/equipment/tableicon.png"
               alt=""
-              v-if="active == index"
+              v-if="item.status"
             />
             {{ item.code }}
           </span>
@@ -157,7 +158,11 @@
     <div class="bigscreen_rb_bottom">
       <img src="/public/img/xujian.png" alt="" />
       <div class="bigscreen_rb_bottom_r">
-        <div class="bigscreen_rb_bottom_r_nei" v-for="(item, index) in list2">
+        <div
+          class="bigscreen_rb_bottom_r_nei"
+          v-for="(item, index) in list2"
+          @click="rbClick(item)"
+        >
           <div
             style="
               color: #ffffff;
@@ -201,14 +206,105 @@
       </div>
     </div>
   </div>
+
+  <template v-for="item in list3">
+    <div v-if="item.status" class="rcDialog">
+      <div class="rcDialog_top">
+        <span>维修记录详情</span>
+        <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
+      </div>
+      <div class="rcDialog_bottom">
+        <div class="rcDialog_bottoml">
+          <div>
+            <span>维修编号：</span>
+            <span>MAINT002</span>
+          </div>
+          <div>
+            <span>设备编号：</span>
+            <span>001</span>
+          </div>
+          <div>
+            <span>维修时期：</span>
+            <span>2024-10-09</span>
+          </div>
+          <div>
+            <span>维修人员：</span>
+            <span>王凯</span>
+          </div>
+          <div>
+            <span>维修费用：</span>
+            <span>600元</span>
+          </div>
+          <div>
+            <span>维修内容：</span>
+            <span>更换零配件</span>
+          </div>
+          <div>
+            <span>维修原因：</span>
+            <span>无法启用，电源指示灯不亮</span>
+          </div>
+        </div>
+        <!-- <img :src="item.img" alt="" /> -->
+      </div>
+    </div>
+  </template>
+
+  <template v-for="item in list2">
+    <div v-if="item.status" class="rbDialog">
+      <div class="rbDialog_top">
+        <span>巡检记录详情</span>
+        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
+      </div>
+      <div class="rbDialog_bottom">
+        <div class="rbDialog_bottoml">
+          <div>
+            <span>巡检编号：</span>
+            <span>MAINT002</span>
+          </div>
+          <div>
+            <span>巡检时期：</span>
+            <span>2024-10-09</span>
+          </div>
+          <div>
+            <span>巡检人员：</span>
+            <span>王凯</span>
+          </div>
+          <div>
+            <span>异常数：</span>
+            <span>1</span>
+          </div>
+          <div>
+            <span>巡检内容：</span>
+            <span>更换零配件</span>
+          </div>
+          <div>
+            <span>异常说明：</span>
+            <span>无法启用，电源指示灯不亮</span>
+          </div>
+        </div>
+        <!-- <img :src="item.img" alt="" /> -->
+      </div>
+    </div>
+  </template>
+
+  <div v-if="rtStatus" class="rtDialog">
+    <div class="rtDialog_top">
+      <span>查看监控视频</span>
+      <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+    </div>
+    <div class="rtDialog_bottom">
+      <img src="/public/img/监控视频尺寸.png" alt="" />
+      <div>倍速播放×1</div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
-// import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
+import img9 from "../../../public/img/叉号.png";
 
 const list = ref([
   {
@@ -285,39 +381,43 @@ const options = ref([
 ]);
 
 const list2 = ref([
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
+  { code: "编号1", time: "2024-10-11", name: "徐凯品", status: false },
+  { code: "编号2", time: "2024-10-11", name: "徐凯品", status: false },
+  { code: "编号3", time: "2024-10-11", name: "徐凯品", status: false },
+  { code: "编号4", time: "2024-10-11", name: "徐凯品", status: false },
+  { code: "编号5", time: "2024-10-11", name: "徐凯品", status: false },
 ]);
 
-const active = ref(1);
 const list3 = ref([
   {
     code: "001",
     time: "2024-10-09",
     name: "王凯",
+    status: false,
   },
   {
     code: "002",
     time: "2024-10-09",
     name: "王凯",
+    status: false,
   },
   {
     code: "003",
     time: "2024-10-09",
     name: "王凯",
+    status: false,
   },
   {
     code: "004",
     time: "2024-10-09",
     name: "王凯",
+    status: false,
   },
   {
     code: "005",
     time: "2024-10-09",
     name: "王凯",
+    status: false,
   },
 ]);
 
@@ -383,13 +483,48 @@ const bigscreenLBoption = {
   ],
 };
 
+const rtStatus = ref(false);
+const rtClick = () => {
+  rtStatus.value = !rtStatus.value;
+};
+const rtcanleClick = () => {
+  rtStatus.value = false;
+};
+
+const rcClick = (item) => {
+  list3.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rccanleClick = (item) => {
+  item.status = false;
+};
+
+const rbClick = (item) => {
+  list2.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+
+const rbcanleClick = (item) => {
+  item.status = false;
+};
+
 window.onresize = function () {
   bigscreenLBChart.resize();
 };
 
 onMounted(() => {
   if (bigscreenLBRef.value) {
-   bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 });
@@ -769,10 +904,12 @@ $design-height: 1080;
       }
       .bigscreen_rc_bottom_nei_b {
         width: 100%;
+        height: adaptiveHeight(33);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(15);
+        margin-top: adaptiveHeight(8);
+        cursor: pointer;
         span {
           width: 33%;
           color: #ffffff;
@@ -788,7 +925,8 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(15);
+        margin-top: adaptiveHeight(8);
+        cursor: pointer;
         span {
           width: 33%;
           color: #58a4cb;
@@ -877,6 +1015,174 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.rcDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(400);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rcDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-family: youshe;
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rcDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(200);
+    margin: adaptiveHeight(10) auto;
+    img {
+      width: adaptiveWidth(99);
+      height: adaptiveHeight(99);
+    }
+    .rcDialog_bottoml {
+      height: adaptiveHeight(200);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      div {
+        margin-left: adaptiveWidth(20);
+        &:nth-child(1) {
+          margin-top: 0;
+        }
+        span {
+          font-size: adaptiveFontSize(14);
+          &:nth-child(1) {
+            color: #687f92;
+          }
+          &:nth-child(2) {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.rtDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rtDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rtDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(215);
+    margin-left: adaptiveWidth(10);
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    justify-content: center;
+    img {
+      width: 100%;
+      height: adaptiveHeight(195);
+    }
+    div {
+      font-size: adaptiveFontSize(14);
+      color: #ffffff;
+    }
+  }
+}
+
+.rbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(90);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-family: youshe;
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rbDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(200);
+    margin: adaptiveHeight(10) auto;
+    img {
+      width: adaptiveWidth(99);
+      height: adaptiveHeight(99);
+    }
+    .rbDialog_bottoml {
+      height: adaptiveHeight(200);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      div {
+        margin-left: adaptiveWidth(20);
+        &:nth-child(1) {
+          margin-top: 0;
+        }
+        span {
+          font-size: adaptiveFontSize(14);
+          &:nth-child(1) {
+            color: #687f92;
+          }
+          &:nth-child(2) {
+            color: #ffffff;
+          }
+        }
       }
     }
   }

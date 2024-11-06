@@ -8,25 +8,18 @@
     </div>
     <div class="bigscreen_lt_bottom">
       <div class="bigscreen_lt_bottom_nei">
-        <div class="bigscreen_lt_nei1">
-          <span>设备报警</span>
-          <span>二级</span>
-          <span>2024-07-31 22:58:15</span>
-        </div>
-        <div class="bigscreen_lt_nei2">
-          <span>环境数据</span>
-          <span>三级</span>
-          <span>2024-07-31 22:58:15</span>
-        </div>
-        <div class="bigscreen_lt_nei3">
-          <span>物料数据</span>
-          <span>二级</span>
-          <span>2024-07-31 22:58:15</span>
-        </div>
-        <div class="bigscreen_lt_nei4" @click="nei4Click">
-          <span>工艺节点</span>
-          <span>三级</span>
-          <span>2024-07-31 22:58:15</span>
+        <div
+          v-for="item in list1"
+          class="bigscreen_lt_nei"
+          :style="{
+            background: `url(${item.back}) no-repeat`,
+            'background-size': '100% 100%',
+          }"
+          @click="neiClick(item)"
+        >
+          <span class="bigscreen_lt_nei_span">{{ item.name }}</span>
+          <span class="bigscreen_lt_nei_span">{{ item.level }}</span>
+          <span class="bigscreen_lt_nei_span">{{ item.time }}</span>
         </div>
       </div>
     </div>
@@ -112,7 +105,7 @@
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <div><span>JK218 科学大道点位1</span></div>
+          <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
         </div>
@@ -190,70 +183,49 @@
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
     </div>
   </div>
-  <div
-    v-if="nei4Status"
-    style="
-      width: 440px;
-      height: 280px;
-      background: url('/img/弹窗背景.png') no-repeat;
-      background-size: 100% 100%;
-      position: absolute;
-      top: 70px;
-      left: 500px;
-    "
-  >
-    <div
-      style="
-        width: 100%;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      "
-    >
-      <span style="font-size: 20px; color: #ffffff; padding-left: 15px"
-        >报警信息详情</span
-      >
-      <img
-        style="padding-right: 10px"
-        :src="img9"
-        alt=""
-        srcset=""
-        @click="canleClick"
-      />
-    </div>
-    <div
-      style="
-        width: 100%;
-        height: 230px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <img :src="img8" alt="" />
-      <div style="margin-left: 20px">
-        <div>
-          <span style="color: #687f92">报警级别：</span>
-          <span style="color: #ffffff">001</span>
-        </div>
-        <div style="margin-top: 10px">
-          <span style="color: #687f92">报警类型：</span>
-          <span style="color: #ffffff">设备报警</span>
-        </div>
-        <div style="margin-top: 10px">
-          <span style="color: #687f92">报警信息：</span>
-          <span style="color: #ffffff">隔离器报警</span>
-        </div>
-        <div style="margin-top: 10px">
-          <span style="color: #687f92">报警级别：</span>
-          <span style="color: #ffffff">一级</span>
-        </div>
-        <div style="margin-top: 10px">
-          <span style="color: #687f92">报警时间：</span>
-          <span style="color: #ffffff">2024-07-31 22:58:15</span>
+
+  <template v-for="item in list1">
+    <div v-if="item.status" class="ltDialog">
+      <div class="ltDialog_top">
+        <span>报警信息详情</span>
+        <img :src="img9" alt="" srcset="" @click="canleClick(item)" />
+      </div>
+      <div class="ltDialog_bottom">
+        <img :src="item.img" alt="" />
+        <div class="ltDialog_bottomr">
+          <div>
+            <span>报警级别：</span>
+            <span>001</span>
+          </div>
+          <div>
+            <span>报警类型：</span>
+            <span>{{ item.name }}</span>
+          </div>
+          <div>
+            <span>报警信息：</span>
+            <span>{{ item.name }}</span>
+          </div>
+          <div>
+            <span>报警级别：</span>
+            <span>{{ item.level }}</span>
+          </div>
+          <div>
+            <span>报警时间：</span>
+            <span>{{ item.time }}</span>
+          </div>
         </div>
       </div>
+    </div>
+  </template>
+
+  <div v-if="rtStatus" class="rtDialog">
+    <div class="rtDialog_top">
+      <span>查看监控视频</span>
+      <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+    </div>
+    <div class="rtDialog_bottom">
+      <img src="/public/img/监控视频尺寸.png" alt="" />
+      <div>倍速播放×1</div>
     </div>
   </div>
 </template>
@@ -264,7 +236,7 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import '../../assets/scss/index.scss'
+import "../../assets/scss/index.scss";
 
 import img1 from "../../../public/img/黄色.png";
 import img2 from "../../../public/img/绿色.png";
@@ -273,7 +245,6 @@ import img4 from "../../../public/img/蓝色.png";
 import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
-import img8 from "../../../public/img/一级.png";
 import img9 from "../../../public/img/叉号.png";
 
 const radio1 = ref("zhou");
@@ -312,6 +283,45 @@ const list2 = ref([
   {
     background: img7,
     text: "《WHO实验室生物安全手册 (第四版)》",
+  },
+]);
+
+const list1 = ref([
+  {
+    name: "设备报警",
+    level: "二级",
+    time: "2024-07-31 22:58:15",
+    icon: "",
+    back: "/public/img/设备报警.png",
+    status: false,
+    img: "/public/img/二级.png",
+  },
+  {
+    name: "环境数据",
+    level: "三级",
+    time: "2024-07-31 22:58:15",
+    icon: "",
+    back: "/public/img/环境数据.png",
+    status: false,
+    img: "/public/img/三级.png",
+  },
+  {
+    name: "物料数据",
+    level: "二级",
+    time: "2024-07-31 22:58:15",
+    icon: "",
+    back: "/public/img/物料报警.png",
+    status: false,
+    img: "/public/img/二级.png",
+  },
+  {
+    name: "工艺节点",
+    level: "一级",
+    time: "2024-07-31 22:58:15",
+    icon: "",
+    back: "/public/img/工艺节点.png",
+    status: false,
+    img: "/public/img/一级.png",
   },
 ]);
 
@@ -488,12 +498,25 @@ const bigscreenRBoption = {
   ],
 };
 
-const nei4Status = ref(false);
-const nei4Click = () => {
-  nei4Status.value = !nei4Status.value;
+const neiClick = (item) => {
+  list1.value.forEach((v) => {
+    if (item.name == v.name) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
 };
-const canleClick = () => {
-  nei4Status.value = false;
+const canleClick = (item) => {
+  item.status = false;
+};
+
+const rtStatus = ref(false);
+const rtClick = () => {
+  rtStatus.value = !rtStatus.value;
+};
+const rtcanleClick = () => {
+  rtStatus.value = false;
 };
 
 // 创建 areaStyle 的函数
@@ -538,7 +561,6 @@ window.onresize = function () {
 </script>
 
 <style lang="scss" scoped>
-
 $design-width: 1920;
 $design-height: 1080;
 
@@ -609,17 +631,20 @@ $design-height: 1080;
       display: flex;
       justify-content: space-between;
       align-items: center;
-
-      .bigscreen_lt_nei1,
-      .bigscreen_lt_nei2,
-      .bigscreen_lt_nei3,
-      .bigscreen_lt_nei4 {
+      .bigscreen_lt_nei {
         width: adaptiveWidth(93);
         height: adaptiveHeight(210);
         display: flex;
         flex-direction: column;
         align-items: center;
-        span {
+        cursor: pointer;
+        &:nth-child(1) {
+          margin-left: adaptiveWidth(18);
+        }
+        &:nth-child(4) {
+          margin-right: adaptiveWidth(18);
+        }
+        .bigscreen_lt_nei_span {
           &:nth-child(1) {
             color: rgba(255, 255, 255, 0.8);
             font-size: adaptiveFontSize(14);
@@ -637,24 +662,6 @@ $design-height: 1080;
             font-weight: 400;
           }
         }
-      }
-      .bigscreen_lt_nei1 {
-        background: url("/public/img/设备报警.png") no-repeat;
-        background-size: 100% 100%;
-        margin-left: adaptiveWidth(18);
-      }
-      .bigscreen_lt_nei2 {
-        background: url("/public/img/环境数据.png") no-repeat;
-        background-size: 100% 100%;
-      }
-      .bigscreen_lt_nei3 {
-        background: url("/public/img/物料报警.png") no-repeat;
-        background-size: 100% 100%;
-      }
-      .bigscreen_lt_nei4 {
-        background: url("/public/img/工艺节点.png") no-repeat;
-        background-size: 100% 100%;
-        margin-right: adaptiveWidth(18);
       }
     }
   }
@@ -1011,6 +1018,111 @@ $design-height: 1080;
     .bigscreen_rb_bottom_nei {
       width: 100%;
       height: 100%;
+    }
+  }
+}
+.ltDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .ltDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .ltDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(230);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: adaptiveWidth(99);
+      height: adaptiveHeight(99);
+    }
+    .ltDialog_bottomr {
+      margin-left: adaptiveWidth(20);
+      div {
+        margin-top: adaptiveHeight(10);
+        &:nth-child(1) {
+          margin-top: 0;
+        }
+        span {
+          font-size: adaptiveFontSize(14);
+          &:nth-child(1) {
+            color: #687f92;
+          }
+          &:nth-child(2) {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
+.rtDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rtDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rtDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(215);
+    margin-left: adaptiveWidth(10);
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    justify-content: center;
+    img {
+      width: 100%;
+      height: adaptiveHeight(195);
+    }
+    div {
+      font-size: adaptiveFontSize(14);
+      color: #ffffff;
     }
   }
 }

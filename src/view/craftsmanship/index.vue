@@ -95,7 +95,11 @@
             <span>节点状态</span>
           </div>
         </div>
-        <div class="bigscreen_lb_bottom_neis" v-for="item in list3">
+        <div
+          class="bigscreen_lb_bottom_neis"
+          v-for="item in list3"
+          @click="lbClick(item)"
+        >
           <img :src="item.img" alt="" />
           <div class="bigscreen_lb_bottom_neis_r">
             <span>{{ item.name }}</span>
@@ -150,7 +154,7 @@
           </div>
         </div>
       </div>
-      <div class="bigscreen_rt_bottom_nei">
+      <div class="bigscreen_rt_bottom_nei" @click="rtClcik">
         <span>隔离器工艺</span>
         <span>人力要素</span>
         <span>原料要素</span>
@@ -256,6 +260,82 @@
       </div>
     </div>
   </div>
+
+  <template v-for="item in list3">
+    <div v-if="item.status1" class="lbDialog">
+      <div class="lbDialog_top">
+        <span>工艺节点详情</span>
+        <img :src="img9" alt="" srcset="" @click="lbcanleClick(item)" />
+      </div>
+      <div class="lbDialog_bottom">
+        <div>
+          <span>节点编号：</span>
+          <span>001</span>
+        </div>
+        <div>
+          <span>节点名称：</span>
+          <span>隔离器工艺</span>
+        </div>
+        <div>
+          <span>所属工艺：</span>
+          <span>病毒加工艺</span>
+        </div>
+        <div>
+          <span>节点顺序：</span>
+          <span>1</span>
+        </div>
+        <div>
+          <span>操作描述：</span>
+          <span>*******</span>
+        </div>
+        <div>
+          <span>操作方式：</span>
+          <span>**************</span>
+        </div>
+        <div>
+          <span>所需时间：</span>
+          <span>5h</span>
+        </div>
+        <div>
+          <span>节点状态：</span>
+          <span>进行中</span>
+        </div>
+        <div>
+          <span>是否为高风险：</span>
+          <span>是</span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <div v-if="rtstatus" class="rtDialog">
+    <div class="rtDialog_top">
+      <span>工艺要素详情</span>
+      <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+    </div>
+    <div class="rtDialog_bottom">
+      <div>
+        <span>工艺节点：</span>
+        <span>隔离器工艺</span>
+      </div>
+      <div>
+        <span>人力要素：</span>
+        <span>人力成本</span>
+      </div>
+      <div>
+        <span>设备要素：</span>
+        <span>A设备，B设备</span>
+      </div>
+      <div>
+        <span>原料要素：</span>
+        <span>原料a1瓶，原料b3瓶</span>
+      </div>
+      <div>
+        <span>环境要素：</span>
+        <span>温度原因，湿度原因。。。</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -263,28 +343,30 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
+import img9 from "../../../public/img/叉号.png";
 
 const list = ref([
   {
-    name: "病毒加工工艺",
+    name: "病毒加工工艺1",
     img: "/img/craftsmanship/erjilan.png",
     status: "二级报警",
     type: "节点故障",
+    status1: false,
   },
   {
-    name: "病毒加工工艺",
+    name: "病毒加工工艺2",
     img: "/img/craftsmanship/yijilv.png",
     status: "一级报警",
     type: "工艺异常",
   },
   {
-    name: "病毒加工工艺",
+    name: "病毒加工工艺3",
     img: "/img/craftsmanship/erjilan.png",
     status: "二级报警",
     type: "节点故障",
   },
   {
-    name: "病毒加工工艺",
+    name: "病毒加工工艺4",
     img: "/img/craftsmanship/sanjihong.png",
     status: "三级报警",
     type: "工艺异常",
@@ -301,39 +383,45 @@ const list2 = ref([
 const list3 = ref([
   {
     img: "/img/craftsmanship/1.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺1",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
   {
     img: "/img/craftsmanship/2.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺2",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
   {
     img: "/img/craftsmanship/3.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺3",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
   {
     img: "/img/craftsmanship/4.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺4",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
   {
     img: "/img/craftsmanship/1.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺5",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
   {
     img: "/img/craftsmanship/2.png",
-    name: "隔离器工艺",
+    name: "隔离器工艺6",
     type: "病毒加工工艺",
     status: "进行中",
+    status1: false,
   },
 ]);
 
@@ -522,6 +610,27 @@ function createAreaStyle(startColor: string, endColor: string) {
     },
   };
 }
+
+const lbClick = (item) => {
+  list3.value.forEach((v) => {
+    if (item.name == v.name) {
+      v.status1 = !v.status1;
+    } else {
+      v.status1 = false;
+    }
+  });
+};
+const lbcanleClick = (item) => {
+  item.status1 = false;
+};
+
+const rtstatus = ref(false);
+const rtClcik = () => {
+  rtstatus.value = !rtstatus.value;
+};
+const rtcanleClick = () => {
+  rtstatus.value = false;
+};
 
 onMounted(() => {
   if (bigscreenLBRef.value) {
@@ -781,11 +890,11 @@ $design-height: 1080;
       .bigscreen_lb_bottom_neis {
         width: 100%;
         height: adaptiveHeight(40);
-        // border: 1px solid red;
         background: url("/public/img/craftsmanship/jidianback.png") no-repeat;
         background-position: 30px 0;
         margin-top: adaptiveHeight(15);
         display: flex;
+        cursor: pointer;
         .bigscreen_lb_bottom_neis_r {
           width: calc(100% - adaptiveHeight(38));
           height: 100%;
@@ -795,6 +904,7 @@ $design-height: 1080;
           color: #ffffff;
           span {
             width: 33%;
+            font-size: adaptiveFontSize(16);
             text-align: center;
           }
         }
@@ -866,6 +976,7 @@ $design-height: 1080;
       align-items: center;
       color: #ffffff;
       margin-top: adaptiveHeight(20);
+      cursor: pointer;
       span {
         &:nth-child(1) {
           padding-left: adaptiveWidth(20);
@@ -940,6 +1051,118 @@ $design-height: 1080;
           width: 33%;
           text-align: center;
           font-size: adaptiveFontSize(14);
+        }
+      }
+    }
+  }
+}
+
+.lbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(372);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .lbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(60);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .lbDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(282);
+    display: flex;
+    // align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    div {
+      margin-left: adaptiveWidth(30);
+      &:nth-child(1) {
+        margin-top: adaptiveHeight(10);
+      }
+      &:last-child {
+        margin-bottom: adaptiveHeight(10);
+      }
+      span {
+        font-size: adaptiveFontSize(14);
+        &:nth-child(1) {
+          color: #687f92;
+        }
+        &:nth-child(2) {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+.rtDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rtDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rtDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(215);
+    display: flex;
+    // align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    div {
+      margin-left: adaptiveWidth(30);
+      &:nth-child(1) {
+        margin-top: adaptiveHeight(10);
+      }
+      &:last-child {
+        margin-bottom: adaptiveHeight(10);
+      }
+      span {
+        font-size: adaptiveFontSize(14);
+        &:nth-child(1) {
+          color: #687f92;
+        }
+        &:nth-child(2) {
+          color: #ffffff;
         }
       }
     }
