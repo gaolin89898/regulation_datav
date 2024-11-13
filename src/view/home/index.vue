@@ -292,36 +292,36 @@ const list1 = ref([
     level: "二级",
     time: "2024-07-31 22:58:15",
     icon: "",
-    back: "/public/img/设备报警.png",
+    back: "/img/设备报警.png",
     status: false,
-    img: "/public/img/二级.png",
+    img: "/img/二级.png",
   },
   {
     name: "环境数据",
     level: "三级",
     time: "2024-07-31 22:58:15",
     icon: "",
-    back: "/public/img/环境数据.png",
+    back: "/img/环境数据.png",
     status: false,
-    img: "/public/img/三级.png",
+    img: "/img/三级.png",
   },
   {
     name: "物料数据",
     level: "二级",
     time: "2024-07-31 22:58:15",
     icon: "",
-    back: "/public/img/物料报警.png",
+    back: "/img/物料报警.png",
     status: false,
-    img: "/public/img/二级.png",
+    img: "/img/二级.png",
   },
   {
     name: "工艺节点",
     level: "一级",
     time: "2024-07-31 22:58:15",
     icon: "",
-    back: "/public/img/工艺节点.png",
+    back: "/img/工艺节点.png",
     status: false,
-    img: "/public/img/一级.png",
+    img: "/img/一级.png",
   },
 ]);
 
@@ -1128,7 +1128,7 @@ $design-height: 1080;
 }
 
 .inputcss {
-  width: adaptiveWidth(148);
+  // width: adaptiveWidth(148);
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
 }
@@ -1136,6 +1136,9 @@ $design-height: 1080;
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  .el-input__inner {
+    font-size: adaptiveFontSize(12);
+  }
 }
 .scroll {
   height: adaptiveHeight(195);
