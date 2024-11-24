@@ -351,103 +351,225 @@ const bigscreenLBoption = {
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
-
-const bigscreenRBoption = {
-  tooltip: {
-    trigger: "axis",
-    axisPointer: {
-      type: "shadow",
-    },
+// 数据及配置
+const legendData = [
+  {
+    name: "温度异常",
+    itemStyle: { color: "rgba(0, 234, 255, 1)" },
+    textStyle: { color: "rgba(255,255,255,0.9)" },
   },
-  legend: {
-    data: [
+  {
+    name: "血压异常",
+    itemStyle: { color: "rgba(0, 145, 255, 1)" },
+    textStyle: { color: "rgba(255,255,255,0.9)" },
+  },
+];
+const color = [
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
       {
-        name: "温度异常",
-        itemStyle: { color: "#79B24C" },
+        offset: 0,
+        color: "rgba(0, 234, 255, 0.8)",
       },
       {
-        name: "血压异常",
-        itemStyle: { color: "#68B1A6" },
+        offset: 0.5,
+        color: "rgba(0, 234, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 188, 188, 0.8)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0, 188, 188, 0.8)",
       },
     ],
-    textStyle: {
-      color: "#ffffff",
-    },
   },
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
+      {
+        offset: 0,
+        color: "rgba(0, 145, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 145, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 107, 188, 0.8)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0, 107, 188, 0.8)",
+      },
+    ],
+  },
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
+      {
+        offset: 0,
+        color: "rgba(0,188,255,0)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0,188,255,0)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0,138,186,0)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0,138,186,0)",
+      },
+    ],
+  },
+];
+const xData = [
+  "1月",
+  "2月",
+  "3月",
+  "4月",
+  "5月",
+  "6月",
+  "7月",
+  "8月",
+  "9月",
+  "10月",
+  "11月",
+  "12月",
+];
+const val = {
+  data1: [
+    608.123, 643.859, 185.354, 209.232, 732.714, 758.788, 198.801, 281.668,
+  ],
+  data2: [
+    1129.372, 1195.738, 344.228, 388.573, 1360.755, 1409.177, 369.202, 523.098,
+  ],
+};
+const barWidth = 20;
+
+let xBar1: number[] = [];
+let xBar2: number[] = [];
+let xBar3: number[] = [];
+
+// 初始化堆叠条形图数据
+for (let i = 0; i < val.data1.length; i++) {
+  xBar1.push(Number(val.data2[i]));
+  xBar2.push(Number(val.data1[i]) + Number(val.data2[i]));
+  xBar3.push(Number(val.data1[i]));
+}
+
+// 图表选项
+const bigscreenRBoption = {
   grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "20%",
     containLabel: true,
   },
-  xAxis: [
-    {
-      type: "category",
-      data: [
-        "1月",
-        "2月",
-        "3月",
-        "4月",
-        "5月",
-        "6月",
-        "7月",
-        "8月",
-        "9月",
-        "10月",
-        "11月",
-        "12月",
-      ],
-      axisLine: {
-        lineStyle: {
-          color: "#ffffff", // 修改 X 轴线条颜色
-        },
-      },
-      axisLabel: {
-        color: "#ffffff", // 修改 X 轴标签颜色
-      },
-    },
-  ],
-  yAxis: [
-    {
-      type: "value",
-      axisLine: {
-        lineStyle: {
-          color: "#ffffff", // 修改 Y 轴线条颜色
-        },
-      },
-      axisLabel: {
-        color: "#ffffff", // 修改 Y 轴标签颜色
-      },
-    },
-  ],
+  legend: { data: legendData },
+  xAxis: {
+    type: "category",
+    data: xData,
+    axisLine: { lineStyle: { color: "#ffffff" } },
+    axisLabel: { color: "#ffffff" },
+  },
+  yAxis: {
+    type: "value",
+    axisLine: { lineStyle: { color: "#ffffff" } },
+  },
   series: [
     {
-      name: "温度异常",
+      z: 1,
+      name: legendData[1].name,
       type: "bar",
-      stack: "Ad",
-      emphasis: {
-        focus: "series",
-      },
-      itemStyle: {
-        color: "#79B24C", // 线条颜色
-      },
-      data: [220, 182, 191, 234, 290, 330, 310, 320, 330, 310, 320, 310],
+      barWidth: barWidth,
+      stack: "总量",
+      color: color[1],
+      data: val.data2,
     },
     {
-      name: "血压异常",
+      z: 2,
+      name: legendData[0].name,
       type: "bar",
-      stack: "Ad",
-      emphasis: {
-        focus: "series",
-      },
+      barWidth: barWidth,
+      stack: "总量",
+      color: color[0],
+      data: val.data1,
+    },
+    {
+      z: 3,
+      name: "底部立体",
+      type: "pictorialBar",
+      data: xBar1,
+      symbol: "diamond",
+      symbolOffset: ["0%", "50%"],
+      symbolSize: [barWidth, 10],
       itemStyle: {
-        color: "#68B1A6", // 线条颜色
+        normal: {
+          color: color[1],
+        },
       },
-      data: [150, 232, 201, 154, 190, 330, 410, 420, 190, 330, 410, 420],
+      tooltip: { show: false },
+    },
+    // data2头部
+    {
+      z: 5,
+      name: legendData[1].name,
+      type: "pictorialBar",
+      symbolPosition: "end",
+      itemStyle: {
+        normal: {
+          color: color[1],
+        },
+      },
+      data: xBar1,
+      symbol: "diamond",
+      symbolOffset: ["0%", "-50%"],
+      symbolSize: [barWidth - 4, (10 * (barWidth - 4)) / barWidth],
+      tooltip: {
+        show: false,
+      },
+    },
+    // data1头部
+    {
+      z: 4,
+      name: legendData[0].name,
+      type: "pictorialBar",
+      data: xBar2,
+      symbol: "diamond",
+      symbolPosition: "end",
+      symbolOffset: ["0%", "-50%"],
+      symbolSize: [barWidth, 10],
+      itemStyle: {
+        normal: {
+          color: color[0],
+        },
+      },
+      tooltip: {
+        show: false,
+      },
     },
   ],
 };
-
 let lbDialogBottomChart: any = null;
 const lbDialogBottomoption = {
   grid: {
