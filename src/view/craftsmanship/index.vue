@@ -97,14 +97,14 @@
         </div>
         <div
           class="bigscreen_lb_bottom_neis"
-          v-for="item in list3"
+          v-for="item in nodelist"
           @click="lbClick(item)"
         >
           <img :src="item.img" alt="" />
           <div class="bigscreen_lb_bottom_neis_r">
-            <span>{{ item.name }}</span>
-            <span>{{ item.type }}</span>
-            <span>{{ item.status }}</span>
+            <span>{{ item.nodeName }}</span>
+            <span>{{ item.craftArchive.craftArchiveName }}</span>
+            <span>{{ item.isHighRisk }}</span>
           </div>
         </div>
       </div>
@@ -224,7 +224,7 @@
         </div>
         <div
           class="bigscreen_rb_bottom_nei_item"
-          v-for="(item, index) in list2"
+          v-for="(item, index) in archivelist"
         >
           <div style="color: #ffffff; display: flex; align-items: center">
             <div
@@ -246,15 +246,15 @@
                 }"
               ></div>
             </div>
-            {{ item.code }}
+            {{ item.craftArchiveName }}
           </div>
-          <div style="color: #ffffff">{{ item.time }}</div>
+          <div style="color: #ffffff">{{ item.version }}</div>
           <div
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
             }"
           >
-            {{ item.name }}
+            {{ item.creator }}
           </div>
         </div>
       </div>
@@ -342,6 +342,7 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
+import { archiveList, nodeList } from "../../api/craftsmanship";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
@@ -632,6 +633,33 @@ const rtcanleClick = () => {
   rtstatus.value = false;
 };
 
+//工艺档案
+const archiveFormData = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const archivelist = ref<any[]>([]);
+const archivelistFun = async () => {
+  const { data } = await archiveList(archiveFormData.value);
+  archivelist.value = data.data.rows.slice(0, 5);
+};
+
+//工艺节点
+const nodeFormData = ref({
+  nodeName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const nodelist = ref<any[]>([]);
+const nodelistFun = async () => {
+  const { data } = await nodeList(nodeFormData.value);
+  nodelist.value = data.data.rows.slice(0, 5);
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
     const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
@@ -642,6 +670,8 @@ onMounted(() => {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
+  archivelistFun();
+  nodelistFun();
 });
 </script>
 

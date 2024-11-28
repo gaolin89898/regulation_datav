@@ -157,7 +157,7 @@
               ? 'bigscreen_rb_bottom_nei_active'
               : 'bigscreen_rb_bottom_nei_b'
           "
-          v-for="(item, index) in list3"
+          v-for="(item, index) in receivelist"
           @click="rbClick(item)"
         >
           <span>
@@ -166,11 +166,11 @@
               alt=""
               v-if="item.status"
             />
-            {{ item.code }}
+            {{ item.materialsInfo.name }}
           </span>
-          <span>{{ item.time }}</span>
-          <span>{{ item.name }}</span>
-          <span>{{ item.danwei }}</span>
+          <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }} </span>
+          <span>{{ item.receiverInfo.name }}</span>
+          <span>{{ item.receiveNum }}</span>
         </div>
       </div>
     </div>
@@ -228,6 +228,7 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { receiveListRes, receiveList } from "../../api/materials/index";
+import dayjs from "dayjs";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import img7 from "../../../public/img/弹窗文案背景.png";
