@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const http = axios.create({
-  baseURL: "http://192.168.1.141:9020",
+  // fit-office.singzer.cn:17779/dev-api 192.168.1.141:9020
+  baseURL: "http://fit-office.singzer.cn:17779/dev-api",
 });
 
 // 请求拦截

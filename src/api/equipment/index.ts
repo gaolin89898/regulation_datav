@@ -11,25 +11,27 @@ export interface equipmentRepairListRes {
 export function equipmentRepairList(params: equipmentRepairListRes) {
   return http.get("/manage/equipment-repair", { params });
 }
-//获取维修记录信息
-export function equipmentRepairInfo(recordId: number) {
-  return http.request("get", `/manage/equipment-repair/${recordId}`);
-}
-
-
-
-//获取检修记录列表
-export interface inspectionRes {
-  equipmentCode: string;
+//获取日常巡检记录列表
+export interface dailyInspectionRes {
   pageNum: number;
   pageSize: number;
   orderColumn: string;
   orderDirection: string;
 }
-export function inspectionList(params: inspectionRes) {
-  return http.get( "/manage/equipment-inspection", { params });
+export function dailyInspectionList(params: dailyInspectionRes) {
+  return http.get("/manage/equipment-daily-inspection", {
+    params,
+  });
 }
-//获取检修记录信息
-export function inspectionInfo(recordId: number) {
-  return http.request("get", `/manage/equipment-inspection/${recordId}`);
+
+//获取设备档案列表
+export interface equipmentListRes {
+  equipmentName: string;
+  pageNum: number;
+  pageSize: number;
+  orderColumn: string;
+  orderDirection: string;
+}
+export function equipmentList(params: equipmentListRes) {
+  return http.get("/manage/equipment", { params });
 }

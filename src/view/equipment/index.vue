@@ -46,14 +46,14 @@
           <span>设备型号</span>
           <span>安装时间</span>
         </div>
-        <div class="bigscreen_lc_bottom_nei_b" v-for="item in list">
+        <div class="bigscreen_lc_bottom_nei_b" v-for="item in equipmentlist">
           <span>
             <img :src="item.img" alt="" style="margin: 0 15px 0 15px" />
-            {{ item.code }}
+            {{ item.equipmentId }}
           </span>
-          <span>{{ item.name }}</span>
-          <span>{{ item.status }}</span>
-          <span>{{ item.time }}</span>
+          <span>{{ item.equipmentName }}</span>
+          <span>{{ item.equipmentType }}</span>
+          <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
         </div>
       </div>
     </div>
@@ -134,14 +134,7 @@
           v-for="(item, index) in repairList"
           @click="rcClick(item)"
         >
-          <span>
-            <img
-              src="/public/img/equipment/tableicon.png"
-              alt=""
-              v-if="item.status"
-            />
-            {{ item.equipment.equipmentCode }}
-          </span>
+          <span>{{ item.equipment.equipmentCode }}</span>
           <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }}</span>
           <span>{{ item.repairPersonnel }}</span>
         </div>
@@ -190,10 +183,10 @@
                 }"
               ></div>
             </div>
-            {{ item.inspectionCode }}
+            {{ item.recordId }}
           </div>
           <div style="color: #ffffff; font-size: 12px">
-            {{ dayjs(item.createTime).format("YYYY-MM-DD") }}
+            {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}
           </div>
           <div
             :style="{
@@ -202,7 +195,7 @@
               marginRight: '15px',
             }"
           >
-            {{ item.inspectionContent }}
+            {{ item.inspector }}
           </div>
         </div>
       </div>
@@ -219,34 +212,33 @@
         <div class="rcDialog_bottoml">
           <div>
             <span>维修编号：</span>
-            <span>MAINT002</span>
+            <span>{{ item.recordId }}</span>
           </div>
           <div>
             <span>设备编号：</span>
-            <span>001</span>
+            <span>{{ item.equipment.equipmentCode }}</span>
           </div>
           <div>
-            <span>维修时期：</span>
-            <span>2024-10-09</span>
+            <span>维修时间：</span>
+            <span>{{ dayjs(item.repairDate).format("YYYY-MM-DD") }}</span>
           </div>
           <div>
             <span>维修人员：</span>
-            <span>王凯</span>
+            <span>{{ item.repairPersonnel }}</span>
           </div>
           <div>
             <span>维修费用：</span>
-            <span>600元</span>
+            <span>{{ item.repairCost }}</span>
           </div>
           <div>
             <span>维修内容：</span>
-            <span>更换零配件</span>
+            <span>{{ item.repairContent }}</span>
           </div>
           <div>
             <span>维修原因：</span>
-            <span>无法启用，电源指示灯不亮</span>
+            <span>{{ item.faultReason }}</span>
           </div>
         </div>
-        <!-- <img :src="item.img" alt="" /> -->
       </div>
     </div>
   </template>
@@ -261,27 +253,27 @@
         <div class="rbDialog_bottoml">
           <div>
             <span>巡检编号：</span>
-            <span>MAINT002</span>
+            <span> {{ item.recordId }}</span>
           </div>
           <div>
             <span>巡检时期：</span>
-            <span>2024-10-09</span>
+            <span> {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}</span>
           </div>
           <div>
             <span>巡检人员：</span>
-            <span>王凯</span>
+            <span>{{ item.inspector }}</span>
           </div>
           <div>
             <span>异常数：</span>
-            <span>1</span>
+            <span>{{ item.anomalyCount }}</span>
           </div>
           <div>
             <span>巡检内容：</span>
-            <span>更换零配件</span>
+            <span>{{ item.taskDescription }}</span>
           </div>
           <div>
             <span>异常说明：</span>
-            <span>无法启用，电源指示灯不亮</span>
+            <span>{{ item.anomalyDescription }}</span>
           </div>
         </div>
         <!-- <img :src="item.img" alt="" /> -->
@@ -309,8 +301,10 @@ import center from "../../components/center.vue";
 import {
   equipmentRepairList,
   equipmentRepairListRes,
-  inspectionList,
-  inspectionRes,
+  dailyInspectionList,
+  dailyInspectionRes,
+  equipmentListRes,
+  equipmentList,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
 import img9 from "../../../public/img/叉号.png";
@@ -459,7 +453,22 @@ const rtcanleClick = () => {
   rtStatus.value = false;
 };
 
-//维修记录
+//设备台账
+const equipmentFormData = ref({
+  equipmentName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const equipmentlist = ref<any[]>([]);
+const equipmentListFun = async () => {
+  const { data } = await equipmentList(equipmentFormData.value);
+  let list = data.data.rows.slice(0, 5);
+  equipmentlist.value = list;
+};
+
+//巡检记录
 const repairformData = ref<equipmentRepairListRes>({
   equipmentCode: "",
   pageNum: 1,
@@ -479,10 +488,8 @@ const equipmentRepairListFun = async () => {
       };
     }
   });
-  console.log(repairList.value);
 };
-const rcClick = (item: any) => {
-  console.log(item)
+const rcClick = async (item: any) => {
   repairList.value.forEach((v) => {
     if (item.recordId == v.recordId) {
       v.status = !v.status;
@@ -496,8 +503,7 @@ const rccanleClick = (item: any) => {
 };
 
 //巡检记录
-const inspectionformData = ref<inspectionRes>({
-  equipmentCode: "",
+const inspectionformData = ref<dailyInspectionRes>({
   pageNum: 1,
   pageSize: 10000,
   orderColumn: "createTime",
@@ -505,7 +511,7 @@ const inspectionformData = ref<inspectionRes>({
 });
 const inspectionlist = ref<any[]>([]);
 const inspectionListFun = async () => {
-  const { data } = await inspectionList(inspectionformData.value);
+  const { data } = await dailyInspectionList(inspectionformData.value);
   let list = data.data.rows.slice(0, 5);
   inspectionlist.value = list.map((item) => {
     {
@@ -518,7 +524,7 @@ const inspectionListFun = async () => {
 };
 const rbClick = (item: any) => {
   inspectionlist.value.forEach((v) => {
-    if (item.code == v.code) {
+    if (item.recordId == v.recordId) {
       v.status = !v.status;
     } else {
       v.status = false;
@@ -540,6 +546,7 @@ onMounted(() => {
   }
   equipmentRepairListFun();
   inspectionListFun();
+  equipmentListFun();
 });
 </script>
 
