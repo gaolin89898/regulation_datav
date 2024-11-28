@@ -39,5 +39,12 @@ export default defineConfig({
     port: 9200,
     host: "0.0.0.0",
     hmr: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:9020",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
 });

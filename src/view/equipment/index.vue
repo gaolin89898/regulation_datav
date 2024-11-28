@@ -131,7 +131,7 @@
               ? 'bigscreen_rc_bottom_nei_active'
               : 'bigscreen_rc_bottom_nei_b'
           "
-          v-for="(item, index) in list3"
+          v-for="(item, index) in repairList"
           @click="rcClick(item)"
         >
           <span>
@@ -140,10 +140,10 @@
               alt=""
               v-if="item.status"
             />
-            {{ item.code }}
+            {{ item.equipment.equipmentCode }}
           </span>
-          <span>{{ item.time }}</span>
-          <span>{{ item.name }}</span>
+          <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }}</span>
+          <span>{{ item.repairPersonnel }}</span>
         </div>
       </div>
     </div>
@@ -160,7 +160,7 @@
       <div class="bigscreen_rb_bottom_r">
         <div
           class="bigscreen_rb_bottom_r_nei"
-          v-for="(item, index) in list2"
+          v-for="(item, index) in inspectionlist"
           @click="rbClick(item)"
         >
           <div
@@ -190,9 +190,11 @@
                 }"
               ></div>
             </div>
-            {{ item.code }}
+            {{ item.inspectionCode }}
           </div>
-          <div style="color: #ffffff; font-size: 12px">{{ item.time }}</div>
+          <div style="color: #ffffff; font-size: 12px">
+            {{ dayjs(item.createTime).format("YYYY-MM-DD") }}
+          </div>
           <div
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
@@ -200,14 +202,14 @@
               marginRight: '15px',
             }"
           >
-            {{ item.name }}
+            {{ item.inspectionContent }}
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <template v-for="item in list3">
+  <template v-for="item in repairList">
     <div v-if="item.status" class="rcDialog">
       <div class="rcDialog_top">
         <span>维修记录详情</span>
@@ -249,7 +251,7 @@
     </div>
   </template>
 
-  <template v-for="item in list2">
+  <template v-for="item in inspectionlist">
     <div v-if="item.status" class="rbDialog">
       <div class="rbDialog_top">
         <span>巡检记录详情</span>
@@ -304,6 +306,13 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
+import {
+  equipmentRepairList,
+  equipmentRepairListRes,
+  inspectionList,
+  inspectionRes,
+} from "../../api/equipment/index";
+import dayjs from "dayjs";
 import img9 from "../../../public/img/叉号.png";
 
 const list = ref([
@@ -380,47 +389,6 @@ const options = ref([
   },
 ]);
 
-const list2 = ref([
-  { code: "编号1", time: "2024-10-11", name: "徐凯品", status: false },
-  { code: "编号2", time: "2024-10-11", name: "徐凯品", status: false },
-  { code: "编号3", time: "2024-10-11", name: "徐凯品", status: false },
-  { code: "编号4", time: "2024-10-11", name: "徐凯品", status: false },
-  { code: "编号5", time: "2024-10-11", name: "徐凯品", status: false },
-]);
-
-const list3 = ref([
-  {
-    code: "001",
-    time: "2024-10-09",
-    name: "王凯",
-    status: false,
-  },
-  {
-    code: "002",
-    time: "2024-10-09",
-    name: "王凯",
-    status: false,
-  },
-  {
-    code: "003",
-    time: "2024-10-09",
-    name: "王凯",
-    status: false,
-  },
-  {
-    code: "004",
-    time: "2024-10-09",
-    name: "王凯",
-    status: false,
-  },
-  {
-    code: "005",
-    time: "2024-10-09",
-    name: "王凯",
-    status: false,
-  },
-]);
-
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -491,21 +459,65 @@ const rtcanleClick = () => {
   rtStatus.value = false;
 };
 
-const rcClick = (item) => {
-  list3.value.forEach((v) => {
-    if (item.code == v.code) {
+//维修记录
+const repairformData = ref<equipmentRepairListRes>({
+  equipmentCode: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const repairList = ref<any[]>([]);
+const equipmentRepairListFun = async () => {
+  const { data } = await equipmentRepairList(repairformData.value);
+  let list = data.data.rows.slice(0, 5);
+  repairList.value = list.map((item) => {
+    {
+      return {
+        ...item,
+        status: false,
+      };
+    }
+  });
+  console.log(repairList.value);
+};
+const rcClick = (item: any) => {
+  console.log(item)
+  repairList.value.forEach((v) => {
+    if (item.recordId == v.recordId) {
       v.status = !v.status;
     } else {
       v.status = false;
     }
   });
 };
-const rccanleClick = (item) => {
+const rccanleClick = (item: any) => {
   item.status = false;
 };
 
-const rbClick = (item) => {
-  list2.value.forEach((v) => {
+//巡检记录
+const inspectionformData = ref<inspectionRes>({
+  equipmentCode: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const inspectionlist = ref<any[]>([]);
+const inspectionListFun = async () => {
+  const { data } = await inspectionList(inspectionformData.value);
+  let list = data.data.rows.slice(0, 5);
+  inspectionlist.value = list.map((item) => {
+    {
+      return {
+        ...item,
+        status: false,
+      };
+    }
+  });
+};
+const rbClick = (item: any) => {
+  inspectionlist.value.forEach((v) => {
     if (item.code == v.code) {
       v.status = !v.status;
     } else {
@@ -513,8 +525,7 @@ const rbClick = (item) => {
     }
   });
 };
-
-const rbcanleClick = (item) => {
+const rbcanleClick = (item: any) => {
   item.status = false;
 };
 
@@ -527,6 +538,8 @@ onMounted(() => {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
+  equipmentRepairListFun();
+  inspectionListFun();
 });
 </script>
 

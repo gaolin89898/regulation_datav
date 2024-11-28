@@ -227,6 +227,7 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import { receiveListRes, receiveList } from "../../api/materials/index";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import img7 from "../../../public/img/弹窗文案背景.png";
@@ -593,6 +594,18 @@ const rbcanleClick = (item) => {
   item.status = false;
 };
 
+const receiveFormData = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const receivelist = ref<any[]>([]);
+const receivelistFun = async () => {
+  const { data } = await receiveList(receiveFormData.value);
+  receivelist.value = data.data.rows;
+};
+
 window.onresize = function () {
   bigscreenLCChart.resize();
   bigscreenLBChart.resize();
@@ -617,6 +630,7 @@ onMounted(() => {
     bigscreenRCChart = echarts.init(bigscreenRCRef.value);
     bigscreenRCChart.setOption(bigscreenRCoption);
   }
+  receivelistFun();
 });
 </script>
 

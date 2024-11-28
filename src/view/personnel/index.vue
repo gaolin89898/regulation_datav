@@ -216,6 +216,8 @@ import "swiper/swiper-bundle.css";
 import img1 from "../../../public/img/视频监控尺寸.png";
 import img9 from "../../../public/img/叉号.png";
 
+import { indicatorStatistics } from "../../api/personnel/index";
+
 const radio1 = ref("zhou");
 
 const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
@@ -349,227 +351,6 @@ const bigscreenLBoption = {
   ],
 };
 
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
-// 数据及配置
-const legendData = [
-  {
-    name: "温度异常",
-    itemStyle: { color: "rgba(0, 234, 255, 1)" },
-    textStyle: { color: "rgba(255,255,255,0.9)" },
-  },
-  {
-    name: "血压异常",
-    itemStyle: { color: "rgba(0, 145, 255, 1)" },
-    textStyle: { color: "rgba(255,255,255,0.9)" },
-  },
-];
-const color = [
-  {
-    type: "linear",
-    x: 0,
-    x2: 1,
-    y: 0,
-    y2: 0,
-    colorStops: [
-      {
-        offset: 0,
-        color: "rgba(0, 234, 255, 0.8)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0, 234, 255, 0.8)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0, 188, 188, 0.8)",
-      },
-      {
-        offset: 1,
-        color: "rgba(0, 188, 188, 0.8)",
-      },
-    ],
-  },
-  {
-    type: "linear",
-    x: 0,
-    x2: 1,
-    y: 0,
-    y2: 0,
-    colorStops: [
-      {
-        offset: 0,
-        color: "rgba(0, 145, 255, 0.8)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0, 145, 255, 0.8)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0, 107, 188, 0.8)",
-      },
-      {
-        offset: 1,
-        color: "rgba(0, 107, 188, 0.8)",
-      },
-    ],
-  },
-  {
-    type: "linear",
-    x: 0,
-    x2: 1,
-    y: 0,
-    y2: 0,
-    colorStops: [
-      {
-        offset: 0,
-        color: "rgba(0,188,255,0)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0,188,255,0)",
-      },
-      {
-        offset: 0.5,
-        color: "rgba(0,138,186,0)",
-      },
-      {
-        offset: 1,
-        color: "rgba(0,138,186,0)",
-      },
-    ],
-  },
-];
-const xData = [
-  "1月",
-  "2月",
-  "3月",
-  "4月",
-  "5月",
-  "6月",
-  "7月",
-  "8月",
-  "9月",
-  "10月",
-  "11月",
-  "12月",
-];
-const val = {
-  data1: [
-    608.123, 643.859, 185.354, 209.232, 732.714, 758.788, 198.801, 281.668,
-  ],
-  data2: [
-    1129.372, 1195.738, 344.228, 388.573, 1360.755, 1409.177, 369.202, 523.098,
-  ],
-};
-const barWidth = 20;
-
-let xBar1: number[] = [];
-let xBar2: number[] = [];
-let xBar3: number[] = [];
-
-// 初始化堆叠条形图数据
-for (let i = 0; i < val.data1.length; i++) {
-  xBar1.push(Number(val.data2[i]));
-  xBar2.push(Number(val.data1[i]) + Number(val.data2[i]));
-  xBar3.push(Number(val.data1[i]));
-}
-
-// 图表选项
-const bigscreenRBoption = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    top: "20%",
-    containLabel: true,
-  },
-  legend: { data: legendData },
-  xAxis: {
-    type: "category",
-    data: xData,
-    axisLine: { lineStyle: { color: "#ffffff" } },
-    axisLabel: { color: "#ffffff" },
-  },
-  yAxis: {
-    type: "value",
-    axisLine: { lineStyle: { color: "#ffffff" } },
-  },
-  series: [
-    {
-      z: 1,
-      name: legendData[1].name,
-      type: "bar",
-      barWidth: barWidth,
-      stack: "总量",
-      color: color[1],
-      data: val.data2,
-    },
-    {
-      z: 2,
-      name: legendData[0].name,
-      type: "bar",
-      barWidth: barWidth,
-      stack: "总量",
-      color: color[0],
-      data: val.data1,
-    },
-    {
-      z: 3,
-      name: "底部立体",
-      type: "pictorialBar",
-      data: xBar1,
-      symbol: "diamond",
-      symbolOffset: ["0%", "50%"],
-      symbolSize: [barWidth, 10],
-      itemStyle: {
-        normal: {
-          color: color[1],
-        },
-      },
-      tooltip: { show: false },
-    },
-    // data2头部
-    {
-      z: 5,
-      name: legendData[1].name,
-      type: "pictorialBar",
-      symbolPosition: "end",
-      itemStyle: {
-        normal: {
-          color: color[1],
-        },
-      },
-      data: xBar1,
-      symbol: "diamond",
-      symbolOffset: ["0%", "-50%"],
-      symbolSize: [barWidth - 4, (10 * (barWidth - 4)) / barWidth],
-      tooltip: {
-        show: false,
-      },
-    },
-    // data1头部
-    {
-      z: 4,
-      name: legendData[0].name,
-      type: "pictorialBar",
-      data: xBar2,
-      symbol: "diamond",
-      symbolPosition: "end",
-      symbolOffset: ["0%", "-50%"],
-      symbolSize: [barWidth, 10],
-      itemStyle: {
-        normal: {
-          color: color[0],
-        },
-      },
-      tooltip: {
-        show: false,
-      },
-    },
-  ],
-};
 let lbDialogBottomChart: any = null;
 const lbDialogBottomoption = {
   grid: {
@@ -679,6 +460,225 @@ const lbcanleClick = (item) => {
   item.status = false;
 };
 
+let bigscreenRBChart: any = null;
+const bigscreenRBRef = ref();
+// 数据及配置
+const legendData = [
+  {
+    name: "温度异常",
+    itemStyle: { color: "rgba(0, 234, 255, 1)" },
+    textStyle: { color: "rgba(255,255,255,0.9)" },
+  },
+  {
+    name: "血压异常",
+    itemStyle: { color: "rgba(0, 145, 255, 1)" },
+    textStyle: { color: "rgba(255,255,255,0.9)" },
+  },
+];
+const color = [
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
+      {
+        offset: 0,
+        color: "rgba(0, 234, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 234, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 188, 188, 0.8)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0, 188, 188, 0.8)",
+      },
+    ],
+  },
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
+      {
+        offset: 0,
+        color: "rgba(0, 145, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 145, 255, 0.8)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0, 107, 188, 0.8)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0, 107, 188, 0.8)",
+      },
+    ],
+  },
+  {
+    type: "linear",
+    x: 0,
+    x2: 1,
+    y: 0,
+    y2: 0,
+    colorStops: [
+      {
+        offset: 0,
+        color: "rgba(0,188,255,0)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0,188,255,0)",
+      },
+      {
+        offset: 0.5,
+        color: "rgba(0,138,186,0)",
+      },
+      {
+        offset: 1,
+        color: "rgba(0,138,186,0)",
+      },
+    ],
+  },
+];
+const val = {
+  data1: [],
+  data2: [],
+};
+const barWidth = 20;
+
+let xBar1: number[] = [];
+let xBar2: number[] = [];
+let xBar3: number[] = [];
+
+// 图表选项
+const bigscreenRBoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "20%",
+    containLabel: true,
+  },
+  legend: { data: legendData },
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLine: { lineStyle: { color: "#ffffff" } },
+    axisLabel: { color: "#ffffff" },
+  },
+  yAxis: {
+    type: "value",
+    axisLine: { lineStyle: { color: "#ffffff" } },
+  },
+  series: [
+    {
+      z: 1,
+      name: legendData[1].name,
+      type: "bar",
+      barWidth: barWidth,
+      stack: "总量",
+      color: color[1],
+      data: val.data2,
+    },
+    {
+      z: 2,
+      name: legendData[0].name,
+      type: "bar",
+      barWidth: barWidth,
+      stack: "总量",
+      color: color[0],
+      data: val.data1,
+    },
+    {
+      z: 3,
+      name: "底部立体",
+      type: "pictorialBar",
+      data: xBar1,
+      symbol: "diamond",
+      symbolOffset: ["0%", "50%"],
+      symbolSize: [barWidth, 10],
+      itemStyle: {
+        normal: {
+          color: color[1],
+        },
+      },
+      tooltip: { show: false },
+    },
+    // data2头部
+    {
+      z: 5,
+      name: legendData[1].name,
+      type: "pictorialBar",
+      symbolPosition: "end",
+      itemStyle: {
+        normal: {
+          color: color[1],
+        },
+      },
+      data: xBar1,
+      symbol: "diamond",
+      symbolOffset: ["0%", "-50%"],
+      symbolSize: [barWidth - 4, (10 * (barWidth - 4)) / barWidth],
+      tooltip: {
+        show: false,
+      },
+    },
+    // data1头部
+    {
+      z: 4,
+      name: legendData[0].name,
+      type: "pictorialBar",
+      data: xBar2,
+      symbol: "diamond",
+      symbolPosition: "end",
+      symbolOffset: ["0%", "-50%"],
+      symbolSize: [barWidth, 10],
+      itemStyle: {
+        normal: {
+          color: color[0],
+        },
+      },
+      tooltip: {
+        show: false,
+      },
+    },
+  ],
+};
+const indicatorStatisticsList = () => {
+  indicatorStatistics({
+    dayType: "week",
+  }).then((res) => {
+    val.data1 = res.data.data[0].data;
+    val.data2 = res.data.data[1].data;
+    xBar1 = val.data2.map((item) => Number(item));
+    xBar2 = val.data1.map((item, index) => Number(item) + xBar1[index]);
+    xBar3 = val.data1.map((item) => Number(item));
+    bigscreenRBoption.series[0].data = val.data2;
+    bigscreenRBoption.series[1].data = val.data1;
+    bigscreenRBChart?.setOption(bigscreenRBoption);
+    bigscreenRBoption.xAxis.data = res.data.data[0].time;
+  });
+};
+
+const initChart = () => {
+  if (!bigscreenRBRef.value) return;
+  bigscreenRBChart = echarts.init(bigscreenRBRef.value);
+  bigscreenRBChart.setOption(bigscreenRBoption);
+  window.addEventListener("resize", () => bigscreenRBChart?.resize());
+};
+
 window.onresize = function () {
   bigscreenRBChart.resize();
   lbDialogBottomChart.resize();
@@ -690,10 +690,8 @@ onMounted(() => {
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 
-  if (bigscreenRBRef.value) {
-    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    bigscreenRBChart.setOption(bigscreenRBoption);
-  }
+  initChart();
+  indicatorStatisticsList();
 });
 </script>
 
