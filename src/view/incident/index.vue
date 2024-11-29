@@ -18,17 +18,20 @@
         </div>
       </div>
       <div class="bigscreen_lt_bottom_r">
-        <div class="bigscreen_lt_bottom_r_nei" v-for="(item, index) in list3">
+        <div
+          class="bigscreen_lt_bottom_r_nei"
+          v-for="(item, index) in alarmInformationlist"
+        >
           <div>
-            {{ item.code }}
+            {{ item.emergencyAlarmId }}
           </div>
-          <div>{{ item.time }}</div>
+          <div>{{ dayjs(item.createTime).format("YYYY-MM-DD") }}</div>
           <div
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
             }"
           >
-            {{ item.name }}
+            {{ item.type }}
           </div>
         </div>
       </div>
@@ -41,11 +44,25 @@
         <span>区域统计</span>
       </div>
       <div class="pickerCss">
-        <img src="/public/img/zuo.svg" alt="" style="margin-left: 5px" />
-        <span>7月21日</span>
+        <img
+          src="/public/img/zuo.svg"
+          alt=""
+          @click="timeLeftClick"
+          style="margin-left: 5px"
+        />
+        <span>{{
+          dayjs(areaStatisticsFormData.startTime).format("MM月DD日")
+        }}</span>
         <span>-</span>
-        <span>7月27日</span>
-        <img src="/public/img/you.svg" alt="" style="margin-right: 5px" />
+        <span>{{
+          dayjs(areaStatisticsFormData.endTime).format("MM月DD日")
+        }}</span>
+        <img
+          src="/public/img/you.svg"
+          alt=""
+          @click="timeRightClick"
+          style="margin-right: 5px"
+        />
       </div>
     </div>
     <div class="bigscreen_lc_bottom">
@@ -88,7 +105,7 @@
         <img src="/public/img/事件报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
           <Vue3SeamlessScroll
-            :list="list"
+            :list="alarmEventslist"
             :class-option="{
               step: 5,
             }"
@@ -96,19 +113,18 @@
             class="scrool"
           >
             <div
-              v-for="(item, index) in list"
+              v-for="(item, index) in alarmEventslist"
               :key="index"
-              @click="rtClick(item)"
               class="bigscreen_rt_bottom_rnei"
             >
-              <span>{{ item.name }}</span>
+              <span>{{ item.description }}</span>
               <div
                 :style="{
                   background: ` url(${item.img}) no-repeat`,
                   'background-size': '100% 100%',
                 }"
               >
-                {{ item.status }}
+                {{ item.type }}
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -206,7 +222,7 @@
     </div>
   </div>
 
-  <template v-for="(item, index) in list">
+  <!-- <template v-for="(item, index) in list">
     <div v-if="item.status1" class="rtDialog">
       <div class="rtDialog_top">
         <span>事件报告详情</span>
@@ -243,7 +259,7 @@
         </div>
       </div>
     </div>
-  </template>
+  </template> -->
   <template v-for="(item, index) in policieslist">
     <div v-if="item.status" class="rbDialog">
       <div class="rbDialog_top">
@@ -271,11 +287,11 @@
       </div>
     </div>
   </template>
-  <template v-for="(item, index) in list4">
+  <template v-for="(item, index) in soplist">
     <div v-if="item.status" class="rcDialog">
       <div class="rcDialog_top">
         <span>SOP详情</span>
-        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
+        <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
       </div>
       <div class="rcDialog_bottom">
         <div>物料管理标准操作程序</div>
@@ -306,76 +322,20 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import { getPoliciesListApi, sopList } from "../../api/incident";
-import img9 from "../../../public/img/叉号.png";
+import {
+  getPoliciesListApi,
+  sopList,
+  alarmEventsList,
+  alarmInformationList,
+  areaStatistics,
+  getstatistics,
+} from "../../api/incident";
 import dayjs from "dayjs";
-
-const list = ref([
-  {
-    name: "物料A库存异常",
-    img: "/img/黄色.png",
-    status: "物料报警",
-    status1: false,
-  },
-  {
-    name: "设备一监测数据异常",
-    img: "/img/绿色.png",
-    status: "设备报警",
-    status1: false,
-  },
-  {
-    name: "XXX产品出现质量问题",
-    img: "/img/红色.png",
-    status: "质量问题",
-    status1: false,
-  },
-  {
-    name: "XXX发生安全事故",
-    img: "/img/蓝色.png",
-    status: "事故问题",
-    status1: false,
-  },
-]);
-const list3 = ref([
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-  { code: "编号1", time: "2024-10-11", name: "徐凯品" },
-]);
-
-const list4 = ref([
-  {
-    code: "《综合应急预案SOP》",
-    time: "安全生产部1",
-    name: "车间应急方案",
-    status: false,
-  },
-  {
-    code: "《危险化学品事故专项SOP》",
-    time: "安全生产部2",
-    name: "物料管理",
-    status: false,
-  },
-  {
-    code: "《综合应急预案SOP》",
-    time: "安全生产部3",
-    name: "车间应急方案",
-    status: false,
-  },
-  {
-    code: "《危险化学品事故专项SOP》",
-    time: "安全生产部4",
-    name: "物料管理",
-    status: false,
-  },
-  {
-    code: "《综合应急预案SOP》",
-    time: "安全生产部5",
-    name: "车间应急方案",
-    status: false,
-  },
-]);
+import img1 from "../../../public/img/黄色.png";
+import img2 from "../../../public/img/绿色.png";
+import img3 from "../../../public/img/红色.png";
+import img4 from "../../../public/img/蓝色.png";
+import img9 from "../../../public/img/叉号.png";
 
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
@@ -420,7 +380,7 @@ const bigscreenLBoption = {
   },
   series: [
     {
-      data: [2, 0.5, 1, 0.7, 3, 3.5, 1, 5, 3, 2, 2, 5],
+      data: [],
       type: "bar",
       itemStyle: {
         color: "#68B1A6", // 线条颜色
@@ -463,53 +423,24 @@ const bigscreenLCoption = {
       labelLine: {
         show: false,
       },
-      data: [
-        { value: 1048, name: "Search Engine" },
-        { value: 735, name: "Direct" },
-        { value: 580, name: "Email" },
-        { value: 484, name: "Union Ads" },
-      ],
+      data: [],
     },
   ],
 };
-
 const rtClick = (item) => {
-  list.value.forEach((v) => {
-    if (item.name == v.name) {
-      v.status1 = !v.status1;
+  soplist.value.forEach((v) => {
+    if (item.sopId == v.sopId) {
+      v.status = !v.status;
     } else {
-      v.status1 = false;
+      v.status = false;
     }
   });
 };
 const rtcanleClick = (item) => {
-  item.status1 = false;
-};
-
-const rbClcik = (item) => {
-  list2.value.forEach((v) => {
-    if (item.text == v.text) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const rbcanleClick = (item) => {
   item.status = false;
 };
 
-const rcClcik = (item) => {
-  list4.value.forEach((v) => {
-    if (item.time == v.time) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-
-//政策法规
+//sop管理
 const sopFormData = ref({
   name: "",
   pageNum: 1,
@@ -521,6 +452,18 @@ const soplist = ref<any[]>([]);
 const soplistFun = async () => {
   const { data } = await sopList(sopFormData.value);
   soplist.value = data.data.rows.slice(0, 5);
+};
+const rcClcik = (item: any) => {
+  soplist.value.forEach((v) => {
+    if (item.sopId == v.sopId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rccanleClick = (item: any) => {
+  item.status = false;
 };
 
 //政策法规
@@ -534,7 +477,115 @@ const policiesFormData = ref({
 const policieslist = ref<any[]>([]);
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
-  policieslist.value = data.data.rows;
+  policieslist.value = data.data.rows.map((itme) => {
+    return { ...itme, status: false };
+  });
+};
+const rbClcik = (item: any) => {
+  policieslist.value.forEach((v) => {
+    if (item.policiesId == v.policiesId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rbcanleClick = (item: any) => {
+  item.status = false;
+};
+
+//事件报告
+const alarmEventsFormData = ref({
+  type: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmEventslist = ref<any[]>([]);
+const alarmEventslistFun = async () => {
+  const { data } = await alarmEventsList(alarmEventsFormData.value);
+  alarmEventslist.value = data.data.rows;
+};
+
+//事件报告
+const alarmInformationFormData = ref({
+  eventName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmInformationlist = ref<any[]>([]);
+const alarmInformationlistFun = async () => {
+  const { data } = await alarmInformationList(alarmInformationFormData.value);
+  alarmInformationlist.value = data.data.rows.slice(0, 5);
+};
+
+const areaStatisticsFormData = ref({
+  startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
+  endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
+});
+const areaStatisticsFun = async () => {
+  const { data } = await areaStatistics(areaStatisticsFormData.value);
+  bigscreenLCoption.series[0].data = data.data.map((itme) => {
+    return {
+      value: itme.count,
+      name: itme.manufacturer,
+    };
+  });
+  if (bigscreenLCChart) {
+    bigscreenLCChart.setOption(bigscreenLCoption);
+  }
+};
+
+const timeLeftClick = () => {
+  const currentStart = dayjs(
+    areaStatisticsFormData.value.startTime,
+    "YYYY-MM-DD"
+  );
+  areaStatisticsFormData.value.startTime = currentStart
+    .subtract(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  areaStatisticsFormData.value.endTime = currentStart
+    .subtract(1, "month")
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  areaStatisticsFun(); // 更新数据
+};
+const timeRightClick = () => {
+  const currentStart = dayjs(
+    areaStatisticsFormData.value.startTime,
+    "YYYY-MM-DD"
+  );
+  areaStatisticsFormData.value.startTime = currentStart
+    .add(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  areaStatisticsFormData.value.endTime = currentStart
+    .add(1, "month")
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  areaStatisticsFun(); // 更新数据
+};
+
+const historyStatistics = async () => {
+  const { data } = await getstatistics({
+    dayType: "year",
+  });
+  let sum = new Array(12).fill(0);
+  data.data.forEach((item) => {
+    // 遍历每个数据集的 `data` 数组并进行累加
+    item.data.forEach((value, index) => {
+      sum[index] += value;
+    });
+  });
+  bigscreenLBoption.series[0].data = sum;
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
+  }
 };
 
 window.onresize = function () {
@@ -554,6 +605,10 @@ onMounted(() => {
   }
   policieslistFun();
   soplistFun();
+  alarmEventslistFun();
+  alarmInformationlistFun();
+  areaStatisticsFun();
+  historyStatistics();
 });
 </script>
 

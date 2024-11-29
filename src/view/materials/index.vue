@@ -7,12 +7,14 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div class="bigscreen_lt_bottom_nei" v-for="item in list">
+      <div class="bigscreen_lt_bottom_nei" v-for="item in alarmInformationlist">
         <img :src="item.img" alt="" />
         <div class="bigscreen_lt_bottom_nei_r">
-          <span style="padding-left: 25px">{{ item.name }}</span>
-          <span>{{ item.time }}</span>
-          <span>{{ item.status }}</span>
+          <span style="padding-left: 25px">{{ item.materials.name }}</span>
+          <span>{{
+            dayjs(item.materials.createTime).format("YYYY-MM-DD")
+          }}</span>
+          <span>{{ item.level }}</span>
         </div>
       </div>
     </div>
@@ -21,7 +23,7 @@
     <div class="bigscreen_lc_top">
       <div class="bigscreen_lc_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>设备台账</span>
+        <span>库存信息</span>
       </div>
       <div
         style="
@@ -34,9 +36,13 @@
           justify-content: center;
         "
       >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="月" value="ri" />
+        <el-radio-group
+          v-model="materiaStatus"
+          class="group"
+          @change="materiaChange"
+        >
+          <el-radio-button label="周" value="week" />
+          <el-radio-button label="月" value="month" />
         </el-radio-group>
       </div>
     </div>
@@ -44,7 +50,8 @@
       <el-select
         size="small"
         class="selectcss"
-        v-model="selectval2"
+        v-model="materialsId"
+        @change="materialsChange"
         style="
           width: 80px;
           position: absolute;
@@ -54,10 +61,10 @@
         "
       >
         <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in materialFileslist"
+          :key="item.materialsId"
+          :label="item.name"
+          :value="item.materialsId"
         />
       </el-select>
       <div class="bigscreen_lc_bottom_nei" ref="bigscreenLCRef"></div>
@@ -106,18 +113,32 @@
         <span>用量趋势分析</span>
       </div>
       <div class="pickerCss">
-        <img src="/public/img/zuo.svg" alt="" style="margin-left: 5px" />
-        <span>7月21日</span>
+        <img
+          src="/public/img/zuo.svg"
+          alt=""
+          @click="timeLeftClick"
+          style="margin-left: 5px"
+        />
+        <span>
+          {{ dayjs(receivestatisticsData.startTime).format("MM月DD日") }}
+        </span>
         <span>-</span>
-        <span>7月27日</span>
-        <img src="/public/img/you.svg" alt="" style="margin-right: 5px" />
+        <span>
+          {{ dayjs(receivestatisticsData.endTime).format("MM月DD日") }}
+        </span>
+        <img
+          src="/public/img/you.svg"
+          alt=""
+          @click="timeRightClick"
+          style="margin-right: 5px"
+        />
       </div>
     </div>
     <div class="bigscreen_rc_bottom">
       <el-select
         size="small"
         class="selectcss"
-        v-model="selectval2"
+        v-model="materialsId"
         style="
           width: 80px;
           position: absolute;
@@ -127,10 +148,10 @@
         "
       >
         <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in materialFileslist"
+          :key="item.materialsId"
+          :label="item.name"
+          :value="item.materialsId"
         />
       </el-select>
       <div class="bigscreen_rc_bottom_nei" ref="bigscreenRCRef"></div>
@@ -227,33 +248,17 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import { receiveListRes, receiveList } from "../../api/materials/index";
+import {
+  receiveList,
+  getstatistics,
+  materialFilesList,
+  receivestatistics,
+} from "../../api/materials/index";
+import { alarmEventsList } from "../../api/incident/index";
 import dayjs from "dayjs";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import img7 from "../../../public/img/弹窗文案背景.png";
-
-const radio1 = ref("zhou");
-const list = ref([
-  {
-    name: "物料一",
-    img: "/img/materials/lv.png",
-    status: "库存异常",
-    time: "2024-10-11 12:04:58",
-  },
-  {
-    name: "物料一",
-    img: "/img/materials/lan.png",
-    status: "领用异常",
-    time: "2024-10-11 12:04:58",
-  },
-  {
-    name: "物料一",
-    img: "/img/materials/hong.png",
-    status: "库存异常",
-    time: "2024-10-11 12:04:58",
-  },
-]);
 
 const selectval = ref("dian");
 const options = ref([
@@ -322,6 +327,56 @@ const list3 = ref([
   },
 ]);
 
+const rbClick = (item) => {
+  list3.value.forEach((v) => {
+    if (item.code == v.code) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rbcanleClick = (item) => {
+  item.status = false;
+};
+
+//报警信息
+const alarmInformationData = ref({
+  type: "物料报警",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmInformationlist = ref<any[]>([]);
+const alarmInformationlistFun = async () => {
+  const { data } = await alarmEventsList(alarmInformationData.value);
+  let list = data.data.rows.slice(0, 3);
+  list[0].img = "/img/materials/lv.png";
+  list[1].img = "/img/materials/lan.png";
+  list[2].img = "/img/materials/hong.png";
+  alarmInformationlist.value = list.map((item) => {
+    return {
+      ...item,
+      status: "库存异常",
+    };
+  });
+};
+
+//领用记录
+const receiveFormData = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const receivelist = ref<any[]>([]);
+const receivelistFun = async () => {
+  const { data } = await receiveList(receiveFormData.value);
+  receivelist.value = data.data.rows;
+};
+
+//库存分析
 let bigscreenLCChart: any = null;
 const bigscreenLCRef = ref();
 const bigscreenLCoption = {
@@ -335,7 +390,7 @@ const bigscreenLCoption = {
 
   xAxis: {
     type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    data: [],
     axisLabel: {
       color: "rgba(255, 255, 255, 0.65)",
     },
@@ -355,7 +410,7 @@ const bigscreenLCoption = {
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -385,7 +440,48 @@ const bigscreenLCoption = {
     },
   ],
 };
+const materiaStatus = ref("week");
+const materialsId = ref(0);
+const materialFiles = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const materialFileslist = ref<any[]>([]);
+const materialFilesListFun = async () => {
+  const { data } = await materialFilesList(materialFiles.value);
+  materialFileslist.value = data.data.rows;
+  materialsId.value = data.data.rows[0].materialsId;
+  await materialsStatistics();
+  await receivestatisticsFun();
+};
+const materialsStatistics = async () => {
+  const { data } = await getstatistics({
+    dayType: materiaStatus.value,
+    materialsId: materialsId.value,
+  });
+  bigscreenLCoption.xAxis.data = data.data.xaxisData;
+  bigscreenLCoption.series[0].data = data.data.seriesData;
+  if (bigscreenLCRef.value) {
+    bigscreenLCChart = echarts.init(bigscreenLCRef.value);
+    bigscreenLCChart.setOption(bigscreenLCoption);
+  }
+};
+const materiaChange = async (val) => {
+  materiaStatus.value = val;
+  await materialsStatistics();
+};
+const materialsChange = async (val) => {
+  materialsId.value = val;
+  await alarmInformationlistFun();
+  await materialsStatistics();
+  if (bigscreenLCRef.value) {
+    bigscreenLCChart.setOption(bigscreenLCoption);
+  }
+};
 
+//物料类型统计
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -430,6 +526,7 @@ const bigscreenLBoption = {
   ],
 };
 
+//用量类型分析
 let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
 const bigscreenRToption = {
@@ -521,6 +618,7 @@ const bigscreenRToption = {
   ],
 };
 
+//用量趋势分析
 let bigscreenRCChart: any = null;
 const bigscreenRCRef = ref();
 const bigscreenRCoption = {
@@ -581,30 +679,46 @@ const bigscreenRCoption = {
     },
   ],
 };
-
-const rbClick = (item) => {
-  list3.value.forEach((v) => {
-    if (item.code == v.code) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
+const receivestatisticsData = ref({
+  materialsName: "",
+  startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
+  endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
+});
+const receivestatisticsFun = async () => {
+  const { data } = await receivestatistics({
+    ...receivestatisticsData.value,
+    materialsId: materialsId.value,
   });
 };
-const rbcanleClick = (item) => {
-  item.status = false;
+const timeLeftClick = () => {
+  const currentStart = dayjs(
+    receivestatisticsData.value.startTime,
+    "YYYY-MM-DD"
+  );
+  receivestatisticsData.value.startTime = currentStart
+    .subtract(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  receivestatisticsData.value.endTime = currentStart
+    .subtract(1, "month")
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  receivestatisticsFun(); // 更新数据
 };
-
-const receiveFormData = ref({
-  pageNum: 1,
-  pageSize: 10000,
-  orderColumn: "createTime",
-  orderDirection: "descending",
-});
-const receivelist = ref<any[]>([]);
-const receivelistFun = async () => {
-  const { data } = await receiveList(receiveFormData.value);
-  receivelist.value = data.data.rows;
+const timeRightClick = () => {
+  const currentStart = dayjs(
+    receivestatisticsData.value.startTime,
+    "YYYY-MM-DD"
+  );
+  receivestatisticsData.value.startTime = currentStart
+    .add(1, "month")
+    .startOf("month")
+    .format("YYYY-MM-DD");
+  receivestatisticsData.value.endTime = currentStart
+    .add(1, "month")
+    .endOf("month")
+    .format("YYYY-MM-DD");
+  receivestatisticsFun(); // 更新数据
 };
 
 window.onresize = function () {
@@ -615,10 +729,6 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenLCRef.value) {
-    bigscreenLCChart = echarts.init(bigscreenLCRef.value);
-    bigscreenLCChart.setOption(bigscreenLCoption);
-  }
   if (bigscreenLBRef.value) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
@@ -632,6 +742,9 @@ onMounted(() => {
     bigscreenRCChart.setOption(bigscreenRCoption);
   }
   receivelistFun();
+  alarmInformationlistFun();
+  materialFilesListFun();
+  receivestatisticsFun();
 });
 </script>
 

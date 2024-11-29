@@ -92,7 +92,7 @@
           <div class="bigscreen_lb_bottom_nei_t_r">
             <span>节点名称</span>
             <span>所属工艺</span>
-            <span>节点状态</span>
+            <span>是否为高风险</span>
           </div>
         </div>
         <div
@@ -104,7 +104,7 @@
           <div class="bigscreen_lb_bottom_neis_r">
             <span>{{ item.nodeName }}</span>
             <span>{{ item.craftArchive.craftArchiveName }}</span>
-            <span>{{ item.isHighRisk }}</span>
+            <span>{{ item.isHighRisk ? "是" : "否" }}</span>
           </div>
         </div>
       </div>
@@ -183,72 +183,31 @@
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei">
-        <div
-          style="
-            width: 100%;
-            height: 30px;
-            background: url('/img/equipment/tabletop.png') no-repeat;
-            background-size: 100% 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <span
-            style="
-              width: 33%;
-              color: #ffffff;
-              text-align: center;
-              font-size: 14px;
-            "
-            >工艺名称</span
-          >
-          <span
-            style="
-              width: 33%;
-              color: #ffffff;
-              text-align: center;
-              font-size: 14px;
-            "
-            >版本号</span
-          >
-          <span
-            style="
-              width: 33%;
-              color: #ffffff;
-              text-align: center;
-              font-size: 14px;
-            "
-            >工艺制定人员</span
-          >
+        <div class="bigscreen_rb_bottom_nei_t">
+          <span>工艺名称</span>
+          <span>版本号</span>
+          <span>工艺制定人员</span>
         </div>
         <div
           class="bigscreen_rb_bottom_nei_item"
           v-for="(item, index) in archivelist"
         >
-          <div style="color: #ffffff; display: flex; align-items: center">
+          <div class="bigscreen_rb_bottom_nei_item1">
             <div
+              class="bigscreen_rb_bottom_nei_item1_div"
               :style="{
-                width: '13px',
-                height: '13px',
                 border: `1px solid ${index % 2 === 0 ? '#01D1E7' : '#DF9819'}`,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: '0 15px',
               }"
             >
               <div
                 :style="{
-                  width: '5px',
-                  height: '5px',
                   background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
                 }"
               ></div>
             </div>
             {{ item.craftArchiveName }}
           </div>
-          <div style="color: #ffffff">{{ item.version }}</div>
+          <div>{{ item.version }}</div>
           <div
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
@@ -261,8 +220,8 @@
     </div>
   </div>
 
-  <template v-for="item in list3">
-    <div v-if="item.status1" class="lbDialog">
+  <template v-for="item in nodelist">
+    <div v-if="item.status" class="lbDialog">
       <div class="lbDialog_top">
         <span>工艺节点详情</span>
         <img :src="img9" alt="" srcset="" @click="lbcanleClick(item)" />
@@ -270,11 +229,11 @@
       <div class="lbDialog_bottom">
         <div>
           <span>节点编号：</span>
-          <span>001</span>
+          <span>{{ item.craftNodeId }}</span>
         </div>
         <div>
           <span>节点名称：</span>
-          <span>隔离器工艺</span>
+          <span>{{ item.nodeName }}</span>
         </div>
         <div>
           <span>所属工艺：</span>
@@ -282,27 +241,23 @@
         </div>
         <div>
           <span>节点顺序：</span>
-          <span>1</span>
+          <span>{{ item.nodeOrder }}</span>
         </div>
         <div>
           <span>操作描述：</span>
-          <span>*******</span>
+          <span>{{ item.operationDescription }}</span>
         </div>
         <div>
           <span>操作方式：</span>
-          <span>**************</span>
+          <span>{{ item.operationMethod }}</span>
         </div>
         <div>
           <span>所需时间：</span>
-          <span>5h</span>
-        </div>
-        <div>
-          <span>节点状态：</span>
-          <span>进行中</span>
+          <span>{{ item.requiredTime }}</span>
         </div>
         <div>
           <span>是否为高风险：</span>
-          <span>是</span>
+          <span>{{ item.isHighRisk ? "是" : "否" }}</span>
         </div>
       </div>
     </div>
@@ -371,58 +326,6 @@ const list = ref([
     img: "/img/craftsmanship/sanjihong.png",
     status: "三级报警",
     type: "工艺异常",
-  },
-]);
-
-const list2 = ref([
-  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
-  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
-  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
-  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
-  { code: "病毒加工工艺", time: "1.0版本", name: "徐凯品" },
-]);
-const list3 = ref([
-  {
-    img: "/img/craftsmanship/1.png",
-    name: "隔离器工艺1",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
-  },
-  {
-    img: "/img/craftsmanship/2.png",
-    name: "隔离器工艺2",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
-  },
-  {
-    img: "/img/craftsmanship/3.png",
-    name: "隔离器工艺3",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
-  },
-  {
-    img: "/img/craftsmanship/4.png",
-    name: "隔离器工艺4",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
-  },
-  {
-    img: "/img/craftsmanship/1.png",
-    name: "隔离器工艺5",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
-  },
-  {
-    img: "/img/craftsmanship/2.png",
-    name: "隔离器工艺6",
-    type: "病毒加工工艺",
-    status: "进行中",
-    status1: false,
   },
 ]);
 
@@ -612,19 +515,6 @@ function createAreaStyle(startColor: string, endColor: string) {
   };
 }
 
-const lbClick = (item) => {
-  list3.value.forEach((v) => {
-    if (item.name == v.name) {
-      v.status1 = !v.status1;
-    } else {
-      v.status1 = false;
-    }
-  });
-};
-const lbcanleClick = (item) => {
-  item.status1 = false;
-};
-
 const rtstatus = ref(false);
 const rtClcik = () => {
   rtstatus.value = !rtstatus.value;
@@ -657,7 +547,27 @@ const nodeFormData = ref({
 const nodelist = ref<any[]>([]);
 const nodelistFun = async () => {
   const { data } = await nodeList(nodeFormData.value);
-  nodelist.value = data.data.rows.slice(0, 5);
+  let list = data.data.rows.slice(0, 5);
+  list[0].img = "/img/craftsmanship/1.png";
+  list[1].img = "/img/craftsmanship/2.png";
+  list[2].img = "/img/craftsmanship/3.png";
+  list[3].img = "/img/craftsmanship/4.png";
+  list[4].img = "/img/craftsmanship/1.png";
+  nodelist.value = list.map((item) => {
+    return { ...item, status: false };
+  });
+};
+const lbClick = (item: any) => {
+  nodelist.value.forEach((v) => {
+    if (item.craftNodeId == v.craftNodeId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const lbcanleClick = (item: any) => {
+  item.status = false;
 };
 
 onMounted(() => {
@@ -912,7 +822,7 @@ $design-height: 1080;
           align-items: center;
           span {
             width: 33%;
-            font-size: adaptiveFontSize(16);
+            font-size: adaptiveFontSize(14);
             text-align: center;
           }
         }
@@ -934,7 +844,7 @@ $design-height: 1080;
           color: #ffffff;
           span {
             width: 33%;
-            font-size: adaptiveFontSize(16);
+            font-size: adaptiveFontSize(14);
             text-align: center;
           }
         }
@@ -1070,6 +980,21 @@ $design-height: 1080;
       flex-direction: column;
       justify-content: space-between;
       margin: auto;
+      .bigscreen_rb_bottom_nei_t {
+        width: 100%;
+        height: adaptiveHeight(30);
+        background: url("/img/equipment/tabletop.png") no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          font-size: adaptiveWidth(14);
+          width: 33%;
+          color: #ffffff;
+          text-align: center;
+        }
+      }
       .bigscreen_rb_bottom_nei_item {
         width: 100%;
         height: adaptiveHeight(50);
@@ -1081,6 +1006,26 @@ $design-height: 1080;
           width: 33%;
           text-align: center;
           font-size: adaptiveFontSize(14);
+          &:nth-child(2) {
+            color: #ffffff;
+          }
+        }
+        .bigscreen_rb_bottom_nei_item1 {
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          .bigscreen_rb_bottom_nei_item1_div {
+            width: adaptiveWidth(10);
+            height: adaptiveHeight(10);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 adaptiveWidth(10);
+            div {
+              width: adaptiveWidth(5);
+              height: adaptiveHeight(5);
+            }
+          }
         }
       }
     }
