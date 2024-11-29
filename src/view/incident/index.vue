@@ -138,14 +138,14 @@
         </div>
         <div
           class="bigscreen_rc_bottom_nei_b"
-          v-for="(item, index) in list4"
+          v-for="(item, index) in soplist"
           @click="rcClcik(item)"
         >
           <span>
-            {{ item.code }}
+            {{ item.name }}
           </span>
           <span>{{ item.time }}</span>
-          <span>{{ item.name }}</span>
+          <span>{{ item.scope }}</span>
         </div>
       </div>
     </div>
@@ -171,7 +171,7 @@
         </div>
         <div class="bigscreen_rb_bottom_r">
           <Vue3SeamlessScroll
-            :list="list2"
+            :list="policieslist"
             :class-option="{
               step: 5,
             }"
@@ -179,12 +179,12 @@
             class="scrool"
           >
             <div
-              v-for="(item, index) in list2"
+              v-for="(item, index) in policieslist"
               :key="index"
               class="bigscreen_rb_bottom_rnei"
             >
-              <span class="bigscreen_rb_bottom_rnei_span"
-                >2024年09月23日 22:15:53</span
+              <span class="bigscreen_rb_bottom_rnei_span">
+                {{ dayjs(item.createTime).format("YYYY-MM-DD") }}</span
               >
               <div
                 :style="{
@@ -192,7 +192,7 @@
                   'background-size': '100% 100%',
                 }"
               >
-                <span>{{ item.text }}</span>
+                <span>{{ item.policiesName }}</span>
                 <img
                   @click="rbClcik(item)"
                   src="/public/img/查看详情.png"
@@ -244,7 +244,7 @@
       </div>
     </div>
   </template>
-  <template v-for="(item, index) in list2">
+  <template v-for="(item, index) in policieslist">
     <div v-if="item.status" class="rbDialog">
       <div class="rbDialog_top">
         <span>政策法规弹窗</span>
@@ -306,7 +306,9 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import { getPoliciesListApi, sopList } from "../../api/incident";
 import img9 from "../../../public/img/叉号.png";
+import dayjs from "dayjs";
 
 const list = ref([
   {
@@ -334,25 +336,6 @@ const list = ref([
     status1: false,
   },
 ]);
-
-const list2 = ref([
-  {
-    background: "/img/红色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》1",
-    status: false,
-  },
-  {
-    background: "/img/绿色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》2",
-    status: false,
-  },
-  {
-    background: "/img/黄色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》3",
-    status: false,
-  },
-]);
-
 const list3 = ref([
   { code: "编号1", time: "2024-10-11", name: "徐凯品" },
   { code: "编号1", time: "2024-10-11", name: "徐凯品" },
@@ -526,6 +509,34 @@ const rcClcik = (item) => {
   });
 };
 
+//政策法规
+const sopFormData = ref({
+  name: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const soplist = ref<any[]>([]);
+const soplistFun = async () => {
+  const { data } = await sopList(sopFormData.value);
+  soplist.value = data.data.rows.slice(0, 5);
+};
+
+//政策法规
+const policiesFormData = ref({
+  policiesName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const policieslist = ref<any[]>([]);
+const policieslistFun = async () => {
+  const { data } = await getPoliciesListApi(policiesFormData.value);
+  policieslist.value = data.data.rows;
+};
+
 window.onresize = function () {
   bigscreenLCChart.resize();
   bigscreenLBChart.resize();
@@ -541,6 +552,8 @@ onMounted(() => {
     bigscreenLCChart = echarts.init(bigscreenLCRef.value);
     bigscreenLCChart.setOption(bigscreenLCoption);
   }
+  policieslistFun();
+  soplistFun();
 });
 </script>
 
