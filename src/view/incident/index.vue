@@ -204,11 +204,11 @@
               >
               <div
                 :style="{
-                  background: `url(${item.background}) no-repeat`,
+                  background: `url(${item.img}) no-repeat`,
                   'background-size': '100% 100%',
                 }"
               >
-                <span>{{ item.policiesName }}</span>
+                <span style="margin-left: 10px">{{ item.policiesName }}</span>
                 <img
                   @click="rbClcik(item)"
                   src="/public/img/查看详情.png"
@@ -335,6 +335,9 @@ import img1 from "../../../public/img/黄色.png";
 import img2 from "../../../public/img/绿色.png";
 import img3 from "../../../public/img/红色.png";
 import img4 from "../../../public/img/蓝色.png";
+import img5 from "../../../public/img/红色背景框.png";
+import img6 from "../../../public/img/绿色背景框.png";
+import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
 
 let bigscreenLBChart: any = null;
@@ -477,8 +480,9 @@ const policiesFormData = ref({
 const policieslist = ref<any[]>([]);
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
-  policieslist.value = data.data.rows.map((itme) => {
-    return { ...itme, status: false };
+  let imgList = [img5, img6, img7];
+  policieslist.value = data.data.rows.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
 const rbClcik = (item: any) => {
@@ -505,10 +509,13 @@ const alarmEventsFormData = ref({
 const alarmEventslist = ref<any[]>([]);
 const alarmEventslistFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
-  alarmEventslist.value = data.data.rows;
+  let imgList = [img1, img2, img3, img4];
+  alarmEventslist.value = data.data.rows.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
+  });
 };
 
-//事件报告
+//报警信息
 const alarmInformationFormData = ref({
   eventName: "",
   pageNum: 1,

@@ -41,25 +41,25 @@
         <img src="/public/img/事件报告图标.png" alt="" />
         <div class="bigscreen_lc_bottom_r">
           <Vue3SeamlessScroll
-            :list="list"
+            :list="alarmEventslist"
             :class-option="{
               step: 5,
             }"
             class="scrool"
           >
             <div
-              v-for="(item, index) in list"
+              v-for="(item, index) in alarmEventslist"
               :key="index"
               class="bigscreen_lc_bottom_rnei"
             >
-              <span>{{ item.name }}</span>
+              <span>{{ item.description }}</span>
               <div
                 :style="{
                   background: ` url(${item.img}) no-repeat`,
                   'background-size': '100% 100%',
                 }"
               >
-                {{ item.status }}
+                {{ item.type }}
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -133,27 +133,28 @@
         </div>
         <div class="bigscreen_rc_bottom_r">
           <Vue3SeamlessScroll
-            :list="list2"
+            :list="policieslist"
             :class-option="{
               step: 5,
             }"
+            hover
             class="scrool"
           >
             <div
-              v-for="(item, index) in list2"
+              v-for="(item, index) in policieslist"
               :key="index"
               class="bigscreen_rc_bottom_rnei"
             >
-              <span style="color: rgba(172, 223, 255, 1); font-size: 11px"
-                >2024年09月23日 22:15:53</span
-              >
+              <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
+                dayjs(item.createTime).format("YYYY-MM-DD")
+              }}</span>
               <div
                 :style="{
-                  background: `url(${item.background}) no-repeat`,
+                  background: `url(${item.img}) no-repeat`,
                   'background-size': '100% 100%',
                 }"
               >
-                <span>{{ item.text }}</span>
+                <span style="margin-left: 10px">{{ item.policiesName }}</span>
                 <img
                   style="margin-right: 18px"
                   src="/public/img/查看详情.png"
@@ -236,6 +237,15 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import {
+  getPoliciesListApi,
+  sopList,
+  alarmEventsList,
+  alarmInformationList,
+  areaStatistics,
+  getstatistics,
+} from "../../api/incident";
+import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
 
 import img1 from "../../../public/img/黄色.png";
@@ -543,6 +553,52 @@ function createAreaStyle(startColor: string, endColor: string) {
   };
 }
 
+//政策法规
+const policiesFormData = ref({
+  policiesName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const policieslist = ref<any[]>([]);
+const policieslistFun = async () => {
+  const { data } = await getPoliciesListApi(policiesFormData.value);
+  let imgList = [img5, img6, img7];
+  policieslist.value = data.data.rows.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
+  });
+};
+const rbClcik = (item: any) => {
+  policieslist.value.forEach((v) => {
+    if (item.policiesId == v.policiesId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rbcanleClick = (item: any) => {
+  item.status = false;
+};
+
+//事件报告
+const alarmEventsFormData = ref({
+  type: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmEventslist = ref<any[]>([]);
+const alarmEventslistFun = async () => {
+  const { data } = await alarmEventsList(alarmEventsFormData.value);
+  let imgList = [img1, img2, img3, img4];
+  alarmEventslist.value = data.data.rows.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
+  });
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
@@ -553,6 +609,8 @@ onMounted(() => {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
+  policieslistFun();
+  alarmEventslistFun();
 });
 window.onresize = function () {
   bigscreenLBChart.resize();

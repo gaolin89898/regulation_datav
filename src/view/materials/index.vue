@@ -139,6 +139,7 @@
         size="small"
         class="selectcss"
         v-model="materialsId"
+        @change="materialsRCChange"
         style="
           width: 80px;
           position: absolute;
@@ -373,7 +374,7 @@ const receiveFormData = ref({
 const receivelist = ref<any[]>([]);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
-  receivelist.value = data.data.rows;
+  receivelist.value = data.data.rows.slice(0, 5);
 };
 
 //库存分析
@@ -632,7 +633,7 @@ const bigscreenRCoption = {
 
   xAxis: {
     type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    data: [],
     axisLabel: {
       color: "rgba(255, 255, 255, 0.65)",
     },
@@ -652,7 +653,7 @@ const bigscreenRCoption = {
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -689,6 +690,13 @@ const receivestatisticsFun = async () => {
     ...receivestatisticsData.value,
     materialsId: materialsId.value,
   });
+
+  bigscreenRCoption.xAxis.data = data.time;
+  bigscreenRCoption.series[0].data = data.data;
+  if (bigscreenRCRef.value) {
+    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
+    bigscreenRCChart.setOption(bigscreenRCoption);
+  }
 };
 const timeLeftClick = () => {
   const currentStart = dayjs(
@@ -720,6 +728,14 @@ const timeRightClick = () => {
     .format("YYYY-MM-DD");
   receivestatisticsFun(); // 更新数据
 };
+const materialsRCChange = async (val) => {
+  materialsId.value = val;
+  await alarmInformationlistFun();
+  await receivestatisticsFun();
+  if (bigscreenRCRef.value) {
+    bigscreenRCChart.setOption(bigscreenRCoption);
+  }
+};
 
 window.onresize = function () {
   bigscreenLCChart.resize();
@@ -737,10 +753,7 @@ onMounted(() => {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
     bigscreenRTChart.setOption(bigscreenRToption);
   }
-  if (bigscreenRCRef.value) {
-    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
-    bigscreenRCChart.setOption(bigscreenRCoption);
-  }
+
   receivelistFun();
   alarmInformationlistFun();
   materialFilesListFun();
