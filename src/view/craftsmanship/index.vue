@@ -26,7 +26,11 @@
           </div>
           <div class="bigscreen_lt_bottom_tdiv_r">
             <span>一级</span>
-            <span>262</span>
+            <span>
+              {{
+                alarmEventslist.filter((item) => item.level == "一级").length
+              }}
+            </span>
           </div>
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
@@ -41,7 +45,11 @@
           </div>
           <div class="bigscreen_lt_bottom_tdiv_r">
             <span>二级</span>
-            <span>68</span>
+            <span>
+              {{
+                alarmEventslist.filter((item) => item.level == "二级").length
+              }}
+            </span>
           </div>
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
@@ -56,17 +64,21 @@
           </div>
           <div class="bigscreen_lt_bottom_tdiv_r">
             <span>三级</span>
-            <span>102</span>
+            <span>
+              {{
+                alarmEventslist.filter((item) => item.level == "三级").length
+              }}
+            </span>
           </div>
         </div>
       </div>
       <div class="bigscreen_lt_bottom_b">
-        <div class="bigscreen_lt_bottom_b_nei" v-for="item in list">
+        <div class="bigscreen_lt_bottom_b_nei" v-for="item in alarmEventslist">
           <img :src="item.img" alt="" />
           <div>
-            <span style="margin-left: 25px">{{ item.status }}</span>
-            <span>{{ item.name }}</span>
-            <span>{{ item.type }}</span>
+            <span style="margin-left: 25px">{{ item.level }}</span>
+            <span>{{ item.craftNode.nodeName }}</span>
+            <span>{{ item.craftNode.nodeTags }}</span>
           </div>
         </div>
       </div>
@@ -136,7 +148,9 @@
         >
           <div style="display: flex; align-items: center">
             <span style="font-size: 18px">工艺要素</span>
-            <span style="font-size: 28px; padding-left: 25px">30</span>
+            <span style="font-size: 28px; padding-left: 25px">{{
+              processlist.length
+            }}</span>
           </div>
           <div>
             <span>
@@ -154,23 +168,15 @@
           </div>
         </div>
       </div>
-      <div class="bigscreen_rt_bottom_nei" @click="rtClcik">
-        <span>隔离器工艺</span>
-        <span>人力要素</span>
-        <span>原料要素</span>
-        <span>设备要素</span>
-      </div>
-      <div class="bigscreen_rt_bottom_nei">
-        <span>隔离器工艺</span>
-        <span>人力要素</span>
-        <span>原料要素</span>
-        <span>设备要素</span>
-      </div>
-      <div class="bigscreen_rt_bottom_nei">
-        <span>隔离器工艺</span>
-        <span>人力要素</span>
-        <span>原料要素</span>
-        <span>设备要素</span>
+      <div
+        class="bigscreen_rt_bottom_nei"
+        v-for="item in processlist"
+        @click="rtClcik(item)"
+      >
+        <span>{{ item.craftArchiveName }}</span>
+        <span>{{ item.personnelFactors }}</span>
+        <span>{{ item.materialFactors }}</span>
+        <span>{{ item.environmentFactors }}</span>
       </div>
     </div>
   </div>
@@ -263,41 +269,44 @@
     </div>
   </template>
 
-  <div v-if="rtstatus" class="rtDialog">
-    <div class="rtDialog_top">
-      <span>工艺要素详情</span>
-      <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+  <template v-for="item in processlist">
+    <div v-if="item.status" class="rtDialog">
+      <div class="rtDialog_top">
+        <span>工艺要素详情</span>
+        <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+      </div>
+      <div class="rtDialog_bottom">
+        <div>
+          <span>工艺节点：</span>
+          <span>隔离器工艺</span>
+        </div>
+        <div>
+          <span>人力要素：</span>
+          <span>人力成本</span>
+        </div>
+        <div>
+          <span>设备要素：</span>
+          <span>A设备，B设备</span>
+        </div>
+        <div>
+          <span>原料要素：</span>
+          <span>原料a1瓶，原料b3瓶</span>
+        </div>
+        <div>
+          <span>环境要素：</span>
+          <span>温度原因，湿度原因。。。</span>
+        </div>
+      </div>
     </div>
-    <div class="rtDialog_bottom">
-      <div>
-        <span>工艺节点：</span>
-        <span>隔离器工艺</span>
-      </div>
-      <div>
-        <span>人力要素：</span>
-        <span>人力成本</span>
-      </div>
-      <div>
-        <span>设备要素：</span>
-        <span>A设备，B设备</span>
-      </div>
-      <div>
-        <span>原料要素：</span>
-        <span>原料a1瓶，原料b3瓶</span>
-      </div>
-      <div>
-        <span>环境要素：</span>
-        <span>温度原因，湿度原因。。。</span>
-      </div>
-    </div>
-  </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
-import { archiveList, nodeList } from "../../api/craftsmanship";
+import { archiveList, nodeList, processList } from "../../api/craftsmanship";
+import { alarmEventsList } from "../../api/incident";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
@@ -570,6 +579,39 @@ const lbcanleClick = (item: any) => {
   item.status = false;
 };
 
+//报警信息
+const alarmEventsFormData = ref({
+  type: "工艺节点报警",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmEventslist = ref<any[]>([]);
+const alarmEventsListFun = async () => {
+  const { data } = await alarmEventsList(alarmEventsFormData.value);
+  let list = data.data.rows.slice(0, 4);
+  alarmEventslist.value = list.map((item) => {
+    return {
+      ...item,
+      status: false,
+    };
+  });
+};
+
+//工艺流程图
+const processFormData = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const processlist = ref<any[]>([]);
+const processlistFun = async () => {
+  const { data } = await processList(processFormData.value);
+  processlist.value = data.data.rows.slice(0, 3);
+};
+
 onMounted(() => {
   if (bigscreenLBRef.value) {
     const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
@@ -582,6 +624,8 @@ onMounted(() => {
   }
   archivelistFun();
   nodelistFun();
+  alarmEventsListFun();
+  processlistFun();
 });
 </script>
 

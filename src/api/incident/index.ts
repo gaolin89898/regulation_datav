@@ -58,3 +58,8 @@ export function areaStatistics(params: { startTime: string; endTime: string }) {
 export function getstatistics(params: { dayType: string }) {
   return http.get("/manage/event/getWeekStatistics", { params });
 }
+
+//报警数量全部统计
+export function geteventTotal(params: { dayType: string }) {
+  return http.get("/manage/event/eventHistory", { params });
+}

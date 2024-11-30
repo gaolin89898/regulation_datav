@@ -9,7 +9,7 @@
     <div class="bigscreen_lt_bottom">
       <div class="bigscreen_lt_bottom_nei">
         <div
-          v-for="item in list1"
+          v-for="item in alarmEvnetLists"
           class="bigscreen_lt_nei"
           :style="{
             background: `url(${item.back}) no-repeat`,
@@ -17,9 +17,9 @@
           }"
           @click="neiClick(item)"
         >
-          <span class="bigscreen_lt_nei_span">{{ item.name }}</span>
+          <span class="bigscreen_lt_nei_span">{{ item.type }}</span>
           <span class="bigscreen_lt_nei_span">{{ item.level }}</span>
-          <span class="bigscreen_lt_nei_span">{{ item.time }}</span>
+          <span class="bigscreen_lt_nei_span">{{ item.createTime }}</span>
         </div>
       </div>
     </div>
@@ -74,18 +74,15 @@
         <span>报警历史</span>
       </div>
       <div class="groupCss">
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="月" value="ri" />
+        <el-radio-group v-model="lbRadio" @change="lbRadioChange" class="group">
+          <el-radio-button label="周" value="week" />
+          <el-radio-button label="年" value="year" />
         </el-radio-group>
       </div>
     </div>
-    <!-- <BorderBox1 class="bigscreen_lb_bottom"> -->
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
-
-    <!-- </BorderBox1> -->
   </div>
   <center></center>
   <div class="bigscreen_rt">
@@ -174,9 +171,9 @@
         <span>安全生产曲线</span>
       </div>
       <div class="groupCss">
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="月" value="ri" />
+        <el-radio-group v-model="rbRadio" class="group" @change="rbRadioChange">
+          <el-radio-button label="周" value="week" />
+          <el-radio-button label="年" value="year" />
         </el-radio-group>
       </div>
     </div>
@@ -185,7 +182,7 @@
     </div>
   </div>
 
-  <template v-for="item in list1">
+  <template v-for="item in alarmEvnetLists">
     <div v-if="item.status" class="ltDialog">
       <div class="ltDialog_top">
         <span>报警信息详情</span>
@@ -195,16 +192,16 @@
         <img :src="item.img" alt="" />
         <div class="ltDialog_bottomr">
           <div>
-            <span>报警级别：</span>
-            <span>001</span>
+            <span>报警编号：</span>
+            <span>{{ item.eventId }}</span>
           </div>
           <div>
             <span>报警类型：</span>
-            <span>{{ item.name }}</span>
+            <span>{{ item.type }}</span>
           </div>
           <div>
             <span>报警信息：</span>
-            <span>{{ item.name }}</span>
+            <span>{{ item.description }}</span>
           </div>
           <div>
             <span>报警级别：</span>
@@ -212,7 +209,7 @@
           </div>
           <div>
             <span>报警时间：</span>
-            <span>{{ item.time }}</span>
+            <span>{{ item.createTime }}</span>
           </div>
         </div>
       </div>
@@ -244,6 +241,7 @@ import {
   alarmInformationList,
   areaStatistics,
   getstatistics,
+  geteventTotal,
 } from "../../api/incident";
 import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
@@ -256,45 +254,6 @@ import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
-
-const radio1 = ref("zhou");
-const list = ref([
-  {
-    name: "物料A库存异常",
-    img: img1,
-    status: "物料报警",
-  },
-  {
-    name: "设备一监测数据异常",
-    img: img2,
-    status: "设备报警",
-  },
-  {
-    name: "XXX产品出现质量问题",
-    img: img3,
-    status: "质量问题",
-  },
-  {
-    name: "XXX发生安全事故",
-    img: img4,
-    status: "事故问题",
-  },
-]);
-
-const list2 = ref([
-  {
-    background: img5,
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-  {
-    background: img6,
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-  {
-    background: img7,
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-]);
 
 const list1 = ref([
   {
@@ -335,192 +294,6 @@ const list1 = ref([
   },
 ]);
 
-let bigscreenLBChart: any = null;
-const bigscreenLBRef = ref();
-const bigscreenLBoption = {
-  grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
-  },
-
-  xAxis: {
-    type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
-    axisLabel: {
-      color: "rgba(255, 255, 255, 0.65)",
-    },
-  },
-  yAxis: {
-    type: "value",
-    splitLine: {
-      show: true, //让网格显示
-      lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
-    },
-    axisLabel: {
-      color: "rgba(255, 255, 255, 0.65)",
-    },
-  },
-  series: [
-    {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
-    },
-  ],
-};
-
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
-
-const bigscreenRBoption = {
-  grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
-  },
-  legend: {
-    data: [
-      {
-        name: "设备报警",
-        itemStyle: { color: "RGBA(255, 169, 19, 1)" },
-      },
-      {
-        name: "环境数据",
-        itemStyle: { color: "RGBA(225, 110, 122, 1)" },
-      },
-      {
-        name: "物料数据",
-        itemStyle: { color: "RGBA(65, 195, 142, 1)" },
-      },
-      {
-        name: "工艺节点",
-        itemStyle: { color: "RGBA(210, 114, 255, 1)" },
-      },
-    ],
-    top: "10px",
-    textStyle: {
-      color: "#ffffff",
-    },
-  },
-  xAxis: {
-    type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
-    axisLabel: {
-      color: "rgba(255, 255, 255, 0.65)",
-    },
-  },
-  yAxis: {
-    type: "value",
-    splitLine: {
-      show: true,
-      lineStyle: {
-        color: ["rgba(255, 255, 255, 0.15)"],
-        type: "dashed",
-      },
-    },
-    axisLabel: {
-      color: "rgba(255, 255, 255, 0.65)",
-    },
-  },
-  series: [
-    {
-      name: "设备报警",
-      data: [50, 60, 90, 200, 120, 140, 80],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(255, 169, 19, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(255, 169, 19, 0.5)",
-        "rgba(255, 169, 19, 0)"
-      ),
-    },
-    {
-      name: "环境数据",
-      data: [20, 40, 60, 210, 90, 140, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(225, 110, 122, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(225, 110, 122, 0.5)",
-        "rgba(225, 110, 122, 0)"
-      ),
-    },
-    {
-      name: "物料数据",
-      data: [200, 20, 21, 30, 200, 170, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(65, 195, 142, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(65, 195, 142, 0.5)",
-        "rgba(65, 195, 142, 0)"
-      ),
-    },
-    {
-      name: "工艺节点",
-      data: [200, 180, 40, 30, 50, 170, 50],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "RGBA(210, 114, 255, 1)", // 线条颜色
-      },
-      areaStyle: createAreaStyle(
-        "RGBA(210, 114, 255, 0.5)",
-        "rgba(210, 114, 255, 0)"
-      ),
-    },
-  ],
-};
-
-const neiClick = (item) => {
-  list1.value.forEach((v) => {
-    if (item.name == v.name) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const canleClick = (item) => {
-  item.status = false;
-};
-
 const rtStatus = ref(false);
 const rtClick = () => {
   rtStatus.value = !rtStatus.value;
@@ -528,30 +301,6 @@ const rtClick = () => {
 const rtcanleClick = () => {
   rtStatus.value = false;
 };
-
-// 创建 areaStyle 的函数
-function createAreaStyle(startColor: string, endColor: string) {
-  return {
-    color: {
-      type: "linear",
-      x: 0,
-      y: 0,
-      x2: 0,
-      y2: 1,
-      colorStops: [
-        {
-          offset: 0,
-          color: startColor,
-        },
-        {
-          offset: 1,
-          color: endColor,
-        },
-      ],
-      global: false,
-    },
-  };
-}
 
 //政策法规
 const policiesFormData = ref({
@@ -591,26 +340,304 @@ const alarmEventsFormData = ref({
   orderDirection: "descending",
 });
 const alarmEventslist = ref<any[]>([]);
+const alarmEvnetLists = ref<any[]>([]);
 const alarmEventslistFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
   let imgList = [img1, img2, img3, img4];
   alarmEventslist.value = data.data.rows.map((item, index) => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
+  let list = data.data.rows.slice(0, 4);
+  let evnetimglist = [
+    {
+      type: "设备报警",
+      img: "/img/设备报警.png",
+    },
+    {
+      type: "环境报警",
+      img: "/img/环境报警.png",
+    },
+    {
+      type: "物料报警",
+      img: "/img/物料报警.png",
+    },
+    {
+      type: "工艺节点报警",
+      img: "/img/工艺节点.png",
+    },
+  ];
+  let levelList = [
+    {
+      level: "一级",
+      img: "/img/一级.png",
+    },
+    {
+      level: "二级",
+      img: "/img/二级.png",
+    },
+    {
+      level: "三级",
+      img: "/img/三级.png",
+    },
+  ];
+  alarmEvnetLists.value = list.map((item) => {
+    const matchedEvent = evnetimglist.find((event) => event.type === item.type);
+    const matchedLevel = levelList.find((level) => level.level === item.level);
+    return {
+      ...item,
+      back: matchedEvent.img,
+      status: false,
+      img: matchedLevel.img,
+    };
+  });
+};
+const neiClick = (item) => {
+  alarmEvnetLists.value.forEach((v) => {
+    if (item.eventId == v.eventId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const canleClick = (item) => {
+  item.status = false;
 };
 
-onMounted(() => {
-  if (bigscreenLBRef.value) {
-    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
-
+//安全生产曲线
+let bigscreenRBChart: any = null;
+const bigscreenRBRef = ref();
+const rbRadio = ref("week");
+const bigscreenRBoption = {
+  grid: {
+    left: "60px",
+    top: "40px",
+    bottom: "40px",
+  },
+  legend: {
+    data: [
+      {
+        name: "设备报警",
+        itemStyle: { color: "RGBA(255, 169, 19, 1)" },
+      },
+      {
+        name: "环境数据",
+        itemStyle: { color: "RGBA(225, 110, 122, 1)" },
+      },
+      {
+        name: "物料数据",
+        itemStyle: { color: "RGBA(65, 195, 142, 1)" },
+      },
+      {
+        name: "工艺节点",
+        itemStyle: { color: "RGBA(210, 114, 255, 1)" },
+      },
+    ],
+    top: "10px",
+    textStyle: {
+      color: "#ffffff",
+    },
+  },
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "rgba(255, 255, 255, 0.65)",
+    },
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: ["rgba(255, 255, 255, 0.15)"],
+        type: "dashed",
+      },
+    },
+    axisLabel: {
+      color: "rgba(255, 255, 255, 0.65)",
+    },
+  },
+  series: [
+    {
+      name: "设备报警",
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      lineStyle: {
+        color: "RGBA(255, 169, 19, 1)", // 线条颜色
+      },
+      areaStyle: createAreaStyle(
+        "RGBA(255, 169, 19, 0.5)",
+        "rgba(255, 169, 19, 0)"
+      ),
+    },
+    {
+      name: "环境数据",
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      lineStyle: {
+        color: "RGBA(225, 110, 122, 1)", // 线条颜色
+      },
+      areaStyle: createAreaStyle(
+        "RGBA(225, 110, 122, 0.5)",
+        "rgba(225, 110, 122, 0)"
+      ),
+    },
+    {
+      name: "物料数据",
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      lineStyle: {
+        color: "RGBA(65, 195, 142, 1)", // 线条颜色
+      },
+      areaStyle: createAreaStyle(
+        "RGBA(65, 195, 142, 0.5)",
+        "rgba(65, 195, 142, 0)"
+      ),
+    },
+    {
+      name: "工艺节点",
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      lineStyle: {
+        color: "RGBA(210, 114, 255, 1)", // 线条颜色
+      },
+      areaStyle: createAreaStyle(
+        "RGBA(210, 114, 255, 0.5)",
+        "rgba(210, 114, 255, 0)"
+      ),
+    },
+  ],
+};
+const getstatisticsList = async () => {
+  const { data } = await getstatistics({ dayType: rbRadio.value });
+  bigscreenRBoption.xAxis.data = data.data[0].times;
+  bigscreenRBoption.series[0].data = data.data[2].data;
+  bigscreenRBoption.series[1].data = data.data[0].data;
+  bigscreenRBoption.series[2].data = data.data[1].data;
+  bigscreenRBoption.series[3].data = data.data[3].data;
   if (bigscreenRBRef.value) {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
+};
+const rbRadioChange = (val) => {
+  rbRadio.value = val;
+  getstatisticsList();
+};
+// 创建 areaStyle 的函数
+function createAreaStyle(startColor: string, endColor: string) {
+  return {
+    color: {
+      type: "linear",
+      x: 0,
+      y: 0,
+      x2: 0,
+      y2: 1,
+      colorStops: [
+        {
+          offset: 0,
+          color: startColor,
+        },
+        {
+          offset: 1,
+          color: endColor,
+        },
+      ],
+      global: false,
+    },
+  };
+}
+
+//报警历史
+let bigscreenLBChart: any = null;
+const bigscreenLBRef = ref();
+const bigscreenLBoption = {
+  grid: {
+    left: "60px",
+    top: "40px",
+    bottom: "40px",
+  },
+
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "rgba(255, 255, 255, 0.65)",
+    },
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: true, //让网格显示
+      lineStyle: {
+        //网格样式
+        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
+        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
+      },
+    },
+    axisLabel: {
+      color: "rgba(255, 255, 255, 0.65)",
+    },
+  },
+  series: [
+    {
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      areaStyle: {
+        color: {
+          type: "linear",
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
+            },
+          ],
+          global: false, // 缺省为 false
+        },
+      },
+    },
+  ],
+};
+const lbRadio = ref("week");
+const geteventTotalFun = async () => {
+  const { data } = await geteventTotal({ dayType: lbRadio.value });
+  bigscreenLBoption.xAxis.data = data.data.times;
+  bigscreenLBoption.series[0].data = data.data.data;
+
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
+  }
+};
+const lbRadioChange = (val) => {
+  lbRadio.value = val;
+  geteventTotalFun();
+};
+
+onMounted(() => {
   policieslistFun();
   alarmEventslistFun();
+  getstatisticsList();
+  geteventTotalFun();
 });
 window.onresize = function () {
   bigscreenLBChart.resize();

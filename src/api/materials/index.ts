@@ -43,3 +43,13 @@ export function receivestatistics(params: receivestatisticsRes) {
   const { materialsId } = params;
   return http.get("/manage/receive/stock/", { params });
 }
+
+//用量类型分析
+export function typeStatistics() {
+  return http.get("/manage/receive/allType");
+}
+
+//类型分析
+export function dosagetypeStatistics(params: { name: string }) {
+  return http.get("/manage/receive/allTypeByName", { params });
+}

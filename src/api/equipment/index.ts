@@ -35,3 +35,11 @@ export interface equipmentListRes {
 export function equipmentList(params: equipmentListRes) {
   return http.get("/manage/equipment", { params });
 }
+
+//获取设备数据历史统计
+export interface historicalStatisticsRes {
+  thresholdId: number;
+}
+export function historicalStatisticsList(params: historicalStatisticsRes) {
+  return http.get("/manage/equipment-data/history", { params });
+}

@@ -79,14 +79,15 @@
       <el-select
         size="small"
         class="selectcss"
-        v-model="selectval"
-        style="width: 80px; margin-right: 11px"
+        v-model="materialsName"
+        @change="materialsChange2"
+        style="width: 80px; position: absolute; right: 20px; z-index: 100"
       >
         <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          v-for="item in materialFileslist"
+          :key="item.name"
+          :label="item.name"
+          :value="item.name"
         />
       </el-select>
     </div>
@@ -254,36 +255,14 @@ import {
   getstatistics,
   materialFilesList,
   receivestatistics,
+  typeStatistics,
+  dosagetypeStatistics,
 } from "../../api/materials/index";
 import { alarmEventsList } from "../../api/incident/index";
 import dayjs from "dayjs";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import img7 from "../../../public/img/弹窗文案背景.png";
-
-const selectval = ref("dian");
-const options = ref([
-  {
-    label: "物料一",
-    value: "dian",
-  },
-  {
-    label: "物料二",
-    value: "shui",
-  },
-]);
-
-const selectval2 = ref("shui");
-const options2 = ref([
-  {
-    label: "物料一",
-    value: "dian",
-  },
-  {
-    label: "物料二",
-    value: "shui",
-  },
-]);
 
 const list3 = ref([
   {
@@ -454,8 +433,10 @@ const materialFilesListFun = async () => {
   const { data } = await materialFilesList(materialFiles.value);
   materialFileslist.value = data.data.rows;
   materialsId.value = data.data.rows[0].materialsId;
+  materialsName.value = data.data.rows[0].name;
   await materialsStatistics();
   await receivestatisticsFun();
+  await dosagetypeStatisticsFun();
 };
 const materialsStatistics = async () => {
   const { data } = await getstatistics({
@@ -485,6 +466,7 @@ const materialsChange = async (val) => {
 //物料类型统计
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
+const materialsName = ref<string>("");
 const bigscreenLBoption = {
   grid: {
     left: "6%",
@@ -525,6 +507,27 @@ const bigscreenLBoption = {
       ],
     },
   ],
+};
+const dosagetypeStatisticsFun = async () => {
+  const { data } = await dosagetypeStatistics({ name: materialsName.value });
+  bigscreenLBoption.series[0].data = data.data.map((item) => {
+    return {
+      value: item.count,
+      name: item.materialsType,
+    };
+  });
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
+  }
+};
+const materialsChange2 = async (val) => {
+  materialsName.value = val;
+  await dosagetypeStatisticsFun();
+};
+
+const typeStatisticsFun = async () => {
+  const { data } = await typeStatistics();
 };
 
 //用量类型分析
@@ -745,10 +748,6 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenLBRef.value) {
-    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
   if (bigscreenRTRef.value) {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
     bigscreenRTChart.setOption(bigscreenRToption);
@@ -758,6 +757,7 @@ onMounted(() => {
   alarmInformationlistFun();
   materialFilesListFun();
   receivestatisticsFun();
+  typeStatisticsFun();
 });
 </script>
 

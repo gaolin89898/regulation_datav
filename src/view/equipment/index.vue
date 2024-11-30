@@ -35,7 +35,10 @@
       <el-input
         class="inputcss"
         placeholder="请输入设备名称"
+        clearable
         :prefix-icon="Search"
+        v-model="equipmentFormData.equipmentName"
+        @change="searchEquipment"
       />
     </div>
     <div class="bigscreen_lc_bottom">
@@ -64,19 +67,15 @@
         <img src="/public/img/光标.png" alt="" />
         <span>设备运行状态</span>
       </div>
-      <el-select
-        size="small"
-        class="selectcss"
-        v-model="selectval"
-        style="width: 80px; margin-right: 11px"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <el-cascader
+        :options="equipmentlist2"
+        @change="cascaderChange"
+        :props="{
+          value: 'id',
+          label: 'name',
+          children: 'thresholdList',
+        }"
+      />
     </div>
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
@@ -303,8 +302,8 @@ import {
   equipmentRepairListRes,
   dailyInspectionList,
   dailyInspectionRes,
-  equipmentListRes,
   equipmentList,
+  historicalStatisticsList,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
 import img9 from "../../../public/img/叉号.png";
@@ -371,18 +370,52 @@ const list4 = ref([
   },
 ]);
 
-const selectval = ref("dian");
-const options = ref([
-  {
-    label: "设备一",
-    value: "dian",
-  },
-  {
-    label: "设备二",
-    value: "shui",
-  },
-]);
+const rtStatus = ref(false);
+const rtClick = () => {
+  rtStatus.value = !rtStatus.value;
+};
+const rtcanleClick = () => {
+  rtStatus.value = false;
+};
 
+//设备台账
+const equipmentFormData = ref({
+  equipmentName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const equipmentId = ref(0);
+const equipmentlist = ref<any[]>([]);
+const equipmentlist2 = ref<any[]>([]);
+const equipmentListFun = async () => {
+  const { data } = await equipmentList(equipmentFormData.value);
+  let list = data.data.rows.slice(0, 5);
+  equipmentlist.value = list;
+  equipmentlist2.value = data.data.rows.map((item) => {
+    const list = item.thresholdList.map((v) => {
+      return {
+        ...v,
+        id: v.thresholdId,
+        name: v.sensorName,
+      };
+    });
+    return {
+      ...item,
+      id: item.equipmentId,
+      name: item.equipmentName,
+      thresholdList: list,
+    };
+  });
+  equipmentId.value = data.data.rows[0].equipmentId;
+  historicalStatisticsListFun();
+};
+const searchEquipment = (val) => {
+  equipmentListFun();
+};
+
+//设备运行状态
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -396,7 +429,7 @@ const bigscreenLBoption = {
 
   xAxis: {
     type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
+    data: [],
     axisLabel: {
       color: "rgba(255,255,255,0.65)",
     },
@@ -417,7 +450,7 @@ const bigscreenLBoption = {
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -444,28 +477,22 @@ const bigscreenLBoption = {
     },
   ],
 };
-
-const rtStatus = ref(false);
-const rtClick = () => {
-  rtStatus.value = !rtStatus.value;
+const thresholdId = ref(0);
+const historicalStatisticsListFun = async () => {
+  const { data } = await historicalStatisticsList({
+    thresholdId: thresholdId.value,
+  });
+  bigscreenLBoption.xAxis.data = data.time;
+  bigscreenLBoption.series[0].data = data.data;
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
+  }
 };
-const rtcanleClick = () => {
-  rtStatus.value = false;
-};
 
-//设备台账
-const equipmentFormData = ref({
-  equipmentName: "",
-  pageNum: 1,
-  pageSize: 10000,
-  orderColumn: "createTime",
-  orderDirection: "descending",
-});
-const equipmentlist = ref<any[]>([]);
-const equipmentListFun = async () => {
-  const { data } = await equipmentList(equipmentFormData.value);
-  let list = data.data.rows.slice(0, 5);
-  equipmentlist.value = list;
+const cascaderChange = (val) => {
+  thresholdId.value = val[1];
+  historicalStatisticsListFun();
 };
 
 //巡检记录
@@ -540,10 +567,6 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenLBRef.value) {
-    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
   equipmentRepairListFun();
   inspectionListFun();
   equipmentListFun();
@@ -695,14 +718,13 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     .bigscreen_lc_bottom_nei {
       width: adaptiveWidth(407);
+      margin: 0 auto;
       .bigscreen_lc_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
+        margin-top: adaptiveHeight(20);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -902,14 +924,13 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     .bigscreen_rc_bottom_nei {
       width: adaptiveWidth(407);
+      margin: 0 auto;
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
+        margin-top: adaptiveHeight(20);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -928,7 +949,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(8);
+        // margin-top: adaptiveHeight(8);
         cursor: pointer;
         span {
           width: 33%;
@@ -1231,6 +1252,7 @@ $design-height: 1080;
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  font-size: adaptiveFontSize(12);
 }
 .scroll {
   height: adaptiveHeight(195);

@@ -22,3 +22,14 @@ export interface nodeListRes {
 export function nodeList(params: nodeListRes) {
   return http.get("/manage/craft-node", { params });
 }
+
+//获取工艺流程图列表
+export interface processListRes {
+  pageNum: number;
+  pageSize: number;
+  orderColumn: string;
+  orderDirection: string;
+}
+export function processList(params: processListRes) {
+  return http.get("/manage/craft-process", { params });
+}
