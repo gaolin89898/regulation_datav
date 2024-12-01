@@ -2,7 +2,7 @@ import http from "../utils/http";
 
 export function login() {
     const username = "admin";
-    const password = "ltjCwwZVrGTLw4roRS+ranONt4nWElGOSyMrCV05Bb+ksmZ+nePUMpCUaXBAeG8NeO2i3qoFh533AAizfoE+KfFiivKMOfkaFOtaEygHMT+W8h0ea4uQSYIqpFBaVejs2dhDbs2J1RZgbExUobIMOe/S5m6wfv7486omJxN8NcI=";
+    const password = "i6NhzLNLVifEWMsfz/ABPParezXL/p440tM7k/8Zg8eltdPpQlENDbvgENOfNfcGTngi73OLnk1bW9ycS0b5JX1HRncNNJo3Ga8D0egvjNczFkES4ddAi3Xz4L0JbwpMAgwE7joe+44ZBMOA6shTXX5usA5UVCzT7SZwiKAvFas=";
     return http.post("/login", {
         username,
         password

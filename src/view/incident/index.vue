@@ -124,7 +124,8 @@
                   'background-size': '100% 100%',
                 }"
               >
-                {{ item.type }}
+                <span v-if="item.type == '工艺节点报警'">工艺节点</span>
+                <span v-else>{{ item.type }}</span>
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -918,7 +919,7 @@ $design-height: 1080;
       justify-content: center;
       align-items: center;
       img {
-        width: adaptiveWidth(163);
+        width: adaptiveWidth(164);
         height: adaptiveHeight(159);
       }
       .bigscreen_rt_bottom_r {
@@ -939,19 +940,25 @@ $design-height: 1080;
           justify-content: space-between;
           cursor: pointer;
           span {
+            width: adaptiveWidth(140);
             color: rgba(244, 249, 255, 1);
             font-size: adaptiveFontSize(11);
             margin-left: adaptiveWidth(20);
+            white-space: nowrap; /* 禁止换行 */
+            overflow: hidden; /* 超出内容隐藏 */
+            text-overflow: ellipsis; /* 显示省略号 */
           }
           div {
-            width: adaptiveWidth(67);
-            height: adaptiveHeight(31);
+            width: adaptiveWidth(80);
+            height: adaptiveHeight(35);
             color: rgba(244, 249, 255, 1);
             font-size: adaptiveFontSize(12);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: adaptiveWidth(22);
+            span {
+              padding-bottom: adaptiveHeight(5);
+            }
           }
         }
       }

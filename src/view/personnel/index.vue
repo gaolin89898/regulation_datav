@@ -43,15 +43,17 @@
       </div>
       <el-input
         class="inputcss"
+        v-model="healthyFormData.name"
         style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入员工姓名"
         :prefix-icon="Search"
+        @change="healthyChange"
       />
     </div>
     <div class="bigscreen_lb_bottom">
       <div
         class="bigscreen_lb_bottom_nei"
-        v-for="item in list2"
+        v-for="item in healthylist"
         @click="lbClick(item)"
       >
         <div class="bigscreen_lb_bottom_nei_count">
@@ -69,20 +71,24 @@
                 color: '#ffffff',
               }"
             >
-              {{ item.name }}
+              {{ item.personnel.name }}
             </div>
-            <div style="color: #ffffff; margin-top: 10px">{{ item.code }}</div>
+            <div style="color: #ffffff; margin-top: 10px">
+              {{ item.healthyId }}
+            </div>
           </div>
           <div class="right">
             <span class="right_text">
-              <span>体温：{{ item.tiwen }}℃</span>
+              <span>体温：{{ item.temperature }}℃</span>
               <span style="padding-left: 15px"
-                >心率：{{ item.xinlv }}/分钟</span
+                >心率：{{ item.heartRate }}/分钟</span
               >
             </span>
             <span class="right_text">
-              <span>血压：{{ item.xuya1 }}mmHg</span>
-              <span style="padding-left: 15px">{{ item.xueya2 }}mmHg</span>
+              <span>血压：{{ item.lowBloodPressure }}mmHg</span>
+              <span style="padding-left: 15px"
+                >{{ item.highBloodPressure }}mmHg</span
+              >
             </span>
             <span class="right_text">
               <span>监测时间：{{ item.time }}</span>
@@ -207,16 +213,14 @@
 <script lang="ts" setup>
 import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
-// import { BorderBox1 } from "@dataview/datav-vue3/es";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
-
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
 import img1 from "../../../public/img/视频监控尺寸.png";
 import img9 from "../../../public/img/叉号.png";
 
-import { indicatorStatistics } from "../../api/personnel/index";
+import { indicatorStatistics, healthyList } from "../../api/personnel/index";
 
 const radio1 = ref("zhou");
 
@@ -257,42 +261,6 @@ const list = ref([
     bumen: "产品研发部",
     gangwei: "药理学家",
     phone: "18546521548",
-    status: false,
-  },
-]);
-
-const list2 = ref([
-  {
-    name: "张建坤",
-    code: "YG001",
-    tiwen: 36.5,
-    xinlv: 75,
-    xuya1: 100,
-    xueya2: 145,
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/名字绿色背景.png",
-    status: false,
-  },
-  {
-    name: "张建坤",
-    code: "YG002",
-    tiwen: 36.5,
-    xinlv: 75,
-    xuya1: 100,
-    xueya2: 145,
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/名字蓝色背景.png",
-    status: false,
-  },
-  {
-    name: "张建坤",
-    code: "YG003",
-    tiwen: 36.5,
-    xinlv: 75,
-    xuya1: 100,
-    xueya2: 145,
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/名字棕色背景.png",
     status: false,
   },
 ]);
@@ -679,6 +647,31 @@ const initChart = () => {
   window.addEventListener("resize", () => bigscreenRBChart?.resize());
 };
 
+//人员健康数据
+const healthyFormData = ref({
+  name: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const healthylist = ref<any[]>([]);
+const healthylistFun = async () => {
+  const { data } = await healthyList(healthyFormData.value);
+  let imgList = [
+    "/img/personnel/名字绿色背景.png",
+    "/img/personnel/名字蓝色背景.png",
+    "/img/personnel/名字棕色背景.png",
+  ];
+  let list = data.data.rows.slice(0, 3);
+  healthylist.value = list.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
+  });
+};
+const healthyChange = () => {
+  healthylistFun();
+};
+
 window.onresize = function () {
   bigscreenRBChart.resize();
   lbDialogBottomChart.resize();
@@ -692,6 +685,7 @@ onMounted(() => {
 
   initChart();
   indicatorStatisticsList();
+  healthylistFun();
 });
 </script>
 
@@ -873,6 +867,7 @@ $design-height: 1080;
       width: adaptiveWidth(394);
       height: adaptiveHeight(85);
       position: relative;
+      cursor: pointer;
       &:nth-child(1) {
         margin-top: adaptiveHeight(40);
       }
@@ -1167,6 +1162,7 @@ $design-height: 1080;
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  font-size: adaptiveFontSize(12);
 }
 .scroll {
   height: 195px;

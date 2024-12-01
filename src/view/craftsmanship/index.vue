@@ -197,6 +197,7 @@
         <div
           class="bigscreen_rb_bottom_nei_item"
           v-for="(item, index) in archivelist"
+          @click="rbClick(item)"
         >
           <div class="bigscreen_rb_bottom_nei_item1">
             <div
@@ -273,29 +274,75 @@
     <div v-if="item.status" class="rtDialog">
       <div class="rtDialog_top">
         <span>工艺要素详情</span>
-        <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+        <img :src="img9" alt="" srcset="" @click="rtcanleClick(item)" />
       </div>
       <div class="rtDialog_bottom">
         <div>
           <span>工艺节点：</span>
-          <span>隔离器工艺</span>
+          <span>{{ item.craftNode.nodeName }}</span>
         </div>
         <div>
-          <span>人力要素：</span>
-          <span>人力成本</span>
+          <span>人员要素：</span>
+          <span>{{ item.personnelFactors }}</span>
         </div>
         <div>
           <span>设备要素：</span>
-          <span>A设备，B设备</span>
+          <span>{{ item.environmentFactors }}</span>
         </div>
         <div>
           <span>原料要素：</span>
-          <span>原料a1瓶，原料b3瓶</span>
+          <span>{{ item.materialFactors }}</span>
         </div>
         <div>
           <span>环境要素：</span>
-          <span>温度原因，湿度原因。。。</span>
+          <span>{{ item.environmentFactors }}</span>
         </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- 工艺档案弹窗 -->
+  <template v-for="item in archivelist">
+    <div v-if="item.status" class="rbDialog">
+      <div class="rbDialog_top">
+        <span>工艺档案详情</span>
+        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
+      </div>
+      <div class="rbDialog_bottom">
+        <div class="rbDialog_bottom_selet">
+          <span v-for="(v, i) in processSelst">
+            <span
+              :style="{
+                color: v.status ? '#16AAE8' : '#ffffff',
+              }"
+              @click="processSelstClick(item, v, i)"
+            >
+              {{ v.name }}
+            </span>
+            <span style="padding: 0 10px; color: #ffffff" v-if="i === 0"
+              >/</span
+            >
+          </span>
+        </div>
+        <div class="info" v-if="processSelst[0].status">
+          <div>
+            <span>工艺编号：</span>
+            <span>{{ item.craftArchiveCode }}</span>
+          </div>
+          <div>
+            <span>工艺名称：</span>
+            <span>{{ item.craftArchiveName }}</span>
+          </div>
+          <div>
+            <span>版本：</span>
+            <span>{{ item.version }}</span>
+          </div>
+          <div>
+            <span>工艺制定人员：</span>
+            <span>{{ item.creator }}</span>
+          </div>
+        </div>
+        <div class="processflowchart" v-else></div>
       </div>
     </div>
   </template>
@@ -309,34 +356,6 @@ import { archiveList, nodeList, processList } from "../../api/craftsmanship";
 import { alarmEventsList } from "../../api/incident";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
-
-const list = ref([
-  {
-    name: "病毒加工工艺1",
-    img: "/img/craftsmanship/erjilan.png",
-    status: "二级报警",
-    type: "节点故障",
-    status1: false,
-  },
-  {
-    name: "病毒加工工艺2",
-    img: "/img/craftsmanship/yijilv.png",
-    status: "一级报警",
-    type: "工艺异常",
-  },
-  {
-    name: "病毒加工工艺3",
-    img: "/img/craftsmanship/erjilan.png",
-    status: "二级报警",
-    type: "节点故障",
-  },
-  {
-    name: "病毒加工工艺4",
-    img: "/img/craftsmanship/sanjihong.png",
-    status: "三级报警",
-    type: "工艺异常",
-  },
-]);
 
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -524,14 +543,6 @@ function createAreaStyle(startColor: string, endColor: string) {
   };
 }
 
-const rtstatus = ref(false);
-const rtClcik = () => {
-  rtstatus.value = !rtstatus.value;
-};
-const rtcanleClick = () => {
-  rtstatus.value = false;
-};
-
 //工艺档案
 const archiveFormData = ref({
   pageNum: 1,
@@ -542,7 +553,47 @@ const archiveFormData = ref({
 const archivelist = ref<any[]>([]);
 const archivelistFun = async () => {
   const { data } = await archiveList(archiveFormData.value);
-  archivelist.value = data.data.rows.slice(0, 5);
+  let list = data.data.rows.slice(0, 5);
+  archivelist.value = list.map((item: any) => {
+    return { ...item, status: false };
+  });
+};
+const rbClick = (item: any) => {
+  archivelist.value.forEach((v) => {
+    if (item.craftArchiveId == v.craftArchiveId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rbcanleClick = (item: any) => {
+  item.status = false;
+  processSelst.value[0].status = true;
+  processSelst.value[1].status = false;
+  processFormData.value.craftArchiveId = null;
+};
+const processSelst = ref([
+  {
+    name: "基本信息",
+    status: true,
+  },
+  {
+    name: "工艺流程图",
+    status: false,
+  },
+]);
+const processSelstClick = async (item, v, i) => {
+  processSelst.value.forEach((j, k) => {
+    if (i == k) {
+      processSelst.value[k].status = true;
+    } else {
+      j.status = false;
+    }
+  });
+  processFormData.value.craftArchiveId = item.craftArchiveId;
+  const { data } = await processList(processFormData.value);
+  processlist2.value = data.data.rows;
 };
 
 //工艺节点
@@ -591,9 +642,15 @@ const alarmEventslist = ref<any[]>([]);
 const alarmEventsListFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
   let list = data.data.rows.slice(0, 4);
-  alarmEventslist.value = list.map((item) => {
+  let imgList = [
+    "/img/craftsmanship/erjilan.png",
+    "/img/craftsmanship/yijilv.png",
+    "/img/craftsmanship/sanjihong.png",
+  ];
+  alarmEventslist.value = list.map((item, index) => {
     return {
       ...item,
+      img: imgList[index % imgList.length],
       status: false,
     };
   });
@@ -601,15 +658,29 @@ const alarmEventsListFun = async () => {
 
 //工艺流程图
 const processFormData = ref({
+  craftArchiveId: null,
   pageNum: 1,
   pageSize: 10000,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
 const processlist = ref<any[]>([]);
+const processlist2 = ref<any[]>([]);
 const processlistFun = async () => {
   const { data } = await processList(processFormData.value);
   processlist.value = data.data.rows.slice(0, 3);
+};
+const rtClcik = (item) => {
+  processlist.value.forEach((v) => {
+    if (item.craftProcessId == v.craftProcessId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rtcanleClick = (item) => {
+  item.status = false;
 };
 
 onMounted(() => {
@@ -789,10 +860,23 @@ $design-height: 1080;
           margin-left: adaptiveWidth(15);
           span {
             font-size: adaptiveFontSize(14);
+            &:nth-child(1) {
+              width: 20%;
+              white-space: nowrap; /* 禁止换行 */
+              overflow: hidden; /* 超出内容隐藏 */
+              text-overflow: ellipsis; /* 显示省略号 */
+            }
+            &:nth-child(2) {
+              widows: 40%;
+              white-space: nowrap; /* 禁止换行 */
+              overflow: hidden; /* 超出内容隐藏 */
+              text-overflow: ellipsis; /* 显示省略号 */
+            }
             &:nth-child(3) {
+              width: 40%;
               font-size: adaptiveFontSize(20);
               font-family: youshe;
-              text-align: center;
+              text-align: end;
               font-style: normal;
               text-transform: none;
               background: linear-gradient(
@@ -860,7 +944,7 @@ $design-height: 1080;
         display: flex;
         color: #ffffff;
         .bigscreen_lb_bottom_nei_t_r {
-          width: calc(100% - adaptiveHeight(38));
+          width: calc(100% - adaptiveWidth(38));
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -875,12 +959,13 @@ $design-height: 1080;
         width: 100%;
         height: adaptiveHeight(40);
         background: url("/public/img/craftsmanship/jidianback.png") no-repeat;
+        background-size: 100% 100%;
         background-position: 30px 0;
         margin-top: adaptiveHeight(15);
         display: flex;
         cursor: pointer;
         .bigscreen_lb_bottom_neis_r {
-          width: calc(100% - adaptiveHeight(38));
+          width: calc(100% - adaptiveWidth(38));
           height: 100%;
           display: flex;
           justify-content: space-between;
@@ -963,11 +1048,14 @@ $design-height: 1080;
       cursor: pointer;
       span {
         &:nth-child(1) {
-          padding-left: adaptiveWidth(20);
+          width: 30%;
+          padding: adaptiveWidth(10) 0;
         }
-        &:nth-child(4) {
-          padding-right: adaptiveWidth(20);
-        }
+        width: 23%;
+        text-align: center;
+        white-space: nowrap; /* 禁止换行 */
+        overflow: hidden; /* 超出内容隐藏 */
+        text-overflow: ellipsis; /* 显示省略号 */
       }
     }
   }
@@ -1046,6 +1134,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
         div {
           width: 33%;
           text-align: center;
@@ -1077,8 +1166,7 @@ $design-height: 1080;
 }
 
 .lbDialog {
-  width: adaptiveWidth(440);
-  height: adaptiveHeight(372);
+  width: adaptiveWidth(480);
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
@@ -1105,27 +1193,29 @@ $design-height: 1080;
     }
   }
   .lbDialog_bottom {
-    width: 100%;
-    height: adaptiveHeight(282);
+    width: adaptiveWidth(440);
+    margin: adaptiveHeight(20) auto;
     display: flex;
     // align-items: center;
     justify-content: space-between;
     flex-direction: column;
     div {
-      margin-left: adaptiveWidth(30);
-      &:nth-child(1) {
-        margin-top: adaptiveHeight(10);
-      }
+      width: 100%;
+      display: flex;
       &:last-child {
-        margin-bottom: adaptiveHeight(10);
+        margin-bottom: adaptiveHeight(20);
       }
       span {
         font-size: adaptiveFontSize(14);
+        display: block;
+        margin-top: adaptiveHeight(5);
         &:nth-child(1) {
           color: #687f92;
+          width: adaptiveWidth(100);
         }
         &:nth-child(2) {
           color: #ffffff;
+          width: adaptiveWidth(340);
         }
       }
     }
@@ -1168,6 +1258,65 @@ $design-height: 1080;
     justify-content: space-between;
     flex-direction: column;
     div {
+      margin-left: adaptiveWidth(30);
+      &:nth-child(1) {
+        margin-top: adaptiveHeight(10);
+      }
+      &:last-child {
+        margin-bottom: adaptiveHeight(10);
+      }
+      span {
+        font-size: adaptiveFontSize(14);
+        &:nth-child(1) {
+          color: #687f92;
+        }
+        &:nth-child(2) {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+.rbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(372);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(100);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(60);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rbDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(282);
+    .rbDialog_bottom_selet {
+      margin-top: adaptiveHeight(20);
+      margin-left: adaptiveWidth(30);
+      span {
+        cursor: pointer;
+      }
+    }
+    .info {
+      margin-top: adaptiveHeight(10);
       margin-left: adaptiveWidth(30);
       &:nth-child(1) {
         margin-top: adaptiveHeight(10);

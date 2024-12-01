@@ -25,6 +25,7 @@ export function nodeList(params: nodeListRes) {
 
 //获取工艺流程图列表
 export interface processListRes {
+  craftArchiveId: number | null;
   pageNum: number;
   pageSize: number;
   orderColumn: string;

@@ -70,6 +70,7 @@
       <el-cascader
         :options="equipmentlist2"
         @change="cascaderChange"
+        class="cascaderCss"
         :props="{
           value: 'id',
           label: 'name',
@@ -155,14 +156,7 @@
           v-for="(item, index) in inspectionlist"
           @click="rbClick(item)"
         >
-          <div
-            style="
-              color: #ffffff;
-              font-size: 12px;
-              display: flex;
-              align-items: center;
-            "
-          >
+          <div class="bigscreen_rb_bottom_r_neis">
             <div
               :style="{
                 width: '13px',
@@ -184,10 +178,14 @@
             </div>
             {{ item.recordId }}
           </div>
-          <div style="color: #ffffff; font-size: 12px">
+          <div
+            class="bigscreen_rb_bottom_r_neis"
+            style="color: #ffffff; font-size: 12px"
+          >
             {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}
           </div>
           <div
+            class="bigscreen_rb_bottom_r_neis"
             :style="{
               color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
               fontSize: '12px',
@@ -724,7 +722,7 @@ $design-height: 1080;
       .bigscreen_lc_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
-        margin-top: adaptiveHeight(20);
+        margin-top: adaptiveHeight(15);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -739,10 +737,11 @@ $design-height: 1080;
       }
       .bigscreen_lc_bottom_nei_b {
         width: 100%;
+        height: adaptiveHeight(33);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(15);
+        margin-top: adaptiveHeight(5);
         span {
           width: 25%;
           color: #ffffff;
@@ -887,6 +886,9 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(395);
   right: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_rc_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -930,7 +932,7 @@ $design-height: 1080;
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
-        margin-top: adaptiveHeight(20);
+        margin-top: adaptiveHeight(15);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
         display: flex;
@@ -949,7 +951,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        // margin-top: adaptiveHeight(8);
+        margin-top: adaptiveHeight(5);
         cursor: pointer;
         span {
           width: 33%;
@@ -966,7 +968,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(8);
+        margin-top: adaptiveHeight(5);
         cursor: pointer;
         span {
           width: 33%;
@@ -1057,6 +1059,19 @@ $design-height: 1080;
         justify-content: space-between;
         align-items: center;
         cursor: pointer;
+        .bigscreen_rb_bottom_r_neis {
+          width: 33%;
+          &:nth-child(1) {
+            color: #ffffff;
+            font-size: adaptiveFontSize(12);
+            display: flex;
+            align-items: center;
+          }
+          &:nth-child(2),
+          &:nth-child(3) {
+            text-align: center;
+          }
+        }
       }
     }
   }
@@ -1226,6 +1241,14 @@ $design-height: 1080;
         }
       }
     }
+  }
+}
+:deep(.cascaderCss) {
+  width: adaptiveWidth(200);
+  height: adaptiveHeight(24);
+  .el-input__wrapper {
+    background: none;
+    height: adaptiveHeight(24);
   }
 }
 

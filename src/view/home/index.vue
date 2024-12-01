@@ -45,6 +45,7 @@
             :class-option="{
               step: 5,
             }"
+            hover
             class="scrool"
           >
             <div
@@ -59,7 +60,8 @@
                   'background-size': '100% 100%',
                 }"
               >
-                {{ item.type }}
+                <span v-if="item.type == '工艺节点报警'">工艺节点</span>
+                <span v-else>{{ item.type }}</span>
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -191,23 +193,23 @@
       <div class="ltDialog_bottom">
         <img :src="item.img" alt="" />
         <div class="ltDialog_bottomr">
-          <div>
+          <div class="ltDialog_bottomr_nei">
             <span>报警编号：</span>
             <span>{{ item.eventId }}</span>
           </div>
-          <div>
+          <div class="ltDialog_bottomr_nei">
             <span>报警类型：</span>
             <span>{{ item.type }}</span>
           </div>
-          <div>
+          <div class="ltDialog_bottomr_nei">
             <span>报警信息：</span>
             <span>{{ item.description }}</span>
           </div>
-          <div>
+          <div class="ltDialog_bottomr_nei">
             <span>报警级别：</span>
             <span>{{ item.level }}</span>
           </div>
-          <div>
+          <div class="ltDialog_bottomr_nei">
             <span>报警时间：</span>
             <span>{{ item.createTime }}</span>
           </div>
@@ -255,45 +257,6 @@ import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
 
-const list1 = ref([
-  {
-    name: "设备报警",
-    level: "二级",
-    time: "2024-07-31 22:58:15",
-    icon: "",
-    back: "/img/设备报警.png",
-    status: false,
-    img: "/img/二级.png",
-  },
-  {
-    name: "环境数据",
-    level: "三级",
-    time: "2024-07-31 22:58:15",
-    icon: "",
-    back: "/img/环境数据.png",
-    status: false,
-    img: "/img/三级.png",
-  },
-  {
-    name: "物料数据",
-    level: "二级",
-    time: "2024-07-31 22:58:15",
-    icon: "",
-    back: "/img/物料报警.png",
-    status: false,
-    img: "/img/二级.png",
-  },
-  {
-    name: "工艺节点",
-    level: "一级",
-    time: "2024-07-31 22:58:15",
-    icon: "",
-    back: "/img/工艺节点.png",
-    status: false,
-    img: "/img/一级.png",
-  },
-]);
-
 const rtStatus = ref(false);
 const rtClick = () => {
   rtStatus.value = !rtStatus.value;
@@ -317,18 +280,6 @@ const policieslistFun = async () => {
   policieslist.value = data.data.rows.map((item, index) => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
-};
-const rbClcik = (item: any) => {
-  policieslist.value.forEach((v) => {
-    if (item.policiesId == v.policiesId) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const rbcanleClick = (item: any) => {
-  item.status = false;
 };
 
 //事件报告
@@ -820,20 +771,27 @@ $design-height: 1080;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          cursor: pointer;
           span {
+            width: adaptiveWidth(140);
             color: rgba(244, 249, 255, 1);
             font-size: adaptiveFontSize(11);
             margin-left: adaptiveWidth(20);
+            white-space: nowrap; /* 禁止换行 */
+            overflow: hidden; /* 超出内容隐藏 */
+            text-overflow: ellipsis; /* 显示省略号 */
           }
           div {
-            width: adaptiveWidth(67);
-            height: adaptiveHeight(31);
+            width: adaptiveWidth(80);
+            height: adaptiveHeight(35);
             color: rgba(244, 249, 255, 1);
             font-size: adaptiveFontSize(12);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: adaptiveWidth(22);
+            span {
+              padding-bottom: adaptiveHeight(5);
+            }
           }
         }
       }
@@ -1108,7 +1066,6 @@ $design-height: 1080;
 }
 .ltDialog {
   width: adaptiveWidth(440);
-  height: adaptiveHeight(280);
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
@@ -1135,28 +1092,33 @@ $design-height: 1080;
     }
   }
   .ltDialog_bottom {
-    width: 100%;
-    height: adaptiveHeight(230);
+    width: adaptiveWidth(380);
+    // height: adaptiveHeight(230);
+    margin: 0 auto;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     img {
       width: adaptiveWidth(99);
       height: adaptiveHeight(99);
     }
     .ltDialog_bottomr {
-      margin-left: adaptiveWidth(20);
-      div {
+      width: adaptiveWidth(266);
+      margin: adaptiveHeight(40) 0;
+      .ltDialog_bottomr_nei {
         margin-top: adaptiveHeight(10);
+        display: flex;
         &:nth-child(1) {
           margin-top: 0;
         }
         span {
           font-size: adaptiveFontSize(14);
           &:nth-child(1) {
+            width: adaptiveWidth(75);
             color: #687f92;
           }
           &:nth-child(2) {
+            width: adaptiveWidth(191);
             color: #ffffff;
           }
         }

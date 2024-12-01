@@ -5,21 +5,25 @@
         <img src="/public/img/光标.png" alt="" />
         <span>数据展示</span>
       </div>
-      <div class="bigscreen_lt_top_r">
-        <span>环境数据分析</span>
+      <div class="bigscreen_lt_top_r" @click="ltClick">
+        <span>报警历史分析</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div class="bigscreen_lt_bottom_nei" v-for="item in list">
-        <div class="bigscreen_lt_bottom_nei_shang">
-          <img :src="item.img" alt="" />
-          <span>{{ item.type }}</span>
-          <span>{{ item.value }}</span>
-          <span>{{ item.unit }}</span>
-          <span>{{ item.equipment }}</span>
-          <span>{{ item.model }}</span>
+      <div class="bigscreen_lt_bottom_nei">
+        <div class="bigscreen_lt_bottom_nei_t">
+          <span>描述</span>
+          <span>位号</span>
+          <span>信号</span>
         </div>
-        <div class="bigscreen_lt_bottom_nei_xia"></div>
+        <div
+          class="bigscreen_lt_bottom_nei_b"
+          v-for="item in environmentFileList"
+        >
+          <span>{{ item.description }}</span>
+          <span>{{ item.tag }}</span>
+          <span>{{ item.esignal }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -98,30 +102,58 @@
         <img src="/public/img/光标.png" alt="" />
         <span>趋势变化</span>
       </div>
-      <el-select
-        size="small"
-        class="selectcss"
-        v-model="selectval"
-        style="width: 80px; margin-bottom: 5px; margin-right: 11px"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="bigscreen_rb_top_r">
+        <el-select
+          size="small"
+          class="selectcss"
+          v-model="selectval"
+          style="width: 80px; margin-bottom: 5px; margin-right: 11px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+        <el-select
+          size="small"
+          class="selectcss"
+          v-model="selectval"
+          style="width: 80px; margin-bottom: 5px; margin-right: 11px"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
     </div>
+  </div>
+
+  <div v-if="ltstatus" class="ltDialog">
+    <div class="ltDialog_top">
+      <span>报警历史分析</span>
+      <img :src="img9" alt="" srcset="" @click="ltcloneClick" />
+    </div>
+    <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
+import {
+  environmentalFilesList,
+  historyStatistics,
+} from "../../api/environment";
 import center from "../../components/center.vue";
+import img9 from "../../../public/img/叉号.png";
 
 const radio1 = ref("zhou");
 
@@ -318,10 +350,30 @@ const bigscreenRToption = {
   ],
 };
 
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
+//监测数据
+const environmentFileFormData = ref({
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const environmentFileList = ref<any[]>([]);
+const environmentFileFun = async () => {
+  const { data } = await environmentalFilesList(environmentFileFormData.value);
+  let list = data.data.rows.slice(0, 9);
+  environmentFileList.value = list.map((item, index) => {
+    return {
+      ...item,
+      status: false,
+    };
+  });
+};
 
-const bigscreenRBoption = {
+//报警历史分析
+const ltstatus = ref(false);
+let bigscreenLtdialogChart: any = null;
+const bigscreenLtdialogRef = ref();
+const bigscreenLtdialogoption = {
   grid: {
     left: "6%",
     right: "6%",
@@ -338,24 +390,31 @@ const bigscreenRBoption = {
   },
   yAxis: {
     type: "value",
-    splitLine: {
-      lineStyle: {
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
+    name: "km/h",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 40, 5, 0],
     },
     axisLabel: {
       color: "#ffffff",
     },
+    splitLine: {
+      show: true, //让网格显示
+      lineStyle: {
+        //网格样式
+        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
+        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
+      },
+    },
   },
   series: [
     {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [50, 100, 160, 60, 200, 90, 250],
       type: "line",
       smooth: true,
       symbol: "none",
       lineStyle: {
-        color: "rgba(25,100,238, 1)", // 线条颜色
+        color: "rgba(61, 230, 255, 1)", // 线条颜色
       },
       areaStyle: {
         color: {
@@ -367,15 +426,88 @@ const bigscreenRBoption = {
           colorStops: [
             {
               offset: 0,
-              color: "rgba(25,100,238, 0.60)", // 0% 处的颜色
+              color: "rgba(61, 230, 255, 0.60)", // 0% 处的颜色
             },
             {
               offset: 1,
-              color: "rgba(25,100,238, 0)", // 100% 处的颜色
+              color: "rgba(61, 230, 255, 0)", // 100% 处的颜色
             },
           ],
           global: false, // 缺省为 false
         },
+      },
+    },
+  ],
+};
+const ltClick = () => {
+  ltstatus.value = true;
+  console.log(1111);
+  if (bigscreenLtdialogRef.value) {
+    console.log(1111);
+
+    bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
+    bigscreenLtdialogChart.setOption(bigscreenLtdialogoption);
+  }
+};
+const ltcloneClick = () => {
+  ltstatus.value = false;
+};
+const historyStatisticsFormData = ref({
+  description: "",
+  dayType: "week",
+});
+const historyStatisticsFun = async () => {
+  const { data } = await historyStatistics(historyStatisticsFormData.value);
+};
+
+let bigscreenRBChart: any = null;
+const bigscreenRBRef = ref();
+
+const bigscreenRBoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
+  },
+  xAxis: {
+    type: "category",
+    data: [
+      "7月21日",
+      "7月22日",
+      "7月23日",
+      "7月24日",
+      "7月25日",
+      "7月26日",
+      "7月27日",
+    ],
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  yAxis: {
+    type: "value",
+    name: "吨",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 30, 5, 0],
+    },
+    splitLine: {
+      lineStyle: {
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
+      },
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    {
+      data: [2, 0.5, 1, 0.7, 3, 3.5, 1],
+      type: "bar",
+      itemStyle: {
+        color: "#68B1A6", // 线条颜色
       },
     },
   ],
@@ -402,6 +534,8 @@ onMounted(() => {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
     bigscreenRTChart.setOption(bigscreenRToption);
   }
+  environmentFileFun();
+  historyStatisticsFun();
 });
 </script>
 
@@ -432,6 +566,9 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(91);
   left: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_lt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -464,8 +601,9 @@ $design-height: 1080;
     }
     .bigscreen_lt_top_r {
       color: #ffffff;
-      font-size:adaptiveFontSize(14);
-      margin-right:adaptiveWidth(11);
+      font-size: adaptiveFontSize(14);
+      margin-right: adaptiveWidth(11);
+      cursor: pointer;
     }
   }
   .bigscreen_lt_bottom {
@@ -474,80 +612,37 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
     .bigscreen_lt_bottom_nei {
-      width: adaptiveWidth(95);
-      height: adaptiveHeight(300);
-
-      position: relative;
-      background: linear-gradient(
-        180deg,
-        rgba(10, 49, 89, 0) 0%,
-        rgba(10, 49, 89, 0.41) 13%,
-        rgba(13, 62, 102, 0.64) 24%,
-        rgba(14, 60, 109, 0.7) 50%,
-        rgba(11, 54, 97, 0.55) 79%,
-        rgba(11, 54, 97, 0.46) 86%,
-        rgba(10, 49, 89, 0) 100%
-      );
-      .bigscreen_lt_bottom_nei_shang {
+      width: adaptiveWidth(407);
+      margin: 0 auto;
+      .bigscreen_lt_bottom_nei_t {
         width: 100%;
-        height: 100%;
+        height: adaptiveHeight(30);
+        margin-top: adaptiveHeight(15);
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
+        background-size: 100% 100%;
         display: flex;
-        flex-direction: column;
+        justify-content: space-between;
         align-items: center;
-        position: absolute;
-        z-index: 2;
-      }
-      .bigscreen_lt_bottom_nei_xia {
-        width: 100%;
-        height: adaptiveHeight(115);
-        position: absolute;
-        bottom: 0;
-        background: url("/public/img/environment/底座.png") no-repeat;
-        background-position: 0 39px;
-        z-index: 1;
-      }
-      &:nth-child(1) {
-        margin-top: adaptiveHeight(37);
-        margin-left: adaptiveWidth(15);
-      }
-      &:nth-child(2) {
-        margin-top: adaptiveHeight(77);
-        margin-left: adaptiveWidth(10);
-      }
-      &:nth-child(3) {
-        margin-top: adaptiveWidth(37);
-        margin-left: adaptiveWidth(10);
-      }
-      &:nth-child(4) {
-        margin-top: adaptiveHeight(77);
-        margin-left: adaptiveWidth(10);
-      }
-      span {
-        color: #ffffff;
-        &:nth-child(2) {
-          font-size: adaptiveFontSize(23);
-          padding-top: adaptiveHeight(32);
-        }
-        &:nth-child(3) {
-          font-size: adaptiveFontSize(20);
-          padding-top: adaptiveHeight(5);
-          color: #f96168;
-        }
-        &:nth-child(4) {
-          font-size: adaptiveFontSize(20);
-          padding-top: adaptiveHeight(5);
-        }
-        &:nth-child(5) {
-          font-size: adaptiveFontSize(15);
-          padding-top: adaptiveHeight(20);
-        }
-        &:nth-child(6) {
+        span {
+          width: 30%;
+          color: #9eabb7;
+          font-size: adaptiveFontSize(14);
           text-align: center;
+        }
+      }
+      .bigscreen_lt_bottom_nei_b {
+        width: 100%;
+        height: adaptiveHeight(33);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: adaptiveHeight(5);
+        span {
+          width: 30%;
+          color: #ffffff;
           font-size: adaptiveFontSize(12);
-          // padding-top: 10px;
-          padding: adaptiveHeight(5) adaptiveWidth(10) 0;
+          text-align: center;
         }
       }
     }
@@ -702,6 +797,40 @@ $design-height: 1080;
       width: 100%;
       height: 100%;
     }
+  }
+}
+
+.ltDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .ltDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .ltDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(215);
   }
 }
 
