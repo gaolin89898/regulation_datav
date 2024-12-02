@@ -23,7 +23,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { geteventTotal } from "../api/home";
 import img from "../../public/img/0.png";
 import img1 from "../../public/img/1.png";
 import img2 from "../../public/img/2.png";
@@ -35,48 +36,33 @@ import img7 from "../../public/img/7.png";
 import img8 from "../../public/img/8.png";
 import img9 from "../../public/img/9.png";
 
-const count1 = ref(321);
-const count2 = ref(45671);
+const count1 = ref(0);
+const count2 = ref(0);
 
-function shuimg(val: string) {
-  const img = ref("");
-  switch (val) {
-    case "0":
-      img.value = img;
-      break;
-    case "1":
-      img.value = img1;
-      break;
-    case "2":
-      img.value = img2;
-      break;
-    case "3":
-      img.value = img3;
-      break;
-    case "4":
-      img.value = img4;
-      break;
-    case "5":
-      img.value = img5;
-      break;
-    case "6":
-      img.value = img6;
-      break;
-    case "7":
-      img.value = img7;
-      break;
-    case "8":
-      img.value = img8;
-      break;
-    case "9":
-      img.value = img9;
-      break;
-    default:
-      break;
-  }
+const geteventTotalFun = async () => {
+  const { data } = await geteventTotal();
+  count1.value = data.data.todayTotal;
+  count2.value = data.data.allTotal;
+};
 
-  return img.value;
+function shuimg(val: string): string {
+  const imgMap: Record<string, string> = {
+    "0": img,
+    "1": img1,
+    "2": img2,
+    "3": img3,
+    "4": img4,
+    "5": img5,
+    "6": img6,
+    "7": img7,
+    "8": img8,
+    "9": img9,
+  };
+  return imgMap[val] || ""; // 如果值不存在，则返回空字符串
 }
+onMounted(() => {
+  geteventTotalFun();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -139,10 +125,14 @@ $design-height: 1080;
       height: adaptiveHeight(72);
       margin-top: adaptiveHeight(12);
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       div {
-        width:adaptiveWidth(63);
+        &:nth-child(1) {
+          margin-left: 0;
+        }
+        width: adaptiveWidth(63);
         height: adaptiveHeight(72);
+        margin-left: adaptiveWidth(12);
         background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;

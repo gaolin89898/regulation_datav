@@ -177,16 +177,6 @@ import {
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
-const options = ref([
-  {
-    label: "温度",
-    value: "wendu",
-  },
-  {
-    label: "湿度",
-    value: "shudu",
-  },
-]);
 const options2 = ref([
   {
     label: "电",
