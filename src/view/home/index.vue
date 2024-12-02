@@ -9,7 +9,7 @@
     <div class="bigscreen_lt_bottom">
       <div class="bigscreen_lt_bottom_nei">
         <div
-          v-for="item in alarmEvnetLists"
+          v-for="item in alarmEvnetListLt"
           class="bigscreen_lt_nei"
           :style="{
             background: `url(${item.back}) no-repeat`,
@@ -176,19 +176,17 @@
         <img src="/public/img/光标.png" alt="" />
         <span>安全生产曲线</span>
       </div>
-      <div class="groupCss">
-        <el-radio-group v-model="rbRadio" class="group" @change="rbRadioChange">
-          <el-radio-button label="周" value="week" />
-          <el-radio-button label="年" value="year" />
-        </el-radio-group>
-      </div>
+      <el-radio-group v-model="rbRadio" class="group" @change="rbRadioChange">
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
     </div>
   </div>
 
-  <template v-for="item in alarmEvnetLists">
+  <template v-for="item in alarmEvnetListLt">
     <div v-if="item.status" class="ltDialog">
       <div class="ltDialog_top">
         <span>报警信息详情</span>
@@ -286,22 +284,17 @@ const policieslistFun = async () => {
   });
 };
 
-//事件报告
-const alarmEventsFormData = ref({
+//报警信息
+const ltalarmEventsFormData = ref({
   type: "",
   pageNum: 1,
-  pageSize: 10000,
+  pageSize: 4,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
-const alarmEventslist = ref<any[]>([]);
-const alarmEvnetLists = ref<any[]>([]);
-const alarmEventslistFun = async () => {
-  const { data } = await alarmEventsList(alarmEventsFormData.value);
-  let imgList = [img1, img2, img3, img4];
-  alarmEventslist.value = data.data.rows.map((item, index) => {
-    return { ...item, img: imgList[index % imgList.length], status: false };
-  });
+const alarmEvnetListLt = ref<any[]>([]);
+const alarmEventslistFunLt = async () => {
+  const { data } = await alarmEventsList(ltalarmEventsFormData.value);
   let list = data.data.rows.slice(0, 4);
   let evnetimglist = [
     {
@@ -310,7 +303,7 @@ const alarmEventslistFun = async () => {
     },
     {
       type: "环境报警",
-      img: "/img/环境报警.png",
+      img: "/img/环境数据.png",
     },
     {
       type: "物料报警",
@@ -335,19 +328,21 @@ const alarmEventslistFun = async () => {
       img: "/img/三级.png",
     },
   ];
-  alarmEvnetLists.value = list.map((item) => {
-    const matchedEvent = evnetimglist.find((event) => event.type === item.type);
-    const matchedLevel = levelList.find((level) => level.level === item.level);
+  alarmEvnetListLt.value = list.map((item) => {
+    const matchedEvent = evnetimglist.find((v) => v.type === item.type);
+    const matchedLevel = levelList.find((v) => v.level === item.level);
+
     return {
       ...item,
-      back: matchedEvent.img,
+      back: matchedEvent ? matchedEvent.img : "",
       status: false,
-      img: matchedLevel.img,
+      img: matchedLevel ? matchedLevel.img : "",
     };
   });
+  console.log(alarmEvnetListLt.value);
 };
 const neiClick = (item) => {
-  alarmEvnetLists.value.forEach((v) => {
+  alarmEvnetListLt.value.forEach((v) => {
     if (item.eventId == v.eventId) {
       v.status = !v.status;
     } else {
@@ -357,6 +352,23 @@ const neiClick = (item) => {
 };
 const canleClick = (item) => {
   item.status = false;
+};
+
+//事件报告
+const alarmEventsFormData = ref({
+  type: "",
+  pageNum: 1,
+  pageSize: 100,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const alarmEventslist = ref<any[]>([]);
+const alarmEventslistFun = async () => {
+  const { data } = await alarmEventsList(alarmEventsFormData.value);
+  let imgList = [img1, img2, img3, img4];
+  alarmEventslist.value = data.data.rows.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
+  });
 };
 
 //安全生产曲线
@@ -575,7 +587,8 @@ const bigscreenLBoption = {
 const lbRadio = ref("week");
 const geteventTotalFun = async () => {
   const { data } = await geteventTotal({ dayType: lbRadio.value });
-  bigscreenLBoption.xAxis.data = data.data.times;
+
+  bigscreenLBoption.xAxis.data = data.data.time;
   bigscreenLBoption.series[0].data = data.data.data;
 
   if (bigscreenLBRef.value) {
@@ -591,6 +604,7 @@ const lbRadioChange = (val) => {
 onMounted(() => {
   policieslistFun();
   alarmEventslistFun();
+  alarmEventslistFunLt();
   getstatisticsList();
   geteventTotalFun();
 });

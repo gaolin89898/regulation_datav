@@ -185,7 +185,7 @@
       </div>
     </div>
   </template>
-<!-- 
+  <!-- 
   <template v-for="item in healthylist">
     <div v-show="item.status" class="lbDialog">
       <div class="lbDialog_top">
@@ -606,7 +606,6 @@ const lbDialogBottomoption = {
     top: "20%",
     containLabel: true,
   },
-
   xAxis: {
     type: "category",
     data: [],
