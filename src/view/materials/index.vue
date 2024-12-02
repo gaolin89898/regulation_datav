@@ -25,26 +25,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>库存信息</span>
       </div>
-      <div
-        style="
-          width: 65px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+      <el-radio-group
+        v-model="materiaStatus"
+        class="group"
+        @change="materiaChange"
       >
-        <el-radio-group
-          v-model="materiaStatus"
-          class="group"
-          @change="materiaChange"
-        >
-          <el-radio-button label="周" value="week" />
-          <el-radio-button label="月" value="month" />
-        </el-radio-group>
-      </div>
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_lc_bottom">
       <el-select
@@ -85,9 +73,9 @@
       >
         <el-option
           v-for="item in materialFileslist"
-          :key="item.name"
+          :key="item.materialsId"
           :label="item.name"
-          :value="item.name"
+          :value="item.materialsId"
         />
       </el-select>
     </div>
@@ -421,7 +409,7 @@ const bigscreenLCoption = {
   ],
 };
 const materiaStatus = ref("week");
-const materialsId = ref(0);
+const materialsId = ref<number | null>(null);
 const materialFiles = ref({
   pageNum: 1,
   pageSize: 10000,
@@ -438,11 +426,12 @@ const materialFilesListFun = async () => {
   await receivestatisticsFun();
   await dosagetypeStatisticsFun();
 };
+const materialsStatisticsData = ref({
+  materialsId: null,
+  dayType: "week",
+});
 const materialsStatistics = async () => {
-  const { data } = await getstatistics({
-    dayType: materiaStatus.value,
-    materialsId: materialsId.value,
-  });
+  const { data } = await getstatistics(materialsStatisticsData.value);
   bigscreenLCoption.xAxis.data = data.data.xaxisData;
   bigscreenLCoption.series[0].data = data.data.seriesData;
   if (bigscreenLCRef.value) {
@@ -1117,9 +1106,9 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
     .bigscreen_rb_bottom_nei {
       width: adaptiveWidth(407);
       .bigscreen_rb_bottom_nei_t {
@@ -1127,6 +1116,7 @@ $design-height: 1080;
         height: adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;

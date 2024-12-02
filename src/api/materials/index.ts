@@ -24,7 +24,7 @@ export function materialFilesList(params: materialFilesListRes) {
 
 //获取物料库存统计
 export interface getstatisticsRes {
-  materialsId: number;
+  materialsId: number | null;
   dayType: string;
 }
 export function getstatistics(params: getstatisticsRes) {

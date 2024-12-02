@@ -603,14 +603,14 @@ const processSelstClick = async (item, v, i) => {
 const nodeFormData = ref({
   nodeName: "",
   pageNum: 1,
-  pageSize: 10000,
+  pageSize: 6,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
 const nodelist = ref<any[]>([]);
 const nodelistFun = async () => {
   const { data } = await nodeList(nodeFormData.value);
-  let list = data.data.rows.slice(0, 5);
+  let list = data.data.rows;
   let imgList = [
     "/img/craftsmanship/1.png",
     "/img/craftsmanship/2.png",
@@ -767,10 +767,7 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
     .bigscreen_lt_bottom_t {
       width: adaptiveWidth(399);
       height: adaptiveHeight(88);
@@ -778,6 +775,7 @@ $design-height: 1080;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
+      margin: 0 auto;
       img {
         width: adaptiveWidth(88);
         height: adaptiveHeight(88);

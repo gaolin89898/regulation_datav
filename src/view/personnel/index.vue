@@ -44,7 +44,6 @@
       <el-input
         class="inputcss"
         v-model="healthyFormData.name"
-        style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入员工姓名"
         :prefix-icon="Search"
         @change="healthyChange"
@@ -126,22 +125,10 @@
         <img src="/public/img/光标.png" alt="" />
         <span>异常健康指标统计</span>
       </div>
-      <div
-        style="
-          width: 65px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
-      >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="月" value="ri" />
-        </el-radio-group>
-      </div>
+      <el-radio-group v-model="radio1" class="group">
+        <el-radio-button label="周" value="zhou" />
+        <el-radio-button label="月" value="ri" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
@@ -325,7 +312,7 @@ const bigscreenLBoption = {
     },
   ],
 };
-const ltClick = (item) => {
+const ltClick = (item: any) => {
   list.value.forEach((v) => {
     if (item.code == v.code) {
       v.status = !v.status;
@@ -335,21 +322,9 @@ const ltClick = (item) => {
   });
 };
 
-const ltcanleClick = (item) => {
+const ltcanleClick = (item: any) => {
   item.status = false;
 };
-
-const selectval = ref("dian");
-const options = ref([
-  {
-    label: "湿度",
-    value: "dian",
-  },
-  {
-    label: "温度",
-    value: "shui",
-  },
-]);
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -1174,6 +1149,11 @@ $design-height: 1080;
   }
 }
 
+.inputcss {
+  width: adaptiveWidth(148);
+  height: adaptiveHeight(24);
+  margin-right: adaptiveWidth(11);
+}
 .inputcss :deep(.el-input__wrapper) {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
