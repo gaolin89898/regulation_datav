@@ -34,26 +34,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>当前总功耗</span>
       </div>
-      <div
-        style="
-          width: 65px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+      <el-radio-group
+        v-model="powerByTypeStatisticsData.type"
+        @change="powerByTypeStatisticsFun"
+        class="group"
       >
-        <el-radio-group
-          v-model="powerByTypeStatisticsData.type"
-          @change="powerByTypeStatisticsFun"
-          class="group"
-        >
-          <el-radio-button label="电" value="电" />
-          <el-radio-button label="水" value="水" />
-        </el-radio-group>
-      </div>
+        <el-radio-button label="电" value="电" />
+        <el-radio-button label="水" value="水" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
@@ -66,27 +54,15 @@
         <img src="/public/img/光标.png" alt="" />
         <span>历史功耗</span>
       </div>
-      <div
-        style="
-          width: 95px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+      <el-radio-group
+        v-model="powerStaticData.dayType"
+        @change="powerStaticFun"
+        class="group"
       >
-        <el-radio-group
-          v-model="powerStaticData.dayType"
-          @change="powerStaticFun"
-          class="group"
-        >
-          <el-radio-button label="周" value="week" />
-          <el-radio-button label="月" value="month" />
-          <el-radio-button label="年" value="year" />
-        </el-radio-group>
-      </div>
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_rt_bottom">
       <el-select
@@ -118,27 +94,15 @@
         <img src="/public/img/光标.png" alt="" />
         <span>区域环境指标</span>
       </div>
-      <div
-        style="
-          width: 95px;
-          height: 24px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          margin-right: 11px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        "
+      <el-radio-group
+        v-model="powerByAreaTotalStaticData.dayType"
+        @change="powerByAreaTotalStaticFun"
+        class="group"
       >
-        <el-radio-group
-          v-model="powerByAreaTotalStaticData.dayType"
-          @change="powerByAreaTotalStaticFun"
-          class="group"
-        >
-          <el-radio-button label="周" value="week" />
-          <el-radio-button label="月" value="month" />
-          <el-radio-button label="年" value="year" />
-        </el-radio-group>
-      </div>
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
@@ -745,7 +709,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -830,7 +794,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -878,7 +842,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -930,7 +894,7 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
@@ -1031,6 +995,9 @@ $design-height: 1080;
   overflow: hidden;
 }
 
+.group {
+  margin-right: adaptiveWidth(11);
+}
 .group
   :deep(
     .el-radio-button.is-active
@@ -1043,7 +1010,7 @@ $design-height: 1080;
   font-size: adaptiveFontSize(12);
 }
 .group :deep(.el-radio-button .el-radio-button__inner) {
-  padding: 2px 8px;
+  padding: adaptiveWidth(2) adaptiveHeight(6);
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
   font-size: adaptiveFontSize(12);

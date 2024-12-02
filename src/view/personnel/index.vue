@@ -321,7 +321,6 @@ const ltClick = (item: any) => {
     }
   });
 };
-
 const ltcanleClick = (item: any) => {
   item.status = false;
 };
@@ -711,7 +710,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     align-items: center;
     .bigscreen_lt_top_l {
@@ -815,9 +814,9 @@ $design-height: 1080;
   left: adaptiveWidth(26);
   .bigscreen_lb_top {
     width: 100%;
-    height: adaptiveHeight(34);
+    height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -911,7 +910,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -991,7 +990,7 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
@@ -1166,6 +1165,9 @@ $design-height: 1080;
   overflow: hidden;
 }
 
+.group {
+  margin-right: adaptiveWidth(11);
+}
 .group
   :deep(
     .el-radio-button.is-active
@@ -1178,7 +1180,7 @@ $design-height: 1080;
   font-size: 12px;
 }
 .group :deep(.el-radio-button .el-radio-button__inner) {
-  padding: 2px 8px;
+  padding: adaptiveWidth(2) adaptiveHeight(6);
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
   font-size: 12px;

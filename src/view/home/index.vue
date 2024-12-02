@@ -238,25 +238,7 @@
         <span>政策法规弹窗</span>
         <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
       </div>
-      <div class="rcDialog_bottom">
-        <div>生物安全政策法规</div>
-        <div>目的</div>
-        <div>保障生物领域健康和生态环境，促进生物技术可持续发展。</div>
-        <div>二、适用范围</div>
-        <div>
-          涵盖生物研究、实验、生产、运输、经营等各类涉及生物 安全的活动。
-        </div>
-        <div>三、主要内容</div>
-        <div>
-          建立风险评估与防控体系,规范生物实验室管理。加强生物
-          资源保护与利用监管。明确生物安全事故应急处置机制。 规定相关法律责任。
-        </div>
-        <!-- <div>四、执行与监督</div>
-        <div>
-          相关部门负责监督执行，对违规行为依法惩处，定期评 政策法规名称
-          估政策法规实施效果并适时修订。
-        </div> -->
-      </div>
+      <div class="rcDialog_bottom"></div>
     </div>
   </template>
 </template>
@@ -688,7 +670,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     align-items: center;
     .bigscreen_lt_top_l {
@@ -770,7 +752,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -866,7 +848,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -914,7 +896,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -991,7 +973,7 @@ $design-height: 1080;
     width: 100%;
     height: adaptiveHeight(40);
     background: url("/public/img/背景-上层(1).gif") no-repeat;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1082,7 +1064,7 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-size: 110% 100%;
+    background-size: 110% 110%;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
@@ -1233,8 +1215,8 @@ $design-height: 1080;
   }
 }
 .rcDialog {
-  width: adaptiveWidth(440);
-  height: adaptiveHeight(372);
+  width: adaptiveWidth(900);
+  height: adaptiveHeight(500);
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
@@ -1267,21 +1249,6 @@ $design-height: 1080;
     // align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    div {
-      font-size: adaptiveFontSize(16);
-      color: #ffffff;
-      margin-left: adaptiveWidth(20);
-      margin-right: adaptiveWidth(20);
-      &:nth-child(1) {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: adaptiveHeight(10);
-      }
-      &:last-child {
-        margin-bottom: adaptiveHeight(20);
-      }
-    }
   }
 }
 
