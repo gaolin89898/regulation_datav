@@ -145,6 +145,7 @@
           >
             <div
               v-for="(item, index) in policieslist"
+              @click="rcClick(item)"
               :key="index"
               class="bigscreen_rc_bottom_rnei"
             >
@@ -159,7 +160,7 @@
               >
                 <span style="margin-left: 10px">{{ item.policiesName }}</span>
                 <img
-                  style="margin-right: 18px"
+                  style="margin-right: 18px; cursor: pointer"
                   src="/public/img/查看详情.png"
                   alt=""
                 />
@@ -230,6 +231,34 @@
       <div>倍速播放×1</div>
     </div>
   </div>
+  <!-- 政策法规 -->
+  <template v-for="(item, index) in policieslist">
+    <div v-if="item.status" class="rcDialog">
+      <div class="rcDialog_top">
+        <span>政策法规弹窗</span>
+        <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
+      </div>
+      <div class="rcDialog_bottom">
+        <div>生物安全政策法规</div>
+        <div>目的</div>
+        <div>保障生物领域健康和生态环境，促进生物技术可持续发展。</div>
+        <div>二、适用范围</div>
+        <div>
+          涵盖生物研究、实验、生产、运输、经营等各类涉及生物 安全的活动。
+        </div>
+        <div>三、主要内容</div>
+        <div>
+          建立风险评估与防控体系,规范生物实验室管理。加强生物
+          资源保护与利用监管。明确生物安全事故应急处置机制。 规定相关法律责任。
+        </div>
+        <!-- <div>四、执行与监督</div>
+        <div>
+          相关部门负责监督执行，对违规行为依法惩处，定期评 政策法规名称
+          估政策法规实施效果并适时修订。
+        </div> -->
+      </div>
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -282,6 +311,18 @@ const policieslistFun = async () => {
   policieslist.value = data.data.rows.map((item, index) => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
+};
+const rcClick = (item: any) => {
+  policieslist.value.forEach((v) => {
+    if (item.policiesId == v.policiesId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const rccanleClick = (item: any) => {
+  item.status = false;
 };
 
 //报警信息
@@ -1188,6 +1229,58 @@ $design-height: 1080;
     div {
       font-size: adaptiveFontSize(14);
       color: #ffffff;
+    }
+  }
+}
+.rcDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(372);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(400);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rcDialog_top {
+    width: 100%;
+    height: adaptiveHeight(60);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rcDialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(282);
+    display: flex;
+    // align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    div {
+      font-size: adaptiveFontSize(16);
+      color: #ffffff;
+      margin-left: adaptiveWidth(20);
+      margin-right: adaptiveWidth(20);
+      &:nth-child(1) {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: adaptiveHeight(10);
+      }
+      &:last-child {
+        margin-bottom: adaptiveHeight(20);
+      }
     }
   }
 }
