@@ -982,6 +982,9 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(395);
   right: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_rc_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -1019,16 +1022,15 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     .bigscreen_rc_bottom_nei {
       width: adaptiveWidth(407);
+      margin: 0 auto;
       .bigscreen_rc_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
+        margin-top: adaptiveHeight(15);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1048,7 +1050,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(8);
+        margin-top: adaptiveHeight(5);
         cursor: pointer;
         span {
           &:nth-child(1) {
@@ -1359,6 +1361,7 @@ $design-height: 1080;
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  font-size: adaptiveFontSize(12);
 }
 .scroll {
   height: adaptiveHeight(195);

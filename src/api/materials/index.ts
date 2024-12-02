@@ -21,6 +21,10 @@ export interface materialFilesListRes {
 export function materialFilesList(params: materialFilesListRes) {
   return http.get("/manage/materials", { params });
 }
+//获取物料档案信息
+export function materialFilesInfo(materialsId: number) {
+  return http.get(`/manage/materials/${materialsId}`);
+}
 
 //获取物料库存统计
 export interface getstatisticsRes {
@@ -34,13 +38,12 @@ export function getstatistics(params: getstatisticsRes) {
 
 //获取领用统计
 export interface receivestatisticsRes {
-  materialsId: number;
+  materialsId: number | null;
   materialsName: string;
   startTime: string;
   endTime: string;
 }
 export function receivestatistics(params: receivestatisticsRes) {
-  const { materialsId } = params;
   return http.get("/manage/receive/stock/", { params });
 }
 
@@ -52,4 +55,8 @@ export function typeStatistics() {
 //类型分析
 export function dosagetypeStatistics(params: { name: string }) {
   return http.get("/manage/receive/allTypeByName", { params });
+}
+
+export function allByReceiveExplain() {
+  return http.get("/manage/receive/allByReceiveExplain");
 }

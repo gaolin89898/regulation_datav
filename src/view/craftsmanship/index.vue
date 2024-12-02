@@ -731,6 +731,9 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(91);
   left: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_lt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -767,7 +770,6 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
-
     .bigscreen_lt_bottom_t {
       width: adaptiveWidth(399);
       height: adaptiveHeight(88);
@@ -775,7 +777,7 @@ $design-height: 1080;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
-      margin: 0 auto;
+      margin: adaptiveHeight(20) auto 0;
       img {
         width: adaptiveWidth(88);
         height: adaptiveHeight(88);
@@ -1343,6 +1345,7 @@ $design-height: 1080;
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  font-size: adaptiveFontSize(12);
 }
 .scroll {
   height: adaptiveHeight(195);

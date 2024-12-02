@@ -10,9 +10,9 @@
       <div class="bigscreen_lt_bottom_nei" v-for="item in alarmInformationlist">
         <img :src="item.img" alt="" />
         <div class="bigscreen_lt_bottom_nei_r">
-          <span style="padding-left: 25px">{{ item.materials.name }}</span>
+          <span style="padding-left: 25px">{{ item.materials?.name }}</span>
           <span>{{
-            dayjs(item.materials.createTime).format("YYYY-MM-DD")
+            dayjs(item.materials?.createTime).format("YYYY-MM-DD")
           }}</span>
           <span>{{ item.level }}</span>
         </div>
@@ -26,7 +26,7 @@
         <span>库存信息</span>
       </div>
       <el-radio-group
-        v-model="materiaStatus"
+        v-model="materialsStatisticsData.dayType"
         class="group"
         @change="materiaChange"
       >
@@ -38,7 +38,7 @@
       <el-select
         size="small"
         class="selectcss"
-        v-model="materialsId"
+        v-model="materialsStatisticsData.materialsId"
         @change="materialsChange"
         style="
           width: 80px;
@@ -127,8 +127,8 @@
       <el-select
         size="small"
         class="selectcss"
-        v-model="materialsId"
-        @change="materialsRCChange"
+        v-model="receivestatisticsData.materialsId"
+        @change="receivestatisticsFun"
         style="
           width: 80px;
           position: absolute;
@@ -245,6 +245,8 @@ import {
   receivestatistics,
   typeStatistics,
   dosagetypeStatistics,
+  materialFilesInfo,
+  allByReceiveExplain,
 } from "../../api/materials/index";
 import { alarmEventsList } from "../../api/incident/index";
 import dayjs from "dayjs";
@@ -420,7 +422,8 @@ const materialFileslist = ref<any[]>([]);
 const materialFilesListFun = async () => {
   const { data } = await materialFilesList(materialFiles.value);
   materialFileslist.value = data.data.rows;
-  materialsId.value = data.data.rows[0].materialsId;
+  materialsStatisticsData.value.materialsId = data.data.rows[0].materialsId;
+  receivestatisticsData.value.materialsId = data.data.rows[0].materialsId;
   materialsName.value = data.data.rows[0].name;
   await materialsStatistics();
   await receivestatisticsFun();
@@ -510,8 +513,9 @@ const dosagetypeStatisticsFun = async () => {
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 };
-const materialsChange2 = async (val) => {
-  materialsName.value = val;
+const materialsChange2 = async (val: number) => {
+  const { data } = await materialFilesInfo(val);
+  materialsName.value = data.data.name;
   await dosagetypeStatisticsFun();
 };
 
@@ -520,6 +524,7 @@ const typeStatisticsFun = async () => {
 };
 
 //用量类型分析
+type DatasetSource = [string, ...Array<string | number>[]];
 let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
 const bigscreenRToption = {
@@ -534,7 +539,7 @@ const bigscreenRToption = {
   legend: {
     data: [
       {
-        name: "用量类型一",
+        name: "生产领用",
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: "#3EE6FF" }, // 浅色（顶部）
@@ -543,11 +548,20 @@ const bigscreenRToption = {
         },
       },
       {
-        name: "用量类型二",
+        name: "研发领用",
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
             { offset: 0, color: "#FF72A6" }, // 浅色（顶部）
             { offset: 1, color: "#FF3657" }, // 深色（底部）
+          ]),
+        },
+      },
+      {
+        name: "其他领用",
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: "#549CF0" }, // 浅色（顶部）
+            { offset: 1, color: "#2070CE" }, // 深色（底部）
           ]),
         },
       },
@@ -560,16 +574,7 @@ const bigscreenRToption = {
 
   tooltip: {},
   dataset: {
-    source: [
-      ["product", "用量类型一", "用量类型二"],
-      ["物料一", 43.3, 43.3],
-      ["物料二", 43.3, 85.8],
-      ["物料三", 83.1, 73.4],
-      ["物料四", 86.4, 65.2],
-      ["物料五", 72.4, 53.9],
-      ["物料六", 72.4, 53.9],
-      ["物料七", 72.4, 53.9],
-    ],
+    source: [],
   },
   xAxis: {
     type: "category",
@@ -608,7 +613,54 @@ const bigscreenRToption = {
         ]),
       },
     },
+    {
+      type: "bar",
+      itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: "#549CF0" }, // 浅色（顶部）
+          { offset: 1, color: "#2070CE" }, // 深色（底部）
+        ]),
+      },
+    },
   ],
+};
+const allByReceiveExplainFun = async () => {
+  const { data } = await allByReceiveExplain();
+  updateBigscreenRToption(
+    data.xdata,
+    data.productionData,
+    data.researchData,
+    data.otherData
+  );
+  if (bigscreenRTRef.value) {
+    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart.setOption(bigscreenRToption);
+  }
+};
+const updateBigscreenRToption = (
+  xdata: string[],
+  productionData: number[],
+  researchData: number[],
+  otherData: number[]
+) => {
+  console.log([
+    ["product", "生产领用", "研发领用", "其他领用"], // 表头
+    ...xdata.map((item, index) => [
+      item,
+      productionData[index] || 0, // 确保索引对应并处理 undefined
+      researchData[index] || 0,
+      otherData[index] || 0,
+    ]),
+  ]);
+  bigscreenRToption.dataset.source = [
+    ["product", "生产领用", "研发领用", "其他领用"], // 表头
+    ...xdata.map((item, index) => [
+      item,
+      productionData[index] || 0, // 确保索引对应并处理 undefined
+      researchData[index] || 0,
+      otherData[index] || 0,
+    ]),
+  ];
 };
 
 //用量趋势分析
@@ -673,15 +725,13 @@ const bigscreenRCoption = {
   ],
 };
 const receivestatisticsData = ref({
+  materialsId: null,
   materialsName: "",
   startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
   endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
 });
 const receivestatisticsFun = async () => {
-  const { data } = await receivestatistics({
-    ...receivestatisticsData.value,
-    materialsId: materialsId.value,
-  });
+  const { data } = await receivestatistics(receivestatisticsData.value);
 
   bigscreenRCoption.xAxis.data = data.time;
   bigscreenRCoption.series[0].data = data.data;
@@ -721,7 +771,7 @@ const timeRightClick = () => {
   receivestatisticsFun(); // 更新数据
 };
 const materialsRCChange = async (val) => {
-  materialsId.value = val;
+  receivestatisticsData.value.materialsId = val;
   await alarmInformationlistFun();
   await receivestatisticsFun();
   if (bigscreenRCRef.value) {
@@ -737,16 +787,12 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenRTRef.value) {
-    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
-    bigscreenRTChart.setOption(bigscreenRToption);
-  }
-
   receivelistFun();
   alarmInformationlistFun();
   materialFilesListFun();
   receivestatisticsFun();
   typeStatisticsFun();
+  allByReceiveExplainFun();
 });
 </script>
 
@@ -821,31 +867,36 @@ $design-height: 1080;
     .bigscreen_lt_bottom_nei {
       width: 100%;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       img {
         width: adaptiveWidth(52);
         height: adaptiveHeight(59);
+        margin-left: adaptiveWidth(40);
       }
 
       &:nth-child(2) {
         margin: adaptiveHeight(15) 0;
       }
       .bigscreen_lt_bottom_nei_r {
+        width: calc(100% - adaptiveWidth(132));
         margin-left: adaptiveWidth(20);
         background: url("/public/img/back.png") no-repeat;
         background-size: 100% 100%;
         height: adaptiveHeight(33);
+        margin-right: adaptiveWidth(40);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         span {
+          width: 33%;
           color: #ffffff;
           font-size: adaptiveFontSize(14);
-          &:nth-child(2) {
-            padding: 0 adaptiveWidth(10);
-          }
+          text-align: center;
           &:nth-child(3) {
             font-size: adaptiveFontSize(20);
             font-family: youshe;
-            text-align: center;
+            text-align: end;
             font-style: normal;
             text-transform: none;
             background: linear-gradient(
@@ -1064,6 +1115,9 @@ $design-height: 1080;
   position: absolute;
   bottom: adaptiveHeight(85);
   right: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_rb_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -1106,17 +1160,15 @@ $design-height: 1080;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
     .bigscreen_rb_bottom_nei {
       width: adaptiveWidth(407);
+      margin: 0 auto;
       .bigscreen_rb_bottom_nei_t {
         width: 100%;
         height: adaptiveHeight(30);
+        margin-top: adaptiveHeight(15);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
-        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1133,7 +1185,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: adaptiveHeight(8);
+        margin-top: adaptiveHeight(5);
         cursor: pointer;
         span {
           width: 25%;
@@ -1305,6 +1357,9 @@ $design-height: 1080;
   overflow: hidden;
 }
 
+.group {
+  margin-right: adaptiveWidth(11);
+}
 .group
   :deep(
     .el-radio-button.is-active
