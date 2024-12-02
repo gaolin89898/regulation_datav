@@ -940,13 +940,13 @@ $design-height: 1080;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
     .bigscreen_lb_bottom_nei {
       width: adaptiveWidth(377);
       .bigscreen_lb_bottom_nei_t {
         display: flex;
         color: #ffffff;
+        margin-top: adaptiveHeight(20);
         .bigscreen_lb_bottom_nei_t_r {
           width: calc(100% - adaptiveWidth(38));
           display: flex;
@@ -1030,7 +1030,7 @@ $design-height: 1080;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     .bigscreen_rt_bottom_count {
       width: adaptiveWidth(393);
       height: adaptiveHeight(127);
@@ -1038,6 +1038,7 @@ $design-height: 1080;
       background-size: 100% 100%;
       display: flex;
       align-items: center;
+      margin-top: adaptiveHeight(15);
     }
     .bigscreen_rt_bottom_nei {
       width: adaptiveWidth(393);
