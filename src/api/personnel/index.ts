@@ -20,3 +20,11 @@ export interface healthyListRes {
 export function healthyList(params: healthyListRes) {
   return http.get("/manage/healthy", { params });
 }
+
+//数据大屏获取人员的健康数据统计
+export function healthyStatistics(params: {
+  personnelId: number | null;
+  type: string;
+}) {
+  return http.get("/manage/healthy/healthyStock", { params });
+}

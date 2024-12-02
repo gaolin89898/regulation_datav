@@ -19,6 +19,7 @@
         <div
           class="bigscreen_lt_bottom_nei_b"
           v-for="item in environmentFileList"
+          @click="ltClick2(item)"
         >
           <span>{{ item.description }}</span>
           <span>{{ item.tag }}</span>
@@ -44,9 +45,13 @@
           justify-content: center;
         "
       >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="电" value="zhou" />
-          <el-radio-button label="水" value="ri" />
+        <el-radio-group
+          v-model="powerByTypeStatisticsData.type"
+          @change="powerByTypeStatisticsFun"
+          class="group"
+        >
+          <el-radio-button label="电" value="电" />
+          <el-radio-button label="水" value="水" />
         </el-radio-group>
       </div>
     </div>
@@ -72,10 +77,14 @@
           justify-content: center;
         "
       >
-        <el-radio-group v-model="radio1" class="group">
-          <el-radio-button label="周" value="zhou" />
-          <el-radio-button label="月" value="ri" />
-          <el-radio-button label="年" value="nian" />
+        <el-radio-group
+          v-model="powerStaticData.dayType"
+          @change="powerStaticFun"
+          class="group"
+        >
+          <el-radio-button label="周" value="week" />
+          <el-radio-button label="月" value="month" />
+          <el-radio-button label="年" value="year" />
         </el-radio-group>
       </div>
     </div>
@@ -83,8 +92,15 @@
       <el-select
         size="small"
         class="selectcss"
-        v-model="selectval2"
-        style="width: 80px; position: absolute; right: 20px; top: 15px"
+        v-model="powerStaticData.type"
+        @change="powerStaticFun"
+        style="
+          width: 80px;
+          position: absolute;
+          right: 20px;
+          top: 15px;
+          z-index: 99;
+        "
       >
         <el-option
           v-for="item in options2"
@@ -100,35 +116,28 @@
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>趋势变化</span>
+        <span>区域环境指标</span>
       </div>
-      <div class="bigscreen_rb_top_r">
-        <el-select
-          size="small"
-          class="selectcss"
-          v-model="selectval"
-          style="width: 80px; margin-bottom: 5px; margin-right: 11px"
+      <div
+        style="
+          width: 95px;
+          height: 24px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          margin-right: 11px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <el-radio-group
+          v-model="powerByAreaTotalStaticData.dayType"
+          @change="powerByAreaTotalStaticFun"
+          class="group"
         >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-        <el-select
-          size="small"
-          class="selectcss"
-          v-model="selectval"
-          style="width: 80px; margin-bottom: 5px; margin-right: 11px"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+          <el-radio-button label="周" value="week" />
+          <el-radio-button label="月" value="month" />
+          <el-radio-button label="年" value="year" />
+        </el-radio-group>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
@@ -143,6 +152,15 @@
     </div>
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
+  <template v-for="item in environmentFileList">
+    <div v-if="item.status" class="ltDialog">
+      <div class="ltDialog_top">
+        <span>趋势分析</span>
+        <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item)" />
+      </div>
+      <div class="ltDialog_bottom" ref="bigscreenLtdialogRef2"></div>
+    </div>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -151,13 +169,14 @@ import * as echarts from "echarts";
 import {
   environmentalFilesList,
   historyStatistics,
+  envrionmentStatistics,
+  powerStatic,
+  powerByTypeStatistics,
+  powerByAreaTotalStatic,
 } from "../../api/environment";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
-const radio1 = ref("zhou");
-
-const selectval = ref("wendu");
 const options = ref([
   {
     label: "温度",
@@ -168,67 +187,18 @@ const options = ref([
     value: "shudu",
   },
 ]);
-const selectval2 = ref("shui");
 const options2 = ref([
   {
     label: "电",
-    value: "dian",
+    value: "电",
   },
   {
     label: "水",
-    value: "shui",
-  },
-]);
-const list = ref([
-  {
-    img: "/img/environment/温度.png",
-    type: "温度",
-    value: "19.28",
-    unit: "℃",
-    equipment: "QC培养箱1",
-    model: "EMSNS-BX1-TT01",
-  },
-  {
-    img: "/img/environment/湿度.png",
-    type: "湿度",
-    value: "55",
-    unit: "%",
-    equipment: "QC加湿器",
-    model: "EMSNS-BX1-TT01",
-  },
-  {
-    img: "/img/environment/压差.png",
-    type: "压差",
-    value: "110",
-    unit: "Pa",
-    equipment: "排风过滤器1",
-    model: "EMSNS-BX1-TT01",
-  },
-  {
-    img: "/img/environment/温度.png",
-    type: "温度",
-    value: "51.7",
-    unit: "℃",
-    equipment: "QC冰箱",
-    model: "EMSNS-BX1-TT01",
+    value: "水",
   },
 ]);
 
-const list2 = ref([
-  {
-    background: "/public/img/红色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-  {
-    background: "/public/img/绿色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-  {
-    background: "/public/img/黄色背景框.png",
-    text: "《WHO实验室生物安全手册 (第四版)》",
-  },
-]);
-
+//当前总功耗
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -241,14 +211,13 @@ const bigscreenLBoption = {
 
   xAxis: {
     type: "category",
-    data: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00"],
+    data: [],
     axisLabel: {
       color: "#ffffff",
     },
   },
   yAxis: {
     type: "value",
-    name: "km/h",
     nameTextStyle: {
       color: "#ffffff",
       padding: [0, 40, 5, 0],
@@ -267,7 +236,7 @@ const bigscreenLBoption = {
   },
   series: [
     {
-      data: [50, 100, 160, 60, 200, 90, 250],
+      data: [],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -297,60 +266,22 @@ const bigscreenLBoption = {
     },
   ],
 };
-
-let bigscreenRTChart: any = null;
-const bigscreenRTRef = ref();
-const bigscreenRToption = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    containLabel: true,
-  },
-  xAxis: {
-    type: "category",
-    data: [
-      "7月21日",
-      "7月22日",
-      "7月23日",
-      "7月24日",
-      "7月25日",
-      "7月26日",
-      "7月27日",
-    ],
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  yAxis: {
-    type: "value",
-    name: "吨",
-    nameTextStyle: {
-      color: "#ffffff",
-      padding: [0, 30, 5, 0],
-    },
-    splitLine: {
-      lineStyle: {
-        type: "dashed",
-        color: "rgba(255,255,255,0.14)",
-      },
-    },
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  series: [
-    {
-      data: [2, 0.5, 1, 0.7, 3, 3.5, 1],
-      type: "bar",
-      itemStyle: {
-        color: "#68B1A6", // 线条颜色
-      },
-    },
-  ],
+const powerByTypeStatisticsData = ref({
+  des: "",
+  dayType: "year",
+  type: "电",
+});
+const powerByTypeStatisticsFun = async () => {
+  const { data } = await powerByTypeStatistics(powerByTypeStatisticsData.value);
+  bigscreenLBoption.xAxis.data = data.data.time;
+  bigscreenLBoption.series[0].data = data.data.data;
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
+  }
 };
 
-//监测数据
+//数据展示
 const environmentFileFormData = ref({
   pageNum: 1,
   pageSize: 10000,
@@ -380,6 +311,76 @@ const bigscreenLtdialogoption = {
     bottom: "6%",
     containLabel: true,
   },
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  yAxis: {
+    type: "value",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 30, 5, 0],
+    },
+    splitLine: {
+      lineStyle: {
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
+      },
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    {
+      data: [],
+      type: "bar",
+      itemStyle: {
+        color: "#68B1A6", // 线条颜色
+      },
+    },
+  ],
+};
+const envrionmentStatisticsData = ref({
+  description: "",
+  dayType: "week",
+});
+const envrionmentStatisticsFun = async () => {
+  const { data } = await envrionmentStatistics(envrionmentStatisticsData.value);
+
+  bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
+  bigscreenLtdialogoption.series[0].data = data.data.datas;
+};
+const ltClick = async () => {
+  ltstatus.value = true;
+  await envrionmentStatisticsFun();
+  if (bigscreenLtdialogRef.value) {
+    bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
+    bigscreenLtdialogChart.setOption(bigscreenLtdialogoption);
+  }
+};
+const ltcloneClick = () => {
+  ltstatus.value = false;
+};
+const historyStatisticsFormData = ref({
+  description: "",
+  dayType: "week",
+});
+const historyStatisticsFun = async () => {
+  const { data } = await historyStatistics(historyStatisticsFormData.value);
+};
+let bigscreenLtdialogChart2: any = null;
+let bigscreenLtdialogRef2 = ref();
+const bigscreenLtdialogoption2 = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
+  },
 
   xAxis: {
     type: "category",
@@ -439,31 +440,91 @@ const bigscreenLtdialogoption = {
     },
   ],
 };
-const ltClick = () => {
-  ltstatus.value = true;
-  console.log(1111);
-  if (bigscreenLtdialogRef.value) {
-    console.log(1111);
 
-    bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
-    bigscreenLtdialogChart.setOption(bigscreenLtdialogoption);
+const ltClick2 = async (item: any) => {
+  environmentFileList.value.forEach((v) => {
+    if (item.environmentId == v.environmentId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+  if (bigscreenLtdialogRef2.value) {
+    bigscreenLtdialogChart2 = echarts.init(bigscreenLtdialogRef2.value);
+    bigscreenLtdialogChart2.setOption(bigscreenLtdialogoption2);
   }
 };
-const ltcloneClick = () => {
-  ltstatus.value = false;
+const ltcanleClick2 = (item: any) => {
+  item.status = false;
 };
-const historyStatisticsFormData = ref({
-  description: "",
-  dayType: "week",
+
+//历史功耗
+let bigscreenRTChart: any = null;
+const bigscreenRTRef = ref();
+// 绘制左侧面
+const CubeLeft = echarts.graphic.extendShape({
+  shape: {
+    x: 0,
+    y: 0,
+  },
+  buildPath: function (ctx, shape) {
+    const xAxisPoint = shape.xAxisPoint;
+    const c0 = [shape.x, shape.y];
+    const c1 = [shape.x - 8, shape.y - 8];
+    const c2 = [xAxisPoint[0] - 8, xAxisPoint[1] - 8];
+    const c3 = [xAxisPoint[0], xAxisPoint[1]];
+    ctx
+      .moveTo(c0[0], c0[1])
+      .lineTo(c1[0], c1[1])
+      .lineTo(c2[0], c2[1])
+      .lineTo(c3[0], c3[1])
+      .closePath();
+  },
 });
-const historyStatisticsFun = async () => {
-  const { data } = await historyStatistics(historyStatisticsFormData.value);
-};
+// 绘制右侧面
+const CubeRight = echarts.graphic.extendShape({
+  shape: {
+    x: 0,
+    y: 0,
+  },
+  buildPath: function (ctx, shape) {
+    const xAxisPoint = shape.xAxisPoint;
+    const c1 = [shape.x, shape.y];
+    const c2 = [xAxisPoint[0], xAxisPoint[1]];
+    const c3 = [xAxisPoint[0] + 13, xAxisPoint[1] - 4];
+    const c4 = [shape.x + 13, shape.y - 4];
+    ctx
+      .moveTo(c1[0], c1[1])
+      .lineTo(c2[0], c2[1])
+      .lineTo(c3[0], c3[1])
+      .lineTo(c4[0], c4[1])
+      .closePath();
+  },
+});
+// 绘制顶面
+const CubeTop = echarts.graphic.extendShape({
+  shape: {
+    x: 0,
+    y: 0,
+  },
+  buildPath: function (ctx, shape) {
+    const c1 = [shape.x, shape.y];
+    const c2 = [shape.x + 13, shape.y - 4];
+    const c3 = [shape.x + 5, shape.y - 12];
+    const c4 = [shape.x - 8, shape.y - 8];
+    ctx
+      .moveTo(c1[0], c1[1])
+      .lineTo(c2[0], c2[1])
+      .lineTo(c3[0], c3[1])
+      .lineTo(c4[0], c4[1])
+      .closePath();
+  },
+});
+echarts.graphic.registerShape("CubeLeft", CubeLeft);
+echarts.graphic.registerShape("CubeRight", CubeRight);
+echarts.graphic.registerShape("CubeTop", CubeTop);
 
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
-
-const bigscreenRBoption = {
+const bigscreenRToption = {
   grid: {
     left: "6%",
     right: "6%",
@@ -472,22 +533,13 @@ const bigscreenRBoption = {
   },
   xAxis: {
     type: "category",
-    data: [
-      "7月21日",
-      "7月22日",
-      "7月23日",
-      "7月24日",
-      "7月25日",
-      "7月26日",
-      "7月27日",
-    ],
+    data: [],
     axisLabel: {
       color: "#ffffff",
     },
   },
   yAxis: {
     type: "value",
-    name: "吨",
     nameTextStyle: {
       color: "#ffffff",
       padding: [0, 30, 5, 0],
@@ -504,13 +556,154 @@ const bigscreenRBoption = {
   },
   series: [
     {
+      data: [],
+      type: "bar",
+      label: {
+        normal: {
+          show: true,
+          position: "top",
+          fontSize: 14,
+          color: "#101010",
+          offset: [0, -10],
+        },
+      },
+      tooltip: {
+        show: false,
+      },
+      itemStyle: {
+        color: "transparent", // 线条颜色
+      },
+    },
+    {
+      type: "custom",
+      renderItem: (params, api) => {
+        const location = api.coord([api.value(0), api.value(1)]);
+        return {
+          type: "group",
+          children: [
+            {
+              type: "CubeLeft",
+              shape: {
+                api,
+                xValue: api.value(0),
+                yValue: api.value(1),
+                x: location[0],
+                y: location[1],
+                xAxisPoint: api.coord([api.value(0), 0]),
+              },
+              style: {
+                fill: "#549CF0",
+              },
+            },
+            {
+              type: "CubeRight",
+              shape: {
+                api,
+                xValue: api.value(0),
+                yValue: api.value(1),
+                x: location[0],
+                y: location[1],
+                xAxisPoint: api.coord([api.value(0), 0]),
+              },
+              style: {
+                fill: "#2070CE",
+              },
+            },
+            {
+              type: "CubeTop",
+              shape: {
+                api,
+                xValue: api.value(0),
+                yValue: api.value(1),
+                x: location[0],
+                y: location[1],
+                xAxisPoint: api.coord([api.value(0), 0]),
+              },
+              style: {
+                fill: "#8DC1FF",
+              },
+            },
+          ],
+        };
+      },
       data: [2, 0.5, 1, 0.7, 3, 3.5, 1],
+    },
+  ],
+};
+const powerStaticData = ref({
+  des: "",
+  dayType: "week",
+  type: "电",
+});
+const powerStaticFun = async () => {
+  const { data } = await powerStatic(powerStaticData.value);
+  bigscreenRToption.xAxis.data = data.data.time;
+  bigscreenRToption.series[0].data = data.data.data;
+  bigscreenRToption.series[1].data = data.data.data;
+  if (bigscreenRTRef.value) {
+    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart.setOption(bigscreenRToption);
+  }
+};
+
+let bigscreenRBChart: any = null;
+const bigscreenRBRef = ref();
+
+const bigscreenRBoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
+  },
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  yAxis: {
+    type: "value",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 30, 5, 0],
+    },
+    splitLine: {
+      lineStyle: {
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
+      },
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    {
+      data: [],
       type: "bar",
       itemStyle: {
         color: "#68B1A6", // 线条颜色
       },
     },
   ],
+};
+const powerByAreaTotalStaticData = ref({
+  des: "",
+  dayType: "week",
+  type: "电",
+});
+const powerByAreaTotalStaticFun = async () => {
+  const { data } = await powerByAreaTotalStatic(
+    powerByAreaTotalStaticData.value
+  );
+  bigscreenRBoption.xAxis.data = data.data.time;
+  bigscreenRBoption.series[0].data = data.data.data;
+  if (bigscreenRBRef.value) {
+    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
+    bigscreenRBChart.setOption(bigscreenRBoption);
+  }
 };
 
 window.onresize = function () {
@@ -520,22 +713,11 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenLBRef.value) {
-    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
-
-  if (bigscreenRBRef.value) {
-    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    bigscreenRBChart.setOption(bigscreenRBoption);
-  }
-
-  if (bigscreenRTRef.value) {
-    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
-    bigscreenRTChart.setOption(bigscreenRToption);
-  }
   environmentFileFun();
   historyStatisticsFun();
+  powerStaticFun();
+  powerByTypeStatisticsFun();
+  powerByAreaTotalStaticFun();
 });
 </script>
 
@@ -638,6 +820,7 @@ $design-height: 1080;
         justify-content: space-between;
         align-items: center;
         margin-top: adaptiveHeight(5);
+        cursor: pointer;
         span {
           width: 30%;
           color: #ffffff;

@@ -95,6 +95,9 @@
         style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入节点名称"
         :prefix-icon="Search"
+        clearable
+        v-model="nodeFormData.nodeName"
+        @change="nodelistFun"
       />
     </div>
     <div class="bigscreen_lb_bottom">
@@ -608,13 +611,14 @@ const nodelist = ref<any[]>([]);
 const nodelistFun = async () => {
   const { data } = await nodeList(nodeFormData.value);
   let list = data.data.rows.slice(0, 5);
-  list[0].img = "/img/craftsmanship/1.png";
-  list[1].img = "/img/craftsmanship/2.png";
-  list[2].img = "/img/craftsmanship/3.png";
-  list[3].img = "/img/craftsmanship/4.png";
-  list[4].img = "/img/craftsmanship/1.png";
-  nodelist.value = list.map((item) => {
-    return { ...item, status: false };
+  let imgList = [
+    "/img/craftsmanship/1.png",
+    "/img/craftsmanship/2.png",
+    "/img/craftsmanship/3.png",
+    "/img/craftsmanship/4.png",
+  ];
+  nodelist.value = list.map((item, index) => {
+    return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
 const lbClick = (item: any) => {

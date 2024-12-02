@@ -79,6 +79,9 @@
         class="inputcss"
         placeholder="请输入报警类型"
         :prefix-icon="Search"
+        clearable
+        v-model="alarmInformationFormData.eventName"
+        @change="alarmInformationlistFun"
       />
     </div>
     <div class="bigscreen_lb_bottom">
@@ -96,8 +99,11 @@
       </div>
       <el-input
         class="inputcss"
-        placeholder="请输入监控报告"
+        placeholder="请输入事件报告"
         :prefix-icon="Search"
+        clearable
+        v-model="alarmEventsFormData.type"
+        @change="alarmEventslistFun"
       />
     </div>
     <div class="bigscreen_rt_bottom">
@@ -144,6 +150,9 @@
         style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入SOP名称"
         :prefix-icon="Search"
+        v-model="sopFormData.name"
+        @change="soplistFun"
+        clearable
       />
     </div>
     <div class="bigscreen_rc_bottom">
@@ -177,6 +186,9 @@
         class="inputcss"
         placeholder="请输入政策法规"
         :prefix-icon="Search"
+        v-model="policiesFormData.policiesName"
+        @change="policieslistFun"
+        clearable
       />
     </div>
     <div class="bigscreen_rb_bottom">

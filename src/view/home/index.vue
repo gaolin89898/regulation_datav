@@ -33,6 +33,9 @@
       <el-input
         class="inputcss"
         placeholder="请输入事件类型"
+        v-model="alarmEventsFormData.type"
+        @change="alarmEventslistFun"
+        clearable
         :prefix-icon="Search"
       />
     </div>
@@ -75,12 +78,10 @@
         <img src="/public/img/光标.png" alt="" />
         <span>报警历史</span>
       </div>
-      <div class="groupCss">
-        <el-radio-group v-model="lbRadio" @change="lbRadioChange" class="group">
-          <el-radio-button label="周" value="week" />
-          <el-radio-button label="年" value="year" />
-        </el-radio-group>
-      </div>
+      <el-radio-group v-model="lbRadio" @change="lbRadioChange" class="group">
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
@@ -121,6 +122,9 @@
         class="inputcss"
         placeholder="请输入政策法规名称"
         :prefix-icon="Search"
+        clearable
+        v-model="policiesFormData.policiesName"
+        @change="policieslistFun"
       />
     </div>
     <div class="bigscreen_rc_bottom">
@@ -1177,7 +1181,7 @@ $design-height: 1080;
 .inputcss {
   // width: adaptiveWidth(148);
   height: adaptiveHeight(24);
-  margin-right: adaptiveWidth(11);
+  margin-right: adaptiveWidth(10);
 }
 .inputcss :deep(.el-input__wrapper) {
   background-color: rgba(255, 255, 255, 0);
@@ -1194,13 +1198,15 @@ $design-height: 1080;
 }
 
 .groupCss {
-  width: adaptiveWidth(65);
-  height: adaptiveHeight(24);
   border: adaptiveWidth(1) solid rgba(255, 255, 255, 0.2);
-  margin-right: adaptiveWidth(11);
+  margin-right: adaptiveWidth(10);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: adaptiveWidth(3) adaptiveHeight(2);
+}
+.group {
+  margin-right: adaptiveWidth(11);
 }
 .group
   :deep(
@@ -1214,7 +1220,7 @@ $design-height: 1080;
   font-size: adaptiveFontSize(12);
 }
 .group :deep(.el-radio-button .el-radio-button__inner) {
-  padding: 2px 8px;
+  padding: adaptiveWidth(2) adaptiveHeight(6);
   background: rgba(255, 255, 255, 0);
   border-color: rgba(255, 255, 255, 0);
   font-size: adaptiveFontSize(12);

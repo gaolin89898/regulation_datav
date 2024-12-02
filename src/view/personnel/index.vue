@@ -185,14 +185,17 @@
       </div>
     </div>
   </template>
-
-  <template v-for="item in list2">
+<!-- 
+  <template v-for="item in healthylist">
     <div v-show="item.status" class="lbDialog">
       <div class="lbDialog_top">
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="lbcanleClick(item)" />
       </div>
-      <div class="lbDialog_bottom" id="lbDialogBottom"></div>
+      <div
+        class="lbDialog_bottom"
+        :ref="(el) => lbDialogBottomRefs(item.id, el)"
+      ></div>
       <el-select
         size="small"
         class="selectcss"
@@ -207,7 +210,7 @@
         />
       </el-select>
     </div>
-  </template>
+  </template> -->
 </template>
 
 <script lang="ts" setup>
@@ -220,7 +223,11 @@ import "swiper/swiper-bundle.css";
 import img1 from "../../../public/img/视频监控尺寸.png";
 import img9 from "../../../public/img/叉号.png";
 
-import { indicatorStatistics, healthyList } from "../../api/personnel/index";
+import {
+  indicatorStatistics,
+  healthyList,
+  healthyStatistics,
+} from "../../api/personnel/index";
 
 const radio1 = ref("zhou");
 
@@ -318,68 +325,6 @@ const bigscreenLBoption = {
     },
   ],
 };
-
-let lbDialogBottomChart: any = null;
-const lbDialogBottomoption = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    top: "20%",
-    containLabel: true,
-  },
-
-  xAxis: {
-    type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
-    axisLabel: {
-      color: "rgba(255,255,255,0.65)",
-    },
-  },
-  yAxis: {
-    type: "value",
-    splitLine: {
-      show: true, //让网格显示
-      lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
-    },
-    axisLabel: {
-      color: "rgba(255,255,255,0.65)",
-    },
-  },
-  series: [
-    {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
-    },
-  ],
-};
-
 const ltClick = (item) => {
   list.value.forEach((v) => {
     if (item.code == v.code) {
@@ -405,28 +350,6 @@ const options = ref([
     value: "shui",
   },
 ]);
-const lbClick = (item) => {
-  list2.value.forEach((v) => {
-    if (item.code == v.code) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-  nextTick(() => {
-    const lbDialogBottomElement = document.getElementById("lbDialogBottom");
-    console.log(lbDialogBottomElement);
-    if (lbDialogBottomChart) {
-      lbDialogBottomChart.dispose();
-    }
-    // 初始化新的图表实例
-    lbDialogBottomChart = echarts.init(lbDialogBottomElement);
-    lbDialogBottomChart.setOption(lbDialogBottomoption);
-  });
-};
-const lbcanleClick = (item) => {
-  item.status = false;
-};
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -670,6 +593,100 @@ const healthylistFun = async () => {
 };
 const healthyChange = () => {
   healthylistFun();
+};
+
+let lbDialogBottomChart: any = null;
+const lbDialogBottomRefs = ref({});
+const lbDialogBottomCharts = ref({});
+const lbDialogBottomoption = {
+  grid: {
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    top: "20%",
+    containLabel: true,
+  },
+
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
+    },
+  },
+  yAxis: {
+    type: "value",
+    splitLine: {
+      show: true, //让网格显示
+      lineStyle: {
+        //网格样式
+        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
+        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
+      },
+    },
+    axisLabel: {
+      color: "rgba(255,255,255,0.65)",
+    },
+  },
+  series: [
+    {
+      data: [],
+      type: "line",
+      smooth: true,
+      symbol: "none",
+      areaStyle: {
+        color: {
+          type: "linear",
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
+            },
+            {
+              offset: 1,
+              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
+            },
+          ],
+          global: false, // 缺省为 false
+        },
+      },
+    },
+  ],
+};
+const healthyStatisticsData = ref({
+  personnelId: null,
+  type: "",
+});
+const healthyStatisticsFun = async () => {
+  const { data } = await healthyStatistics(healthyStatisticsData.value);
+  lbDialogBottomoption.xAxis.data = data.time;
+  lbDialogBottomoption.series[0].data = data.data;
+};
+
+const lbClick = async (item) => {
+  healthylist.value.forEach((v) => {
+    if (item.personnelId == v.personnelId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+  healthyStatisticsData.value.personnelId = item.personnelId;
+  // await healthyStatisticsFun();
+  if (lbDialogBottomRef.value) {
+    lbDialogBottomChart = echarts.init(lbDialogBottomRef.value);
+    lbDialogBottomChart.setOption(lbDialogBottomoption);
+  }
+};
+const lbcanleClick = (item) => {
+  item.status = false;
+  if (lbDialogBottomChart) {
+    lbDialogBottomChart.dispose();
+  }
 };
 
 window.onresize = function () {

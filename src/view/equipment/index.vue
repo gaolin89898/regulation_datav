@@ -116,6 +116,9 @@
         class="inputcss"
         placeholder="请输入设备编号"
         :prefix-icon="Search"
+        clearable
+        v-model="repairformData.equipmentCode"
+        @change="equipmentRepairListFun"
       />
     </div>
     <div class="bigscreen_rc_bottom">
@@ -493,7 +496,7 @@ const cascaderChange = (val) => {
   historicalStatisticsListFun();
 };
 
-//巡检记录
+//维修记录
 const repairformData = ref<equipmentRepairListRes>({
   equipmentCode: "",
   pageNum: 1,
