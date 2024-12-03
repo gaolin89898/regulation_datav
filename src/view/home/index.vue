@@ -249,6 +249,7 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import OfficePreview from "../../components/OfficePreview/index";
 import {
   getPoliciesListApi,
   sopList,
@@ -302,6 +303,7 @@ const rcClick = (item: any) => {
       v.status = false;
     }
   });
+  console.log(item);
 };
 const rccanleClick = (item: any) => {
   item.status = false;
@@ -1225,7 +1227,8 @@ $design-height: 1080;
   z-index: 10;
   .rcDialog_top {
     width: 100%;
-    height: adaptiveHeight(60);
+    height: adaptiveHeight(80);
+    border: 1px solid red;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1236,9 +1239,9 @@ $design-height: 1080;
       font-family: youshe;
     }
     img {
-      width: adaptiveWidth(8);
-      height: adaptiveHeight(8);
-      padding-right: adaptiveWidth(10);
+      width: adaptiveWidth(15);
+      height: adaptiveHeight(15);
+      padding-right: adaptiveWidth(20);
       cursor: pointer;
     }
   }

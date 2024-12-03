@@ -28,3 +28,17 @@ export function healthyStatistics(params: {
 }) {
   return http.get("/manage/healthy/healthyStock", { params });
 }
+
+//门禁列表
+export interface accesscontrolRes {
+  doorCode: string;
+  doorPlace: string;
+  name: string;
+  pageNum: number;
+  pageSize: number;
+  orderColumn: string;
+  orderDirection: string;
+}
+export function accesscontrolList(params: accesscontrolRes) {
+  return http.get("/manage/door", { params });
+}

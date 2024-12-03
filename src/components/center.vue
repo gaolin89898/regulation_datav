@@ -101,10 +101,14 @@ $design-height: 1080;
       height: adaptiveHeight(72);
       margin-top: adaptiveHeight(12);
       display: flex;
-      justify-content: space-between;
+      // justify-content: space-between;
       div {
+        &:nth-child(1) {
+          margin-left: 0;
+        }
         width: adaptiveWidth(63);
         height: adaptiveHeight(72);
+        margin-left: adaptiveWidth(12);
         background: url("/public/img/数字背景.png") no-repeat;
         background-size: 100% 100%;
         display: flex;

@@ -7,7 +7,10 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div class="bigscreen_lt_bottom_nei" v-for="item in list4">
+      <div
+        class="bigscreen_lt_bottom_nei"
+        v-for="(item, index) in ltequipmentlist"
+      >
         <img :src="item.img" alt="" />
         <div
           :style="{
@@ -15,12 +18,12 @@
             backgroundSize: '100% 100%',
           }"
         >
-          <span>设备编号：{{ item.code }}</span>
+          <span>{{ item.equipmentCode }}</span>
           <span
             :style="{
-              color: item.status ? '#00FFF9' : '#FFBCC0',
+              color: index % 2 === 0 ? '#00FFF9' : '#FFBCC0',
             }"
-            >{{ item.name }}</span
+            >{{ item.equipmentName }}</span
           >
         </div>
       </div>
@@ -63,8 +66,7 @@
               v-for="item in equipmentlist"
             >
               <span>
-                <img :src="item.img" alt="" style="margin: 0 15px 0 15px" />
-                {{ item.equipmentId }}
+                {{ item.equipmentCode }}
               </span>
               <span>{{ item.equipmentName }}</span>
               <span>{{ item.equipmentType }}</span>
@@ -367,74 +369,35 @@ import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import img9 from "../../../public/img/叉号.png";
 
-const list = ref([
-  {
-    code: "001",
-    name: "隔离器",
-    time: "2024-10-09",
-    status: "型号1",
-    img: "/img/红色标记-圆.png",
-  },
-  {
-    code: "002",
-    name: "隔离器",
-    time: "2024-10-09",
-    status: "型号2",
-    img: "/img/绿色标记-圆.png",
-  },
-  {
-    code: "003",
-    name: "隔离器",
-    time: "2024-10-09",
-    status: "型号3",
-    img: "/img/黄色标记-圆.png",
-  },
-  {
-    code: "004",
-    name: "隔离器",
-    time: "2024-10-09",
-    status: "型号4",
-    img: "/img/蓝色标记-圆.png",
-  },
-  {
-    code: "005",
-    name: "隔离器",
-    time: "2024-10-09",
-    status: "型号5",
-    img: "/img/紫色标记-圆.png",
-  },
-]);
-
-const list4 = ref([
-  {
-    img: "/img/正常状态.png",
-    back: "/img/绿色背景.png",
-    code: "001",
-    name: "生物反应器",
-    status: true,
-  },
-  {
-    img: "/img/异常状态.png",
-    back: "/img/红色背景.png",
-    code: "002",
-    name: "隔离器",
-    status: false,
-  },
-  {
-    img: "/img/正常状态.png",
-    back: "/img/绿色背景.png",
-    code: "003",
-    name: "生物反应器",
-    status: true,
-  },
-]);
-
 const rtStatus = ref(false);
 const rtClick = () => {
   rtStatus.value = !rtStatus.value;
 };
 const rtcanleClick = () => {
   rtStatus.value = false;
+};
+
+//监测数据
+const ltequipmentFormData = ref({
+  equipmentName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const ltequipmentlist = ref<any[]>([]);
+const ltequipmentListFun = async () => {
+  const { data } = await equipmentList(ltequipmentFormData.value);
+  let list = data.data.rows.slice(0, 3);
+  let img = ["/img/正常状态.png", "/img/异常状态.png"];
+  let back = ["/img/绿色背景.png", "/img/红色背景.png"];
+  ltequipmentlist.value = list.map((item, index) => {
+    return {
+      ...item,
+      img: img[index % img.length],
+      back: back[index % back.length],
+    };
+  });
 };
 
 //设备台账
@@ -696,6 +659,7 @@ onMounted(() => {
   equipmentRepairListFun();
   inspectionListFun();
   equipmentListFun();
+  ltequipmentListFun();
 });
 </script>
 

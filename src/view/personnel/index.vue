@@ -90,7 +90,7 @@
               >
             </span>
             <span class="right_text">
-              <span>监测时间：{{ item.time }}</span>
+              <span>监测时间：{{ item.createTime }}</span>
             </span>
           </div>
         </div>
@@ -211,6 +211,8 @@ import {
   indicatorStatistics,
   healthyList,
   healthyStatistics,
+  accesscontrolRes,
+  accesscontrolList,
 } from "../../api/personnel/index";
 
 const radio1 = ref("zhou");
@@ -541,6 +543,20 @@ const initChart = () => {
   window.addEventListener("resize", () => bigscreenRBChart?.resize());
 };
 
+//门禁列表
+const accesscontrolData = ref<accesscontrolRes>({
+  doorCode: "",
+  doorPlace: "",
+  name: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const accesscontrolFun = async () => {
+  const { data } = await accesscontrolList(accesscontrolData.value);
+};
+
 //人员健康数据
 const healthyFormData = ref({
   name: "",
@@ -656,15 +672,10 @@ const lbClick = async (item, index) => {
 };
 const lbcanleClick = (item, index) => {
   item.status = false;
-  // if (chartInstances.value[index]) {
-  //   chartInstances.value[index].dispose();
-  //   delete chartInstances.value[index];
-  // }
 };
 
 window.onresize = function () {
   bigscreenRBChart.resize();
-  // lbDialogBottomChart.resize();
 };
 
 onMounted(() => {
@@ -676,6 +687,7 @@ onMounted(() => {
   initChart();
   indicatorStatisticsList();
   healthylistFun();
+  accesscontrolFun();
 });
 </script>
 
