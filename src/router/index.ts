@@ -17,14 +17,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "/home2",
-        name: "home2",
-        component: () => import("../view/home2/index.vue"),
-        meta: {
-          title: "首页2",
-        },
-      },
-      {
         path: "/personnel",
         name: "personnel",
         component: () => import("../view/personnel/index.vue"),

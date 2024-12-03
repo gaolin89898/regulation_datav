@@ -77,8 +77,8 @@
           <img :src="item.img" alt="" />
           <div>
             <span style="margin-left: 25px">{{ item.level }}</span>
-            <span>{{ item.craftNode.nodeName }}</span>
-            <span>{{ item.craftNode.nodeTags }}</span>
+            <span>{{ item.craftNode?.nodeName }}</span>
+            <span>{{ item.craftNode?.nodeTags }}</span>
           </div>
         </div>
       </div>
@@ -842,7 +842,7 @@ $design-height: 1080;
     }
     .bigscreen_lt_bottom_b {
       width: adaptiveWidth(399);
-      margin-top: adaptiveHeight(20);
+      margin: adaptiveHeight(20) auto 0;
       .bigscreen_lt_bottom_b_nei {
         display: flex;
         align-items: center;

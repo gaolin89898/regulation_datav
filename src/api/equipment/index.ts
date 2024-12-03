@@ -43,3 +43,13 @@ export interface historicalStatisticsRes {
 export function historicalStatisticsList(params: historicalStatisticsRes) {
   return http.get("/manage/equipment-data/history", { params });
 }
+
+//维修统计分析
+export interface repairStatisticsRes {
+  dayType: string;
+}
+export function repairStatistics(params: repairStatisticsRes) {
+  return http.get("/manage/equipment-repair/repair-record-count-by-time", {
+    params,
+  });
+}

@@ -52,8 +52,8 @@
     <div class="bigscreen_lb_bottom">
       <div
         class="bigscreen_lb_bottom_nei"
-        v-for="item in healthylist"
-        @click="lbClick(item)"
+        v-for="(item, index) in healthylist"
+        @click="lbClick(item, index)"
       >
         <div class="bigscreen_lb_bottom_nei_count">
           <div class="left">
@@ -172,18 +172,15 @@
       </div>
     </div>
   </template>
-  <!-- 
-  <template v-for="item in healthylist">
+
+  <template v-for="(item, index) in healthylist">
     <div v-show="item.status" class="lbDialog">
       <div class="lbDialog_top">
         <span>趋势分析</span>
-        <img :src="img9" alt="" srcset="" @click="lbcanleClick(item)" />
+        <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />
       </div>
-      <div
-        class="lbDialog_bottom"
-        :ref="(el) => lbDialogBottomRefs(item.id, el)"
-      ></div>
-      <el-select
+      <div class="lbDialog_bottom" :id="`ry_${item.personnelId}`"></div>
+      <!-- <el-select
         size="small"
         class="selectcss"
         v-model="selectval"
@@ -195,9 +192,9 @@
           :label="item.label"
           :value="item.value"
         />
-      </el-select>
+      </el-select> -->
     </div>
-  </template> -->
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -569,9 +566,9 @@ const healthyChange = () => {
   healthylistFun();
 };
 
+const chartRef = ref();
 let lbDialogBottomChart: any = null;
-const lbDialogBottomRefs = ref({});
-const lbDialogBottomCharts = ref({});
+const healthyStatisticsData = ref({ personnelId: null, type: "" });
 const lbDialogBottomoption = {
   grid: {
     left: "6%",
@@ -630,41 +627,44 @@ const lbDialogBottomoption = {
     },
   ],
 };
-const healthyStatisticsData = ref({
-  personnelId: null,
-  type: "",
-});
 const healthyStatisticsFun = async () => {
   const { data } = await healthyStatistics(healthyStatisticsData.value);
   lbDialogBottomoption.xAxis.data = data.time;
   lbDialogBottomoption.series[0].data = data.data;
 };
 
-const lbClick = async (item) => {
-  healthylist.value.forEach((v) => {
-    if (item.personnelId == v.personnelId) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
+const lbClick = async (item, index) => {
+  healthylist.value.forEach(
+    (v) => (v.status = v.personnelId === item.personnelId)
+  );
+  if (!item.status) return;
+  healthyStatisticsData.value.personnelId = item.personnelId;
+  await healthyStatisticsFun();
+
+  nextTick(() => {
+    chartRef.value = document.getElementById(`ry_${item.personnelId}`);
+    console.log(chartRef.value);
+    if (chartRef.value) {
+      if (lbDialogBottomChart) {
+        lbDialogBottomChart.dispose();
+      }
+
+      lbDialogBottomChart = echarts.init(chartRef.value);
+      lbDialogBottomChart.setOption(lbDialogBottomoption);
     }
   });
-  healthyStatisticsData.value.personnelId = item.personnelId;
-  // await healthyStatisticsFun();
-  if (lbDialogBottomRef.value) {
-    lbDialogBottomChart = echarts.init(lbDialogBottomRef.value);
-    lbDialogBottomChart.setOption(lbDialogBottomoption);
-  }
 };
-const lbcanleClick = (item) => {
+const lbcanleClick = (item, index) => {
   item.status = false;
-  if (lbDialogBottomChart) {
-    lbDialogBottomChart.dispose();
-  }
+  // if (chartInstances.value[index]) {
+  //   chartInstances.value[index].dispose();
+  //   delete chartInstances.value[index];
+  // }
 };
 
 window.onresize = function () {
   bigscreenRBChart.resize();
-  lbDialogBottomChart.resize();
+  // lbDialogBottomChart.resize();
 };
 
 onMounted(() => {

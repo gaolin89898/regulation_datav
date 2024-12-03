@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Center: typeof import('./src/components/center.vue')['default']
     Center2: typeof import('./src/components/center2.vue')['default']
+    ElButton: typeof import('element-plus/es')['ElButton']
     ElCascader: typeof import('element-plus/es')['ElCascader']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']

@@ -49,14 +49,28 @@
           <span>设备型号</span>
           <span>安装时间</span>
         </div>
-        <div class="bigscreen_lc_bottom_nei_b" v-for="item in equipmentlist">
-          <span>
-            <img :src="item.img" alt="" style="margin: 0 15px 0 15px" />
-            {{ item.equipmentId }}
-          </span>
-          <span>{{ item.equipmentName }}</span>
-          <span>{{ item.equipmentType }}</span>
-          <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
+        <div class="bigscreen_lc_bottom_neib">
+          <Vue3SeamlessScroll
+            :list="equipmentlist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              class="bigscreen_lc_bottom_nei_b"
+              v-for="item in equipmentlist"
+            >
+              <span>
+                <img :src="item.img" alt="" style="margin: 0 15px 0 15px" />
+                {{ item.equipmentId }}
+              </span>
+              <span>{{ item.equipmentName }}</span>
+              <span>{{ item.equipmentType }}</span>
+              <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -69,6 +83,7 @@
       </div>
       <el-cascader
         :options="equipmentlist2"
+        v-model="equipmentIds"
         @change="cascaderChange"
         class="cascaderCss"
         :props="{
@@ -112,14 +127,19 @@
         <img src="/public/img/光标.png" alt="" />
         <span>维修记录</span>
       </div>
-      <el-input
-        class="inputcss"
-        placeholder="请输入设备编号"
-        :prefix-icon="Search"
-        clearable
-        v-model="repairformData.equipmentCode"
-        @change="equipmentRepairListFun"
-      />
+      <div class="bigscreen_rc_top_r">
+        <el-input
+          class="inputcss"
+          placeholder="请输入设备编号"
+          :prefix-icon="Search"
+          clearable
+          v-model="repairformData.equipmentCode"
+          @change="equipmentRepairListFun"
+        />
+        <el-button link @click="rctClick" style="color: #ffffff"
+          >维修统计分析</el-button
+        >
+      </div>
     </div>
     <div class="bigscreen_rc_bottom">
       <div class="bigscreen_rc_bottom_nei">
@@ -128,18 +148,29 @@
           <span>维修日期</span>
           <span>维修人员</span>
         </div>
-        <div
-          :class="
-            item.status
-              ? 'bigscreen_rc_bottom_nei_active'
-              : 'bigscreen_rc_bottom_nei_b'
-          "
-          v-for="(item, index) in repairList"
-          @click="rcClick(item)"
-        >
-          <span>{{ item.equipment.equipmentCode }}</span>
-          <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }}</span>
-          <span>{{ item.repairPersonnel }}</span>
+        <div class="bigscreen_rc_bottom_b">
+          <Vue3SeamlessScroll
+            :list="repairList"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              :class="
+                item.status
+                  ? 'bigscreen_rc_bottom_nei_active'
+                  : 'bigscreen_rc_bottom_nei_b'
+              "
+              v-for="(item, index) in repairList"
+              @click="rcClick(item)"
+            >
+              <span>{{ item.equipment.equipmentCode }}</span>
+              <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }}</span>
+              <span>{{ item.repairPersonnel }}</span>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -154,49 +185,67 @@
     <div class="bigscreen_rb_bottom">
       <img src="/public/img/xujian.png" alt="" />
       <div class="bigscreen_rb_bottom_r">
-        <div
-          class="bigscreen_rb_bottom_r_nei"
-          v-for="(item, index) in inspectionlist"
-          @click="rbClick(item)"
-        >
-          <div class="bigscreen_rb_bottom_r_neis">
-            <div
-              :style="{
-                width: '13px',
-                height: '13px',
-                border: `1px solid ${index % 2 === 0 ? '#01D1E7' : '#DF9819'}`,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: '0 15px',
-              }"
-            >
-              <div
-                :style="{
-                  width: '5px',
-                  height: '5px',
-                  background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-                }"
-              ></div>
-            </div>
-            {{ item.recordId }}
-          </div>
-          <div
-            class="bigscreen_rb_bottom_r_neis"
-            style="color: #ffffff; font-size: 12px"
-          >
-            {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}
-          </div>
-          <div
-            class="bigscreen_rb_bottom_r_neis"
-            :style="{
-              color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-              fontSize: '12px',
-              marginRight: '15px',
+        <div class="bigscreen_rb_bottom_r_t">
+          <span>巡检编号</span>
+          <span>巡检日期</span>
+          <span>巡检人员</span>
+        </div>
+        <div class="bigscreen_rb_bottom_r_b">
+          <Vue3SeamlessScroll
+            :list="inspectionlist"
+            :class-option="{
+              step: 5,
             }"
+            hover
+            class="scrool"
           >
-            {{ item.inspector }}
-          </div>
+            <div
+              class="bigscreen_rb_bottom_r_nei"
+              v-for="(item, index) in inspectionlist"
+              @click="rbClick(item)"
+            >
+              <div class="bigscreen_rb_bottom_r_neis">
+                <div
+                  :style="{
+                    width: '13px',
+                    height: '13px',
+                    border: `1px solid ${
+                      index % 2 === 0 ? '#01D1E7' : '#DF9819'
+                    }`,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    margin: '0 15px',
+                  }"
+                >
+                  <div
+                    :style="{
+                      width: '5px',
+                      height: '5px',
+                      background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
+                    }"
+                  ></div>
+                </div>
+                {{ item.recordId }}
+              </div>
+              <div
+                class="bigscreen_rb_bottom_r_neis"
+                style="color: #ffffff; font-size: 12px"
+              >
+                {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}
+              </div>
+              <div
+                class="bigscreen_rb_bottom_r_neis"
+                :style="{
+                  color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
+                  fontSize: '12px',
+                  marginRight: '15px',
+                }"
+              >
+                {{ item.inspector }}
+              </div>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -281,6 +330,13 @@
     </div>
   </template>
 
+  <div v-if="rcStatus" class="rctDialog">
+    <div class="rctDialog_top">
+      <span>维修统计分析</span>
+      <img :src="img9" alt="" srcset="" @click="rctcanleClick" />
+    </div>
+    <div class="rctDialog_bottom" ref="bigscreenRCRef"></div>
+  </div>
   <div v-if="rtStatus" class="rtDialog">
     <div class="rtDialog_top">
       <span>查看监控视频</span>
@@ -305,8 +361,10 @@ import {
   dailyInspectionRes,
   equipmentList,
   historicalStatisticsList,
+  repairStatistics,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import img9 from "../../../public/img/叉号.png";
 
 const list = ref([
@@ -388,11 +446,12 @@ const equipmentFormData = ref({
   orderDirection: "descending",
 });
 const equipmentId = ref(0);
+const equipmentIds = ref<number[]>([]);
 const equipmentlist = ref<any[]>([]);
 const equipmentlist2 = ref<any[]>([]);
 const equipmentListFun = async () => {
   const { data } = await equipmentList(equipmentFormData.value);
-  let list = data.data.rows.slice(0, 5);
+  let list = data.data.rows;
   equipmentlist.value = list;
   equipmentlist2.value = data.data.rows.map((item) => {
     const list = item.thresholdList.map((v) => {
@@ -410,6 +469,11 @@ const equipmentListFun = async () => {
     };
   });
   equipmentId.value = data.data.rows[0].equipmentId;
+  equipmentIds.value = [
+    equipmentlist2.value[0].equipmentId,
+    equipmentlist2.value[0].thresholdList[0].thresholdId,
+  ];
+  thresholdId.value = equipmentlist2.value[0].thresholdList[0].thresholdId;
   historicalStatisticsListFun();
 };
 const searchEquipment = (val) => {
@@ -507,7 +571,7 @@ const repairformData = ref<equipmentRepairListRes>({
 const repairList = ref<any[]>([]);
 const equipmentRepairListFun = async () => {
   const { data } = await equipmentRepairList(repairformData.value);
-  let list = data.data.rows.slice(0, 5);
+  let list = data.data.rows;
   repairList.value = list.map((item) => {
     {
       return {
@@ -530,6 +594,67 @@ const rccanleClick = (item: any) => {
   item.status = false;
 };
 
+let bigscreenRCChart: any = null;
+const bigscreenRCRef = ref();
+const bigscreenRCoption = {
+  grid: {
+    top: "15%",
+    left: "6%",
+    right: "6%",
+    bottom: "6%",
+    containLabel: true,
+  },
+  xAxis: {
+    type: "category",
+    data: [],
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  yAxis: {
+    type: "value",
+    nameTextStyle: {
+      color: "#ffffff",
+      padding: [0, 30, 5, 0],
+    },
+    splitLine: {
+      lineStyle: {
+        type: "dashed",
+        color: "rgba(255,255,255,0.14)",
+      },
+    },
+    axisLabel: {
+      color: "#ffffff",
+    },
+  },
+  series: [
+    {
+      data: [],
+      type: "bar",
+      itemStyle: {
+        color: "#68B1A6", // 线条颜色
+      },
+    },
+  ],
+};
+const rcStatus = ref(false);
+const repairStatisticsData = ref({
+  dayType: "week",
+});
+const rctClick = async () => {
+  rcStatus.value = !rcStatus.value;
+  const { data } = await repairStatistics(repairStatisticsData.value);
+  bigscreenRCoption.xAxis.data = data.data.times;
+  bigscreenRCoption.series[0].data = data.data.data;
+  if (bigscreenRCRef.value) {
+    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
+    bigscreenRCChart.setOption(bigscreenRCoption);
+  }
+};
+const rctcanleClick = () => {
+  rcStatus.value = false;
+};
+
 //巡检记录
 const inspectionformData = ref<dailyInspectionRes>({
   pageNum: 1,
@@ -540,7 +665,7 @@ const inspectionformData = ref<dailyInspectionRes>({
 const inspectionlist = ref<any[]>([]);
 const inspectionListFun = async () => {
   const { data } = await dailyInspectionList(inspectionformData.value);
-  let list = data.data.rows.slice(0, 5);
+  let list = data.data.rows;
   inspectionlist.value = list.map((item) => {
     {
       return {
@@ -738,21 +863,26 @@ $design-height: 1080;
           text-align: center;
         }
       }
-      .bigscreen_lc_bottom_nei_b {
+      .bigscreen_lc_bottom_neib {
         width: 100%;
-        height: adaptiveHeight(33);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: adaptiveHeight(5);
-        span {
-          width: 25%;
-          color: #ffffff;
-          font-size: adaptiveFontSize(12);
-          &:nth-child(2),
-          &:nth-child(3),
-          &:nth-child(4) {
-            text-align: center;
+        height: adaptiveHeight(200);
+        overflow: hidden;
+        .bigscreen_lc_bottom_nei_b {
+          width: 100%;
+          height: adaptiveHeight(33);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: adaptiveHeight(5);
+          span {
+            width: 25%;
+            color: #ffffff;
+            font-size: adaptiveFontSize(12);
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4) {
+              text-align: center;
+            }
           }
         }
       }
@@ -922,6 +1052,9 @@ $design-height: 1080;
         padding-left: adaptiveWidth(10);
       }
     }
+    .bigscreen_rc_top_r {
+      margin-right: adaptiveWidth(11);
+    }
   }
   .bigscreen_rc_bottom {
     width: 100%;
@@ -948,43 +1081,48 @@ $design-height: 1080;
           text-align: center;
         }
       }
-      .bigscreen_rc_bottom_nei_b {
+      .bigscreen_rc_bottom_b {
         width: 100%;
-        height: adaptiveHeight(33);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: adaptiveHeight(5);
-        cursor: pointer;
-        span {
-          width: 33%;
-          color: #ffffff;
-          font-size: adaptiveFontSize(12);
-          text-align: center;
+        height: adaptiveHeight(200);
+        overflow: hidden;
+        .bigscreen_rc_bottom_nei_b {
+          width: 100%;
+          height: adaptiveHeight(33);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: adaptiveHeight(5);
+          cursor: pointer;
+          span {
+            width: 33%;
+            color: #ffffff;
+            font-size: adaptiveFontSize(12);
+            text-align: center;
+          }
         }
-      }
-      .bigscreen_rc_bottom_nei_active {
-        width: 100%;
-        height: adaptiveHeight(33);
-        background: url("/public/img/equipment/tableactive.png") no-repeat;
-        background-size: 100% 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: adaptiveHeight(5);
-        cursor: pointer;
-        span {
-          width: 33%;
-          color: #58a4cb;
-          font-size: adaptiveFontSize(12);
-          text-align: center;
-          position: relative;
-          &:nth-child(1) {
-            img {
-              position: absolute;
-              width: adaptiveWidth(18);
-              height: adaptiveHeight(17);
-              left: adaptiveWidth(25);
+        .bigscreen_rc_bottom_nei_active {
+          width: 100%;
+          height: adaptiveHeight(33);
+          background: url("/public/img/equipment/tableactive.png") no-repeat;
+          background-size: 100% 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: adaptiveHeight(5);
+          cursor: pointer;
+          span {
+            width: 33%;
+            color: #58a4cb;
+            font-size: adaptiveFontSize(12);
+            text-align: center;
+            position: relative;
+            &:nth-child(1) {
+              img {
+                position: absolute;
+                width: adaptiveWidth(18);
+                height: adaptiveHeight(17);
+                left: adaptiveWidth(25);
+              }
             }
           }
         }
@@ -1054,6 +1192,26 @@ $design-height: 1080;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
+      .bigscreen_rb_bottom_r_t {
+        width: 100%;
+        height: adaptiveHeight(30);
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          width: 33%;
+          color: #9eabb7;
+          font-size: adaptiveFontSize(14);
+          text-align: center;
+        }
+      }
+      .bigscreen_rb_bottom_r_b {
+        width: 100%;
+        height: adaptiveHeight(171);
+        overflow: hidden;
+      }
       .bigscreen_rb_bottom_r_nei {
         width: 100%;
         height: adaptiveHeight(35);
@@ -1061,6 +1219,7 @@ $design-height: 1080;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-top: adaptiveHeight(10);
         cursor: pointer;
         .bigscreen_rb_bottom_r_neis {
           width: 33%;
@@ -1246,12 +1405,48 @@ $design-height: 1080;
     }
   }
 }
+.rctDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(400);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .rctDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-family: youshe;
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .rctDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(200);
+    margin: adaptiveHeight(10) auto;
+  }
+}
 :deep(.cascaderCss) {
   width: adaptiveWidth(200);
   height: adaptiveHeight(24);
+  margin-right: adaptiveWidth(11);
   .el-input__wrapper {
     background: none;
     height: adaptiveHeight(24);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
   }
 }
 
