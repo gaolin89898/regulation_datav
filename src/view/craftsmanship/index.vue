@@ -1030,7 +1030,7 @@ $design-height: 1080;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     .bigscreen_rt_bottom_count {
       width: adaptiveWidth(393);
       height: adaptiveHeight(127);
