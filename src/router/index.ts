@@ -64,6 +64,14 @@ const routes: RouteRecordRaw[] = [
           title: "事件管理",
         },
       },
+      {
+        path: "/riskassessment",
+        name: "riskassessment",
+        component: () => import("../view/riskassessment/index.vue"),
+        meta: {
+          title: "风险评估",
+        },
+      },
     ],
   },
 ];

@@ -314,20 +314,41 @@ const rbcanleClick = (item) => {
 const alarmInformationData = ref({
   type: "物料报警",
   pageNum: 1,
-  pageSize: 10000,
+  pageSize: 3,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
 const alarmInformationlist = ref<any[]>([]);
 const alarmInformationlistFun = async () => {
   const { data } = await alarmEventsList(alarmInformationData.value);
-  let list = data.data.rows.slice(0, 3);
-  list[0].img = "/img/materials/lv.png";
-  list[1].img = "/img/materials/lan.png";
-  list[2].img = "/img/materials/hong.png";
+  let list = data.data.rows;
+  let imgList = [
+    {
+      level: "轻微",
+      img: "/img/lvse_icon.png",
+    },
+    {
+      level: "一般",
+      img: "/img/siji_icon.png",
+    },
+    {
+      level: "中度",
+      img: "/img/sanji_icon.png",
+    },
+    {
+      level: "重要",
+      img: "/img/erji_icon.png",
+    },
+    {
+      level: "紧急",
+      img: "/img/yiji_icon.png",
+    },
+  ];
   alarmInformationlist.value = list.map((item) => {
+    const matchedLevel = imgList.find((v) => v.level === item.level);
     return {
       ...item,
+      img: matchedLevel ? matchedLevel.img : "",
       status: "库存异常",
     };
   });

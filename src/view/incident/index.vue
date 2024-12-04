@@ -80,9 +80,9 @@
         placeholder="请输入报警类型"
         :prefix-icon="Search"
         clearable
-        v-model="alarmInformationFormData.eventName"
-        @change="alarmInformationlistFun"
       />
+      <!-- v-model="alarmInformationFormData.eventName"
+        @change="historyStatistics" -->
     </div>
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
@@ -158,8 +158,8 @@
     <div class="bigscreen_rc_bottom">
       <div class="bigscreen_rc_bottom_nei">
         <div class="bigscreen_rc_bottom_nei_t">
+          <span>SOP编号</span>
           <span>SOP名称</span>
-          <span>发布部门</span>
           <span>适用范围</span>
         </div>
         <div
@@ -168,9 +168,9 @@
           @click="rcClcik(item)"
         >
           <span>
-            {{ item.name }}
+            {{ item.sopId }}
           </span>
-          <span>{{ item.time }}</span>
+          <span>{{ item.name }}</span>
           <span>{{ item.scope }}</span>
         </div>
       </div>
@@ -235,44 +235,6 @@
     </div>
   </div>
 
-  <!-- <template v-for="(item, index) in list">
-    <div v-if="item.status1" class="rtDialog">
-      <div class="rtDialog_top">
-        <span>事件报告详情</span>
-        <img :src="img9" alt="" srcset="" @click="rtcanleClick(item)" />
-      </div>
-      <div class="rtDialog_bottom">
-        <div>
-          <span>事件内容：</span>
-          <span>设备检测数据异常</span>
-        </div>
-        <div>
-          <span>事件类型：</span>
-          <span>设备报警</span>
-        </div>
-        <div>
-          <span>事件发生时间：</span>
-          <span>2024-10-13</span>
-        </div>
-        <div>
-          <span>事件发生地点：</span>
-          <span>A区监控1</span>
-        </div>
-        <div>
-          <span>事件级别：</span>
-          <span>重要</span>
-        </div>
-        <div>
-          <span>应对措施：</span>
-          <span>综合应急预案SOP.doc</span>
-        </div>
-        <div>
-          <span>处理结果：</span>
-          <span>事件已完全解决</span>
-        </div>
-      </div>
-    </div>
-  </template> -->
   <template v-for="(item, index) in policieslist">
     <div v-if="item.status" class="rbDialog">
       <div class="rbDialog_top">
@@ -280,26 +242,59 @@
         <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
       </div>
       <div class="rbDialog_bottom">
-        <div>生物安全政策法规</div>
-        <div>目的</div>
-        <div>保障生物领域健康和生态环境，促进生物技术可持续发展。</div>
-        <div>二、适用范围</div>
-        <div>
-          涵盖生物研究、实验、生产、运输、经营等各类涉及生物 安全的活动。
-        </div>
-        <div>三、主要内容</div>
-        <div>
-          建立风险评估与防控体系,规范生物实验室管理。加强生物
-          资源保护与利用监管。明确生物安全事故应急处置机制。 规定相关法律责任。
-        </div>
-        <!-- <div>四、执行与监督</div>
-        <div>
-          相关部门负责监督执行，对违规行为依法惩处，定期评 政策法规名称
-          估政策法规实施效果并适时修订。
-        </div> -->
+        <el-scrollbar
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div class="rbDialog_bottom_nei">
+            <span>政策法规编号：</span>
+            <span>{{ item.policiesId }}</span>
+          </div>
+          <div class="rbDialog_bottom_nei">
+            <span>名称：</span>
+            <span>{{ item.policiesName }}</span>
+          </div>
+          <div class="rbDialog_bottom_nei">
+            <span>发布时间：</span>
+            <span>{{ item.createTime }}</span>
+          </div>
+          <div class="rbDialog_bottom_nei">
+            <span>附件：</span>
+            <span>
+              <div class="file_list">
+                <div
+                  v-for="(item, index) in Paths"
+                  :key="index"
+                  class="file-item"
+                  style="width: 100%"
+                  @click="fileClick(item)"
+                >
+                  <span class="file-name text-ellipsis" style="width: 100%">{{
+                    item.name
+                  }}</span>
+                </div>
+              </div>
+            </span>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
   </template>
+  <div v-if="previewVisible" class="preview">
+    <div class="preview_top">
+      <span>文件预览</span>
+      <img :src="img9" alt="" srcset="" @click="previewcanleClick" />
+    </div>
+    <div class="preview_bottom">
+      <div class="preview_bottom_nei">
+        <OfficePreview :file-url="previewVisibleUrl" />
+      </div>
+    </div>
+  </div>
   <template v-for="(item, index) in soplist">
     <div v-if="item.status" class="rcDialog">
       <div class="rcDialog_top">
@@ -307,26 +302,59 @@
         <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
       </div>
       <div class="rcDialog_bottom">
-        <div>物料管理标准操作程序</div>
-        <div>目的</div>
-        <div>保障生物领域健康和生态环境，促进生物技术可持续发展。</div>
-        <div>二、适用范围</div>
-        <div>
-          涵盖生物研究、实验、生产、运输、经营等各类涉及生物 安全的活动。
-        </div>
-        <div>三、主要内容</div>
-        <div>
-          建立风险评估与防控体系,规范生物实验室管理。加强生物
-          资源保护与利用监管。明确生物安全事故应急处置机制。 规定相关法律责任。
-        </div>
-        <!-- <div>四、执行与监督</div>
-        <div>
-          相关部门负责监督执行，对违规行为依法惩处，定期评 政策法规名称
-          估政策法规实施效果并适时修订。
-        </div> -->
+        <el-scrollbar
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <div class="rcDialog_bottom_item">
+            <span>SOP编号：</span>
+            <span>{{ item.sopId }}</span>
+          </div>
+          <div class="rcDialog_bottom_item">
+            <span>SOP名称：</span>
+            <span>{{ item.name }}</span>
+          </div>
+          <div class="rcDialog_bottom_item">
+            <span>适用范围：</span>
+            <span>{{ item.scope }}</span>
+          </div>
+          <div class="rcDialog_bottom_item">
+            <span>附件：</span>
+            <span>
+              <div class="file_list">
+                <div
+                  v-for="(item, index) in sopPaths"
+                  :key="index"
+                  class="file-item"
+                  style="width: 100%"
+                  @click="fileClick2(item)"
+                >
+                  <span class="file-name text-ellipsis" style="width: 100%">{{
+                    item.name
+                  }}</span>
+                </div>
+              </div>
+            </span>
+          </div>
+        </el-scrollbar>
       </div>
     </div>
   </template>
+  <div v-if="previewVisible2" class="preview2">
+    <div class="preview_top">
+      <span>文件预览</span>
+      <img :src="img9" alt="" srcset="" @click="previewcanleClick2" />
+    </div>
+    <div class="preview_bottom">
+      <div class="preview_bottom_nei">
+        <OfficePreview :file-url="previewVisibleUrl2" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -343,11 +371,8 @@ import {
   areaStatistics,
   getstatistics,
 } from "../../api/incident";
+import OfficePreview from "../../components/officereview.vue";
 import dayjs from "dayjs";
-import img1 from "../../../public/img/黄色.png";
-import img2 from "../../../public/img/绿色.png";
-import img3 from "../../../public/img/红色.png";
-import img4 from "../../../public/img/蓝色.png";
 import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
@@ -443,18 +468,6 @@ const bigscreenLCoption = {
     },
   ],
 };
-const rtClick = (item) => {
-  soplist.value.forEach((v) => {
-    if (item.sopId == v.sopId) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const rtcanleClick = (item) => {
-  item.status = false;
-};
 
 //sop管理
 const sopFormData = ref({
@@ -465,6 +478,7 @@ const sopFormData = ref({
   orderDirection: "descending",
 });
 const soplist = ref<any[]>([]);
+const sopPaths = ref<any[]>([]);
 const soplistFun = async () => {
   const { data } = await sopList(sopFormData.value);
   soplist.value = data.data.rows.slice(0, 5);
@@ -477,9 +491,28 @@ const rcClcik = (item: any) => {
       v.status = false;
     }
   });
+  item.paths?.forEach((item) => {
+    sopPaths.value.push({
+      name: getShortFileName(item.path),
+      path: item.path,
+    });
+  });
 };
 const rccanleClick = (item: any) => {
   item.status = false;
+};
+const previewVisible2 = ref(false);
+const previewVisibleUrl2 = ref("");
+const fileClick2 = (item: any) => {
+  if (!item.path.includes("/upload/")) {
+    item.path = "/upload/" + item.path;
+  }
+  item.status = false;
+  previewVisibleUrl2.value = item.path;
+  previewVisible2.value = true;
+};
+const previewcanleClick2 = () => {
+  previewVisible2.value = false;
 };
 
 //政策法规
@@ -491,6 +524,7 @@ const policiesFormData = ref({
   orderDirection: "descending",
 });
 const policieslist = ref<any[]>([]);
+const Paths = ref<any[]>([]);
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
   let imgList = [img5, img6, img7];
@@ -506,9 +540,44 @@ const rbClcik = (item: any) => {
       v.status = false;
     }
   });
+  item.paths?.forEach((item) => {
+    Paths.value.push({
+      name: getShortFileName(item.path),
+      path: item.path,
+    });
+  });
 };
 const rbcanleClick = (item: any) => {
   item.status = false;
+};
+function getShortFileName(fileName: string): string {
+  // 找到最后一个下划线和最后一个点的位置
+  const lastUnderscoreIndex = fileName.lastIndexOf("_");
+  const secondLastUnderscoreIndex = fileName.lastIndexOf(
+    "_",
+    lastUnderscoreIndex - 1
+  );
+
+  // 提取需要的部分
+  const extractedName = fileName.substring(
+    secondLastUnderscoreIndex + 1, // 倒数第二个下划线后开始
+    lastUnderscoreIndex // 到最后一个下划线前
+  );
+  const fileExtension = fileName.substring(fileName.lastIndexOf("."));
+  return `${extractedName}${fileExtension}`;
+}
+const previewVisible = ref(false);
+const previewVisibleUrl = ref("");
+const fileClick = (item: any) => {
+  if (!item.path.includes("/upload/")) {
+    item.path = "/upload/" + item.path;
+  }
+  item.status = false;
+  previewVisibleUrl.value = item.path;
+  previewVisible.value = true;
+};
+const previewcanleClick = () => {
+  previewVisible.value = false;
 };
 
 //事件报告
@@ -1061,10 +1130,7 @@ $design-height: 1080;
         justify-content: space-between;
         align-items: center;
         span {
-          &:nth-child(1) {
-            width: 43%;
-          }
-          width: 28%;
+          width: 33%;
           color: #9eabb7;
           font-size: adaptiveFontSize(14);
           text-align: center;
@@ -1079,10 +1145,7 @@ $design-height: 1080;
         margin-top: adaptiveHeight(5);
         cursor: pointer;
         span {
-          &:nth-child(1) {
-            width: 43%;
-          }
-          width: 28%;
+          width: 33%;
           color: #ffffff;
           font-size: 12px;
           text-align: center;
@@ -1302,24 +1365,28 @@ $design-height: 1080;
   }
   .rcDialog_bottom {
     width: 100%;
-    height: adaptiveHeight(282);
-    display: flex;
-    // align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    div {
-      font-size: adaptiveFontSize(16);
-      color: #ffffff;
-      margin-left: adaptiveWidth(20);
-      margin-right: adaptiveWidth(20);
-      &:nth-child(1) {
+    height: adaptiveHeight(292);
+    :deep(.el-scrollbar) {
+      .el-scrollbar__wrap {
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-top: adaptiveHeight(10);
-      }
-      &:last-child {
-        margin-bottom: adaptiveHeight(20);
+        .rcDialog_bottom_item {
+          width: 100%;
+          display: flex;
+          margin-top: adaptiveHeight(30);
+          span {
+            font-size: adaptiveFontSize(14);
+            &:nth-child(1) {
+              width: adaptiveWidth(100);
+              color: #687f92;
+            }
+            &:nth-child(2) {
+              width: adaptiveWidth(191);
+              color: #ffffff;
+            }
+          }
+        }
       }
     }
   }
@@ -1355,26 +1422,136 @@ $design-height: 1080;
   }
   .rbDialog_bottom {
     width: 100%;
-    height: adaptiveHeight(282);
-    display: flex;
-    // align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
-    div {
-      font-size: adaptiveFontSize(16);
-      color: #ffffff;
-      margin-left: adaptiveWidth(20);
-      margin-right: adaptiveWidth(20);
-      &:nth-child(1) {
+    height: adaptiveHeight(292);
+    :deep(.el-scrollbar) {
+      .el-scrollbar__wrap {
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-top: adaptiveHeight(10);
-      }
-      &:last-child {
-        margin-bottom: adaptiveHeight(20);
+        .rbDialog_bottom_nei {
+          width: 100%;
+          display: flex;
+          margin-top: adaptiveHeight(30);
+          span {
+            font-size: adaptiveFontSize(14);
+            &:nth-child(1) {
+              width: adaptiveWidth(105);
+              color: #687f92;
+            }
+            &:nth-child(2) {
+              width: adaptiveWidth(191);
+              color: #ffffff;
+            }
+          }
+        }
       }
     }
+  }
+}
+.preview {
+  width: adaptiveWidth(640);
+  position: absolute;
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  bottom: adaptiveHeight(40);
+  right: adaptiveWidth(480);
+  z-index: 12;
+  .preview_top {
+    width: 100%;
+    height: adaptiveHeight(90);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(12);
+      height: adaptiveHeight(12);
+      padding-right: adaptiveWidth(15);
+      cursor: pointer;
+    }
+  }
+  .preview_bottom {
+    width: adaptiveWidth(625);
+    height: adaptiveHeight(450);
+    margin: 0 auto;
+    .preview_bottom_nei {
+      height: adaptiveHeight(420);
+      overflow: hidden;
+    }
+  }
+}
+.preview2 {
+  width: adaptiveWidth(640);
+  position: absolute;
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  top: adaptiveHeight(395);
+  right: adaptiveWidth(480);
+  z-index: 12;
+  .preview_top {
+    width: 100%;
+    height: adaptiveHeight(90);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(12);
+      height: adaptiveHeight(12);
+      padding-right: adaptiveWidth(15);
+      cursor: pointer;
+    }
+  }
+  .preview_bottom {
+    width: adaptiveWidth(625);
+    height: adaptiveHeight(450);
+    margin: 0 auto;
+    .preview_bottom_nei {
+      height: adaptiveHeight(420);
+      overflow: hidden;
+    }
+  }
+}
+
+.file_list {
+  width: 100%;
+  margin-bottom: adaptiveHeight(30);
+  .file-item {
+    // 改用 file-item class
+    width: 280px;
+    height: 35px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    padding: 0 10px; // 移动padding到父元素
+    transition: all 0.3s;
+    cursor: pointer;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    span {
+      white-space: nowrap; /* 禁止换行 */
+      overflow: hidden; /* 超出内容隐藏 */
+      text-overflow: ellipsis; /* 显示省略号 */
+    }
+  }
+
+  .file-actions {
+    display: flex;
+    gap: 8px; // 按钮之间添加间距
   }
 }
 

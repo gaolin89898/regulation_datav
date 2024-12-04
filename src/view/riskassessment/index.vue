@@ -3,10 +3,7 @@
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>数据展示</span>
-      </div>
-      <div class="bigscreen_lt_top_r" @click="ltClick">
-        <span>报警历史分析</span>
+        <span>环境信息</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
@@ -19,7 +16,6 @@
         <div
           class="bigscreen_lt_bottom_nei_b"
           v-for="(item, index) in environmentFileList"
-          @click="ltClick2(item, index)"
         >
           <span>{{ `${item.description}-${item.unitName}` }}</span>
           <span>{{ item.tag }}</span>
@@ -32,15 +28,15 @@
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>当前总功耗</span>
+        <span>历史告警统计</span>
       </div>
       <el-radio-group
-        v-model="powerByTypeStatisticsData.type"
-        @change="powerByTypeStatisticsFun"
+        v-model="historyStatisticsData.dayType"
+        @change="historyStatistics"
         class="group"
       >
-        <el-radio-button label="电" value="电" />
-        <el-radio-button label="水" value="水" />
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
       </el-radio-group>
     </div>
     <div class="bigscreen_lb_bottom">
@@ -52,7 +48,7 @@
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>历史功耗</span>
+        <span>区域报警统计</span>
       </div>
       <el-radio-group
         v-model="powerStaticData.dayType"
@@ -92,7 +88,7 @@
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>区域环境指标</span>
+        <span>设备数据</span>
       </div>
       <el-radio-group
         v-model="powerByAreaTotalStaticData.dayType"
@@ -108,26 +104,6 @@
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
     </div>
   </div>
-
-  <div v-if="ltstatus" class="ltDialog">
-    <div class="ltDialog_top">
-      <span>报警历史分析</span>
-      <img :src="img9" alt="" srcset="" @click="ltcloneClick" />
-    </div>
-    <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
-  </div>
-  <template v-for="item in environmentFileList">
-    <div v-if="item.status" class="ltDialog">
-      <div class="ltDialog_top">
-        <span>趋势分析</span>
-        <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item)" />
-      </div>
-      <div
-        class="ltDialog_bottom"
-        :ref="(el) => (bigscreenLtdialogRef2s[index] = el)"
-      ></div>
-    </div>
-  </template>
 </template>
 
 <script lang="ts" setup>
@@ -135,12 +111,10 @@ import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 import {
   environmentalFilesList,
-  historyStatistics,
-  envrionmentStatistics,
   powerStatic,
-  powerByTypeStatistics,
   powerByAreaTotalStatic,
 } from "../../api/environment";
+import { getstatistics } from "../../api/incident";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
@@ -155,90 +129,7 @@ const options2 = ref([
   },
 ]);
 
-//当前总功耗
-let bigscreenLBChart: any = null;
-const bigscreenLBRef = ref();
-const bigscreenLBoption = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    containLabel: true,
-  },
-
-  xAxis: {
-    type: "category",
-    data: [],
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  yAxis: {
-    type: "value",
-    nameTextStyle: {
-      color: "#ffffff",
-      padding: [0, 40, 5, 0],
-    },
-    axisLabel: {
-      color: "#ffffff",
-    },
-    splitLine: {
-      show: true, //让网格显示
-      lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
-    },
-  },
-  series: [
-    {
-      data: [],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "rgba(61, 230, 255, 1)", // 线条颜色
-      },
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(61, 230, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(61, 230, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
-    },
-  ],
-};
-const powerByTypeStatisticsData = ref({
-  des: "",
-  dayType: "year",
-  type: "电",
-});
-const powerByTypeStatisticsFun = async () => {
-  const { data } = await powerByTypeStatistics(powerByTypeStatisticsData.value);
-  bigscreenLBoption.xAxis.data = data.data.time;
-  bigscreenLBoption.series[0].data = data.data.data;
-  if (bigscreenLBRef.value) {
-    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
-};
-
-//数据展示
+//环境信息
 const environmentFileFormData = ref({
   pageNum: 1,
   pageSize: 10000,
@@ -257,11 +148,10 @@ const environmentFileFun = async () => {
   });
 };
 
-//报警历史分析
-const ltstatus = ref(false);
-let bigscreenLtdialogChart: any = null;
-const bigscreenLtdialogRef = ref();
-const bigscreenLtdialogoption = {
+//历史告警统计
+let bigscreenLBChart: any = null;
+const bigscreenLBRef = ref();
+const bigscreenLBoption = {
   grid: {
     left: "6%",
     right: "6%",
@@ -277,10 +167,6 @@ const bigscreenLtdialogoption = {
   },
   yAxis: {
     type: "value",
-    nameTextStyle: {
-      color: "#ffffff",
-      padding: [0, 30, 5, 0],
-    },
     splitLine: {
       lineStyle: {
         type: "dashed",
@@ -301,128 +187,26 @@ const bigscreenLtdialogoption = {
     },
   ],
 };
-const envrionmentStatisticsData = ref({
-  description: "",
+const historyStatisticsData = ref({
   dayType: "week",
 });
-const envrionmentStatisticsFun = async () => {
-  const { data } = await envrionmentStatistics(envrionmentStatisticsData.value);
-
-  bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
-  bigscreenLtdialogoption.series[0].data = data.data.datas;
-};
-const ltClick = async () => {
-  ltstatus.value = !ltstatus.value;
-  await envrionmentStatisticsFun();
-  if (bigscreenLtdialogRef.value) {
-    bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
-    bigscreenLtdialogChart.setOption(bigscreenLtdialogoption);
+const historyStatistics = async () => {
+  const { data } = await getstatistics({
+    dayType: historyStatisticsData.value.dayType,
+  });
+  let sum = new Array(12).fill(0);
+  data.data.forEach((item) => {
+    // 遍历每个数据集的 `data` 数组并进行累加
+    item.data.forEach((value, index) => {
+      sum[index] += value;
+    });
+  });
+  bigscreenLBoption.xAxis.data = data.data[0].times;
+  bigscreenLBoption.series[0].data = sum;
+  if (bigscreenLBRef.value) {
+    bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+    bigscreenLBChart.setOption(bigscreenLBoption);
   }
-};
-const ltcloneClick = () => {
-  ltstatus.value = false;
-};
-
-let bigscreenLtdialogChart2: any = null;
-let bigscreenLtdialogRef2s = ref<(HTMLElement | null)[]>([]);
-const bigscreenLtdialogoption2 = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    containLabel: true,
-  },
-
-  xAxis: {
-    type: "category",
-    data: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00"],
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  yAxis: {
-    type: "value",
-    name: "km/h",
-    nameTextStyle: {
-      color: "#ffffff",
-      padding: [0, 40, 5, 0],
-    },
-    axisLabel: {
-      color: "#ffffff",
-    },
-    splitLine: {
-      show: true, //让网格显示
-      lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
-    },
-  },
-  series: [
-    {
-      data: [50, 100, 160, 60, 200, 90, 250],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      lineStyle: {
-        color: "rgba(61, 230, 255, 1)", // 线条颜色
-      },
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(61, 230, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(61, 230, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
-    },
-  ],
-};
-const historyStatisticsFormData = ref({
-  description: "",
-  dayType: "week",
-});
-const historyStatisticsFun = async () => {
-  const { data } = await historyStatistics(historyStatisticsFormData.value);
-  bigscreenLtdialogoption2.xAxis.data = data.data.unitNames;
-  bigscreenLtdialogoption2.series[0].data = data.data.datas;
-};
-const ltClick2 = async (item, index) => {
-  environmentFileList.value.forEach((v) => {
-    if (item.environmentId == v.environmentId) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-  await historyStatisticsFun();
-
-  nextTick(() => {
-    const dom = bigscreenLtdialogRef2s.value[index];
-    if (dom) {
-      if (bigscreenLtdialogChart2) {
-        bigscreenLtdialogChart2.disabled();
-      }
-      bigscreenLtdialogChart2 = echarts.init(dom);
-      bigscreenLtdialogChart2.setOption(bigscreenLtdialogoption2);
-    }
-  });
-};
-const ltcanleClick2 = (item: any) => {
-  item.status = false;
 };
 
 //历史功耗
@@ -681,9 +465,8 @@ window.onresize = function () {
 
 onMounted(() => {
   environmentFileFun();
-  historyStatisticsFun();
   powerStaticFun();
-  powerByTypeStatisticsFun();
+  historyStatistics();
   powerByAreaTotalStaticFun();
 });
 </script>

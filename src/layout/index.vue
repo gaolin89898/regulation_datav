@@ -96,6 +96,11 @@ const btnfun = [
     path: "/home",
   },
   {
+    title: "风险评估",
+    name: "riskassessment",
+    path: "/riskassessment",
+  },
+  {
     title: "人员数据",
     name: "personnel",
     path: "/personnel",
@@ -224,12 +229,12 @@ $design-height: 1080;
     position: absolute;
     bottom: 0;
     .bigscreen_bottom_nei {
-      width: adaptiveWidth(860);
+      width: adaptiveWidth(960);
       height: adaptiveHeight(75);
       position: absolute;
       top: adaptiveHeight(15);
       left: 50%;
-      margin-left: adaptiveWidth(-430);
+      margin-left: adaptiveWidth(-480);
       display: flex;
       align-items: center;
       justify-content: space-between;

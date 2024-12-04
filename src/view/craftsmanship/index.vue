@@ -966,17 +966,15 @@ $design-height: 1080;
         color: #ffffff;
         margin-top: adaptiveHeight(20);
         .bigscreen_lb_bottom_nei_t_r {
-          width: calc(100% - adaptiveWidth(38));
+          width: calc(100% - adaptiveWidth(48));
           display: flex;
           justify-content: space-between;
           align-items: center;
+          margin-left: adaptiveWidth(10);
           span {
             width: 33%;
             font-size: adaptiveFontSize(14);
             text-align: center;
-            white-space: nowrap; /* 禁止换行 */
-            overflow: hidden; /* 超出内容隐藏 */
-            text-overflow: ellipsis; /* 显示省略号 */
           }
         }
       }
@@ -990,8 +988,9 @@ $design-height: 1080;
         display: flex;
         cursor: pointer;
         .bigscreen_lb_bottom_neis_r {
-          width: calc(100% - adaptiveWidth(38));
+          width: calc(100% - adaptiveWidth(48));
           height: 100%;
+          margin-left: adaptiveWidth(10);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -1000,6 +999,9 @@ $design-height: 1080;
             width: 33%;
             font-size: adaptiveFontSize(14);
             text-align: center;
+            white-space: nowrap; /* 禁止换行 */
+            overflow: hidden; /* 超出内容隐藏 */
+            text-overflow: ellipsis; /* 显示省略号 */
           }
         }
       }
@@ -1249,7 +1251,7 @@ $design-height: 1080;
 }
 
 .rtDialog {
-  width: adaptiveWidth(440);
+  width: adaptiveWidth(480);
   height: adaptiveHeight(280);
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
@@ -1277,27 +1279,32 @@ $design-height: 1080;
     }
   }
   .rtDialog_bottom {
-    width: 100%;
-    height: adaptiveHeight(215);
+    width: adaptiveWidth(440);
+    margin: adaptiveHeight(20) auto;
     display: flex;
     // align-items: center;
     justify-content: space-between;
     flex-direction: column;
     div {
-      margin-left: adaptiveWidth(30);
+      display: flex;
+      width: 100%;
       &:nth-child(1) {
-        margin-top: adaptiveHeight(10);
+        margin-top: 0;
       }
       &:last-child {
         margin-bottom: adaptiveHeight(10);
       }
       span {
         font-size: adaptiveFontSize(14);
+        display: block;
+        margin-top: adaptiveHeight(10);
         &:nth-child(1) {
           color: #687f92;
+          width: adaptiveWidth(100);
         }
         &:nth-child(2) {
           color: #ffffff;
+          width: adaptiveWidth(340);
         }
       }
     }
