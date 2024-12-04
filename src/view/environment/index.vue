@@ -18,8 +18,8 @@
         </div>
         <div
           class="bigscreen_lt_bottom_nei_b"
-          v-for="item in environmentFileList"
-          @click="ltClick2(item)"
+          v-for="(item, index) in environmentFileList"
+          @click="ltClick2(item, index)"
         >
           <span>{{ item.description }}</span>
           <span>{{ item.tag }}</span>
@@ -122,13 +122,16 @@
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item)" />
       </div>
-      <div class="ltDialog_bottom" ref="bigscreenLtdialogRef2"></div>
+      <div
+        class="ltDialog_bottom"
+        :ref="(el) => (bigscreenLtdialogRef2s[index] = el)"
+      ></div>
     </div>
   </template>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 import {
   environmentalFilesList,
@@ -309,7 +312,7 @@ const envrionmentStatisticsFun = async () => {
   bigscreenLtdialogoption.series[0].data = data.data.datas;
 };
 const ltClick = async () => {
-  ltstatus.value = true;
+  ltstatus.value = !ltstatus.value;
   await envrionmentStatisticsFun();
   if (bigscreenLtdialogRef.value) {
     bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
@@ -319,15 +322,9 @@ const ltClick = async () => {
 const ltcloneClick = () => {
   ltstatus.value = false;
 };
-const historyStatisticsFormData = ref({
-  description: "",
-  dayType: "week",
-});
-const historyStatisticsFun = async () => {
-  const { data } = await historyStatistics(historyStatisticsFormData.value);
-};
+
 let bigscreenLtdialogChart2: any = null;
-let bigscreenLtdialogRef2 = ref();
+let bigscreenLtdialogRef2s = ref<(HTMLElement | null)[]>([]);
 const bigscreenLtdialogoption2 = {
   grid: {
     left: "6%",
@@ -394,8 +391,16 @@ const bigscreenLtdialogoption2 = {
     },
   ],
 };
-
-const ltClick2 = async (item: any) => {
+const historyStatisticsFormData = ref({
+  description: "",
+  dayType: "week",
+});
+const historyStatisticsFun = async () => {
+  const { data } = await historyStatistics(historyStatisticsFormData.value);
+  bigscreenLtdialogoption2.xAxis.data = data.data.unitNames;
+  bigscreenLtdialogoption2.series[0].data = data.data.datas;
+};
+const ltClick2 = async (item, index) => {
   environmentFileList.value.forEach((v) => {
     if (item.environmentId == v.environmentId) {
       v.status = !v.status;
@@ -403,10 +408,18 @@ const ltClick2 = async (item: any) => {
       v.status = false;
     }
   });
-  if (bigscreenLtdialogRef2.value) {
-    bigscreenLtdialogChart2 = echarts.init(bigscreenLtdialogRef2.value);
-    bigscreenLtdialogChart2.setOption(bigscreenLtdialogoption2);
-  }
+  await historyStatisticsFun();
+
+  nextTick(() => {
+    const dom = bigscreenLtdialogRef2s.value[index];
+    if (dom) {
+      if (bigscreenLtdialogChart2) {
+        bigscreenLtdialogChart2.disabled();
+      }
+      bigscreenLtdialogChart2 = echarts.init(dom);
+      bigscreenLtdialogChart2.setOption(bigscreenLtdialogoption2);
+    }
+  });
 };
 const ltcanleClick2 = (item: any) => {
   item.status = false;

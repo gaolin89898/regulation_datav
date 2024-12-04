@@ -9,7 +9,7 @@
     <div class="bigscreen_lt_bottom">
       <div
         class="bigscreen_lt_bottom_nei"
-        v-for="item in list"
+        v-for="item in accesscontrollist"
         @click="ltClick(item)"
       >
         <img src="/public/img/personnel/人物图标.png" alt="" />
@@ -21,15 +21,15 @@
           }"
         >
           <div>
-            <span>张建坤</span>
+            <span>{{ item.personnel?.name }}</span>
             <span>进入</span>
           </div>
           <div>
-            <span>员工编号：YG005</span>
-            <span>门禁地点：公司大门</span>
+            <span>员工编号：{{ item.personnel?.code }}</span>
+            <span>门禁地点：{{ item.doorPlace }}</span>
           </div>
           <div>
-            <span>刷卡时间：2024-07-20 20:23:06</span>
+            <span>刷卡时间：{{ item.createTime }}</span>
           </div>
         </div>
       </div>
@@ -135,38 +135,40 @@
     </div>
   </div>
 
-  <template v-for="item in list">
+  <template v-for="item in accesscontrollist">
     <div v-if="item.status" class="ltDialog">
       <div class="ltDialog_top">
         <span>查看人员信息</span>
         <img :src="img9" alt="" srcset="" @click="ltcanleClick(item)" />
       </div>
       <div class="ltDialog_bottom">
-        <img src="/public/img/弹窗头像图标.png" alt="" />
-        <div class="ltDialog_bottomr">
-          <div>
-            <span>员工编号：</span>
-            <span>{{ item.code }}</span>
-          </div>
-          <div>
-            <span>姓名：</span>
-            <span>{{ item.name }}</span>
-          </div>
-          <div>
-            <span>性别：</span>
-            <span>{{ item.sex }}</span>
-          </div>
-          <div>
-            <span>部门：</span>
-            <span>{{ item.bumen }}</span>
-          </div>
-          <div>
-            <span>岗位：</span>
-            <span>{{ item.gangwei }}</span>
-          </div>
-          <div>
-            <span>联系方式：</span>
-            <span>{{ item.phone }}</span>
+        <div class="ltDialog_bottom_nei">
+          <img src="/public/img/弹窗头像图标.png" alt="" />
+          <div class="ltDialog_bottomr">
+            <div>
+              <span>员工编号：</span>
+              <span>{{ item.personnel?.code }}</span>
+            </div>
+            <div>
+              <span>姓名：</span>
+              <span>{{ item.personnel?.name }}</span>
+            </div>
+            <div>
+              <span>性别：</span>
+              <span>{{ item.personnel?.sex }}</span>
+            </div>
+            <div>
+              <span>部门：</span>
+              <span>{{ item.personnel?.department }}</span>
+            </div>
+            <div>
+              <span>岗位：</span>
+              <span>{{ item.personnel?.post }}</span>
+            </div>
+            <div>
+              <span>联系方式：</span>
+              <span>{{ item.personnel?.contact }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -179,20 +181,10 @@
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />
       </div>
-      <div class="lbDialog_bottom" :id="`ry_${item.personnelId}`"></div>
-      <!-- <el-select
-        size="small"
-        class="selectcss"
-        v-model="selectval"
-        style="width: 80px; margin-right: 11px"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select> -->
+      <div
+        class="lbDialog_bottom"
+        :ref="(el) => (lbDialogRefs[index] = el)"
+      ></div>
     </div>
   </template>
 </template>
@@ -216,113 +208,7 @@ import {
 } from "../../api/personnel/index";
 
 const radio1 = ref("zhou");
-
 const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
-
-const list = ref([
-  {
-    name: "张建坤",
-    code: "YG005",
-    didian: "公司大门",
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/红色背景.png",
-    sex: "男",
-    bumen: "产品研发部",
-    gangwei: "药理学家",
-    phone: "18546521548",
-    status: false,
-  },
-  {
-    name: "张建坤",
-    code: "YG006",
-    didian: "公司大门",
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/绿色背景.png",
-    sex: "男",
-    bumen: "产品研发部",
-    gangwei: "药理学家",
-    phone: "18546521548",
-    status: false,
-  },
-  {
-    name: "张建坤",
-    code: "YG007",
-    didian: "公司大门",
-    time: "2024-07-20 20:23:06",
-    img: "/img/personnel/黄色背景.png",
-    sex: "男",
-    bumen: "产品研发部",
-    gangwei: "药理学家",
-    phone: "18546521548",
-    status: false,
-  },
-]);
-
-const bigscreenLBRef = ref();
-const bigscreenLBoption = {
-  grid: {
-    left: "60px",
-    top: "40px",
-    bottom: "40px",
-  },
-
-  xAxis: {
-    type: "category",
-    data: ["07-21", "07-22", "07-23", "07-24", "07-25", "07-26", "07-27"],
-  },
-  yAxis: {
-    type: "value",
-    splitLine: {
-      show: true, //让网格显示
-      lineStyle: {
-        //网格样式
-        color: ["rgba(255, 255, 255, 0.15)"], //网格的颜色
-        width: 2, //网格的宽度
-        type: "dashed", //网格是实实线，可以修改成虚线以及其他的类型
-      },
-    },
-  },
-  series: [
-    {
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
-      type: "line",
-      smooth: true,
-      symbol: "none",
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(54, 161, 255, 0.60)", // 0% 处的颜色
-            },
-            {
-              offset: 1,
-              color: "rgba(25, 104, 255, 0)", // 100% 处的颜色
-            },
-          ],
-          global: false, // 缺省为 false
-        },
-      },
-    },
-  ],
-};
-const ltClick = (item: any) => {
-  list.value.forEach((v) => {
-    if (item.code == v.code) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const ltcanleClick = (item: any) => {
-  item.status = false;
-};
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -553,8 +439,30 @@ const accesscontrolData = ref<accesscontrolRes>({
   orderColumn: "createTime",
   orderDirection: "descending",
 });
+const accesscontrollist = ref<any[]>([]);
 const accesscontrolFun = async () => {
   const { data } = await accesscontrolList(accesscontrolData.value);
+  let img = [
+    "/img/personnel/红色背景.png",
+    "/img/personnel/绿色背景.png",
+    "/img/personnel/黄色背景.png",
+  ];
+  let list = data.data.rows.slice(0, 3);
+  accesscontrollist.value = list.map((item, index) => {
+    return { ...item, img: img[index % img.length], status: false };
+  });
+};
+const ltClick = (item: any) => {
+  accesscontrollist.value.forEach((v) => {
+    if (item.personnelId == v.personnelId) {
+      v.status = !v.status;
+    } else {
+      v.status = false;
+    }
+  });
+};
+const ltcanleClick = (item: any) => {
+  item.status = false;
 };
 
 //人员健康数据
@@ -582,7 +490,8 @@ const healthyChange = () => {
   healthylistFun();
 };
 
-const chartRef = ref();
+//特征指标
+const lbDialogRefs = ref<(HTMLElement | null)[]>([]);
 let lbDialogBottomChart: any = null;
 const healthyStatisticsData = ref({ personnelId: null, type: "" });
 const lbDialogBottomoption = {
@@ -645,8 +554,8 @@ const lbDialogBottomoption = {
 };
 const healthyStatisticsFun = async () => {
   const { data } = await healthyStatistics(healthyStatisticsData.value);
-  lbDialogBottomoption.xAxis.data = data.time;
-  lbDialogBottomoption.series[0].data = data.data;
+  lbDialogBottomoption.xAxis.data = data.data.time;
+  lbDialogBottomoption.series[0].data = data.data.data;
 };
 
 const lbClick = async (item, index) => {
@@ -658,20 +567,24 @@ const lbClick = async (item, index) => {
   await healthyStatisticsFun();
 
   nextTick(() => {
-    chartRef.value = document.getElementById(`ry_${item.personnelId}`);
-    console.log(chartRef.value);
-    if (chartRef.value) {
+    const dom = lbDialogRefs.value[index];
+    if (dom) {
       if (lbDialogBottomChart) {
         lbDialogBottomChart.dispose();
       }
 
-      lbDialogBottomChart = echarts.init(chartRef.value);
+      lbDialogBottomChart = echarts.init(dom);
       lbDialogBottomChart.setOption(lbDialogBottomoption);
     }
   });
 };
 const lbcanleClick = (item, index) => {
   item.status = false;
+  if (lbDialogRefs.value[index]) {
+    if (lbDialogBottomChart) {
+      lbDialogBottomChart.dispose();
+    }
+  }
 };
 
 window.onresize = function () {
@@ -679,10 +592,10 @@ window.onresize = function () {
 };
 
 onMounted(() => {
-  if (bigscreenLBRef.value) {
-    const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
-  }
+  // if (bigscreenLBRef.value) {
+  //   const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+  //   bigscreenLBChart.setOption(bigscreenLBoption);
+  // }
 
   initChart();
   indicatorStatisticsList();
@@ -762,6 +675,7 @@ $design-height: 1080;
       height: adaptiveHeight(92);
       display: flex;
       align-items: center;
+      cursor: pointer;
       &:nth-child(1) {
         margin-top: adaptiveHeight(30);
       }
@@ -1078,28 +992,33 @@ $design-height: 1080;
   .ltDialog_bottom {
     width: 100%;
     height: adaptiveHeight(230);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    img {
-      width: adaptiveWidth(98);
-      height: adaptiveHeight(98);
-      margin-right: adaptiveWidth(20);
-    }
-    .ltDialog_bottomr {
-      margin-left: adaptiveWidth(20);
-      div {
-        margin-top: adaptiveHeight(10);
-        &:nth-child(1) {
-          margin-top: 0;
-        }
-        span {
-          font-size: adaptiveFontSize(14);
+    .ltDialog_bottom_nei {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      img {
+        width: adaptiveWidth(98);
+        height: adaptiveHeight(98);
+        margin-left: adaptiveWidth(50);
+      }
+      .ltDialog_bottomr {
+        width: adaptiveWidth(202);
+        margin-right: adaptiveWidth(50);
+        div {
+          margin-top: adaptiveHeight(10);
           &:nth-child(1) {
-            color: #687f92;
+            margin-top: 0;
           }
-          &:nth-child(2) {
-            color: #ffffff;
+          span {
+            font-size: adaptiveFontSize(14);
+            &:nth-child(1) {
+              color: #687f92;
+            }
+            &:nth-child(2) {
+              color: #ffffff;
+            }
           }
         }
       }

@@ -956,6 +956,9 @@ $design-height: 1080;
             width: 33%;
             font-size: adaptiveFontSize(14);
             text-align: center;
+            white-space: nowrap; /* 禁止换行 */
+            overflow: hidden; /* 超出内容隐藏 */
+            text-overflow: ellipsis; /* 显示省略号 */
           }
         }
       }
