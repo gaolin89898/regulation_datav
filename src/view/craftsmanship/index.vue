@@ -78,7 +78,7 @@
           <div>
             <span style="margin-left: 25px">{{ item.level }}</span>
             <span>{{ item.craftNode?.nodeName }}</span>
-            <span>{{ item.craftNode?.nodeTags }}</span>
+            <span>节点故障</span>
           </div>
         </div>
       </div>
@@ -647,14 +647,32 @@ const alarmEventsListFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
   let list = data.data.rows.slice(0, 4);
   let imgList = [
-    "/img/craftsmanship/erjilan.png",
-    "/img/craftsmanship/yijilv.png",
-    "/img/craftsmanship/sanjihong.png",
+    {
+      level: "轻微",
+      img: "/img/lvse_icon.png",
+    },
+    {
+      level: "一般",
+      img: "/img/siji_icon.png",
+    },
+    {
+      level: "中度",
+      img: "/img/sanji_icon.png",
+    },
+    {
+      level: "重要",
+      img: "/img/erji_icon.png",
+    },
+    {
+      level: "紧急",
+      img: "/img/yiji_icon.png",
+    },
   ];
   alarmEventslist.value = list.map((item, index) => {
+    const matchedLevel = imgList.find((v) => v.level === item.level);
     return {
       ...item,
-      img: imgList[index % imgList.length],
+      img: matchedLevel ? matchedLevel.img : "",
       status: false,
     };
   });

@@ -14,7 +14,7 @@
       height: '100vh',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     }"
   >
     <img
@@ -36,7 +36,7 @@
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      flexDirection: 'column'
+      flexDirection: 'column',
     }"
   >
     <i class="el-icon-warning" style="font-size: 48px; color: #e6a23c" />
@@ -53,21 +53,21 @@ import "@vue-office/docx/lib/index.css";
 import "@vue-office/excel/lib/index.css";
 // import "@vue-office/pdf/lib/index.css";
 import axios from "axios";
-import { getToken } from "../../utils/auth";
-import { defaultConfig } from "@/utils/http";
+// import { getToken } from "../../utils/auth";
+import { baseURL } from "../../src/utils/http";
 
 export default {
   components: {
     VueOfficeDocx,
     VueOfficeExcel,
     VuePdfEmbed,
-    VueOfficePptx
+    VueOfficePptx,
   },
   props: {
     fileUrl: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     isImage() {
@@ -105,11 +105,11 @@ export default {
       if (!this.fileUrl) return false;
       const ext = this.fileUrl.split(".").pop().toLowerCase();
       return ["docx", "xlsx", "pdf", "pptx"].includes(ext);
-    }
+    },
   },
   data() {
     return {
-      src: ""
+      src: "",
     };
   },
   watch: {
@@ -119,35 +119,35 @@ export default {
         if (newUrl) {
           this.loadFile();
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     loadFile() {
       axios
-        .get(`${defaultConfig.baseURL}/file/preview`, {
+        .get(`${baseURL}/file/preview`, {
           params: {
-            fileName: this.fileUrl
+            fileName: this.fileUrl,
           },
           headers: {
-            Authorization: `Bearer ${getToken().token}`,
-            Accept: "*/*"
+            Authorization: `Bearer MASTER_TOKEN_123456`,
+            Accept: "*/*",
           },
           responseType: "arraybuffer",
           transformResponse: [
-            data => {
+            (data) => {
               return new Blob([data], {
                 type: this.fileUrl.endsWith(".pdf")
                   ? "application/pdf"
-                  : "application/octet-stream"
+                  : "application/octet-stream",
               });
-            }
-          ]
+            },
+          ],
         })
-        .then(response => {
+        .then((response) => {
           this.src = window.URL.createObjectURL(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("文件预览加载失败:", error);
           this.errorHandler();
         });
@@ -157,7 +157,7 @@ export default {
     },
     errorHandler() {
       console.log("渲染失败");
-    }
-  }
+    },
+  },
 };
 </script>

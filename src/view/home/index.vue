@@ -238,9 +238,53 @@
         <span>政策法规弹窗</span>
         <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
       </div>
-      <div class="rcDialog_bottom"></div>
+      <div class="rcDialog_bottom">
+        <div class="rcDialog_bottom_neis">
+          <div class="rcDialog_bottom_nei">
+            <span>政策法规编号：</span>
+            <span>{{ item.policiesId }}</span>
+          </div>
+          <div class="rcDialog_bottom_nei">
+            <span>名称：</span>
+            <span>{{ item.policiesName }}</span>
+          </div>
+          <div class="rcDialog_bottom_nei">
+            <span>发布时间：</span>
+            <span>{{ item.createTime }}</span>
+          </div>
+          <div class="rcDialog_bottom_nei">
+            <span>附件：</span>
+            <span>
+              <div class="file_list">
+                <div
+                  v-for="(item, index) in Paths"
+                  :key="index"
+                  class="file-item"
+                  style="width: 100%"
+                  @click="fileClick(item)"
+                >
+                  <span class="file-name text-ellipsis" style="width: 100%">{{
+                    item.name
+                  }}</span>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </template>
+  <div v-if="previewVisible" class="preview">
+    <div class="preview_top">
+      <span>文件预览</span>
+      <img :src="img9" alt="" srcset="" @click="previewcanleClick" />
+    </div>
+    <div class="preview_bottom">
+      <div class="preview_bottom_nei">
+        <OfficePreview :file-url="previewVisibleUrl" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -249,23 +293,16 @@ import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import OfficePreview from "../../components/OfficePreview/index";
+import OfficePreview from "../../components/officereview.vue";
 import {
   getPoliciesListApi,
-  sopList,
   alarmEventsList,
-  alarmInformationList,
-  areaStatistics,
   getstatistics,
   geteventTotal,
 } from "../../api/incident";
 import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
 
-import img1 from "../../../public/img/黄色.png";
-import img2 from "../../../public/img/绿色.png";
-import img3 from "../../../public/img/红色.png";
-import img4 from "../../../public/img/蓝色.png";
 import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
@@ -288,6 +325,7 @@ const policiesFormData = ref({
   orderDirection: "descending",
 });
 const policieslist = ref<any[]>([]);
+const Paths = ref<any[]>([]);
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
   let imgList = [img5, img6, img7];
@@ -303,10 +341,44 @@ const rcClick = (item: any) => {
       v.status = false;
     }
   });
-  console.log(item);
+  item.paths?.forEach((item) => {
+    Paths.value.push({
+      name: getShortFileName(item.path),
+      path: item.path,
+    });
+  });
 };
 const rccanleClick = (item: any) => {
   item.status = false;
+};
+function getShortFileName(fileName: string): string {
+  // 找到最后一个下划线和最后一个点的位置
+  const lastUnderscoreIndex = fileName.lastIndexOf("_");
+  const secondLastUnderscoreIndex = fileName.lastIndexOf(
+    "_",
+    lastUnderscoreIndex - 1
+  );
+
+  // 提取需要的部分
+  const extractedName = fileName.substring(
+    secondLastUnderscoreIndex + 1, // 倒数第二个下划线后开始
+    lastUnderscoreIndex // 到最后一个下划线前
+  );
+  const fileExtension = fileName.substring(fileName.lastIndexOf("."));
+  return `${extractedName}${fileExtension}`;
+}
+const previewVisible = ref(false);
+const previewVisibleUrl = ref("");
+const fileClick = (item: any) => {
+  if (!item.path.includes("/upload/")) {
+    item.path = "/upload/" + item.path;
+  }
+  item.status = false;
+  previewVisibleUrl.value = item.path;
+  previewVisible.value = true;
+};
+const previewcanleClick = () => {
+  previewVisible.value = false;
 };
 
 //报警信息
@@ -341,16 +413,24 @@ const alarmEventslistFunLt = async () => {
   ];
   let levelList = [
     {
-      level: "一级",
-      img: "/img/一级.png",
+      level: "轻微",
+      img: "/img/wuji_ticon.png",
     },
     {
-      level: "二级",
-      img: "/img/二级.png",
+      level: "一般",
+      img: "/img/siji_ticon.png",
     },
     {
-      level: "三级",
-      img: "/img/三级.png",
+      level: "中度",
+      img: "/img/sanji_ticon.png",
+    },
+    {
+      level: "重要",
+      img: "/img/erji_ticon.png",
+    },
+    {
+      level: "紧急",
+      img: "/img/yiji_ticon.png",
     },
   ];
   alarmEvnetListLt.value = list.map((item) => {
@@ -364,7 +444,6 @@ const alarmEventslistFunLt = async () => {
       img: matchedLevel ? matchedLevel.img : "",
     };
   });
-  console.log(alarmEvnetListLt.value);
 };
 const neiClick = (item) => {
   alarmEvnetListLt.value.forEach((v) => {
@@ -390,9 +469,35 @@ const alarmEventsFormData = ref({
 const alarmEventslist = ref<any[]>([]);
 const alarmEventslistFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
-  let imgList = [img1, img2, img3, img4];
+  let imgList = [
+    {
+      level: "轻微",
+      img: "/img/wuji_back.png",
+    },
+    {
+      level: "一般",
+      img: "/img/siji_back.png",
+    },
+    {
+      level: "中度",
+      img: "/img/sanji_back.png",
+    },
+    {
+      level: "重要",
+      img: "/img/erji_back.png",
+    },
+    {
+      level: "紧急",
+      img: "/img/yiji_back.png",
+    },
+  ];
   alarmEventslist.value = data.data.rows.map((item, index) => {
-    return { ...item, img: imgList[index % imgList.length], status: false };
+    const matchedLevel = imgList.find((v) => v.level === item.level);
+    return {
+      ...item,
+      img: matchedLevel ? matchedLevel.img : "",
+      status: false,
+    };
   });
 };
 
@@ -1217,8 +1322,7 @@ $design-height: 1080;
   }
 }
 .rcDialog {
-  width: adaptiveWidth(900);
-  height: adaptiveHeight(500);
+  width: adaptiveWidth(440);
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
   position: absolute;
@@ -1227,8 +1331,7 @@ $design-height: 1080;
   z-index: 10;
   .rcDialog_top {
     width: 100%;
-    height: adaptiveHeight(80);
-    border: 1px solid red;
+    height: adaptiveHeight(45);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1239,19 +1342,105 @@ $design-height: 1080;
       font-family: youshe;
     }
     img {
-      width: adaptiveWidth(15);
-      height: adaptiveHeight(15);
-      padding-right: adaptiveWidth(20);
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
       cursor: pointer;
     }
   }
   .rcDialog_bottom {
     width: 100%;
-    height: adaptiveHeight(282);
     display: flex;
-    // align-items: center;
+    justify-content: center;
+    .rcDialog_bottom_neis {
+      margin: adaptiveHeight(50) 0;
+      .rcDialog_bottom_nei {
+        display: flex;
+        margin-top: adaptiveHeight(30);
+        &:nth-child(1) {
+          margin-top: 0;
+        }
+        span {
+          font-size: adaptiveFontSize(14);
+          &:nth-child(1) {
+            width: adaptiveWidth(105);
+            color: #687f92;
+          }
+          &:nth-child(2) {
+            width: adaptiveWidth(191);
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+.preview {
+  width: adaptiveWidth(640);
+  position: absolute;
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  bottom: adaptiveHeight(400);
+  right: adaptiveWidth(480);
+  z-index: 10;
+  .preview_top {
+    width: 100%;
+    height: adaptiveHeight(90);
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    flex-direction: column;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(12);
+      height: adaptiveHeight(12);
+      padding-right: adaptiveWidth(15);
+      cursor: pointer;
+    }
+  }
+  .preview_bottom {
+    width: adaptiveWidth(625);
+    height: adaptiveHeight(450);
+    margin: 0 auto;
+    .preview_bottom_nei {
+      height: adaptiveHeight(420);
+      overflow: hidden;
+    }
+  }
+}
+
+.file_list {
+  width: 100%;
+  .file-item {
+    // 改用 file-item class
+    width: 300px;
+    height: 35px;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    padding: 0 10px; // 移动padding到父元素
+    transition: all 0.3s;
+    cursor: pointer;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    span {
+      white-space: nowrap; /* 禁止换行 */
+      overflow: hidden; /* 超出内容隐藏 */
+      text-overflow: ellipsis; /* 显示省略号 */
+    }
+  }
+
+  .file-actions {
+    display: flex;
+    gap: 8px; // 按钮之间添加间距
   }
 }
 

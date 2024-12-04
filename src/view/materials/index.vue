@@ -643,20 +643,11 @@ const updateBigscreenRToption = (
   researchData: number[],
   otherData: number[]
 ) => {
-  console.log([
-    ["product", "生产领用", "研发领用", "其他领用"], // 表头
-    ...xdata.map((item, index) => [
-      item,
-      productionData[index] || 0, // 确保索引对应并处理 undefined
-      researchData[index] || 0,
-      otherData[index] || 0,
-    ]),
-  ]);
   bigscreenRToption.dataset.source = [
     ["product", "生产领用", "研发领用", "其他领用"], // 表头
     ...xdata.map((item, index) => [
       item,
-      productionData[index] || 0, // 确保索引对应并处理 undefined
+      productionData[index] || 0,
       researchData[index] || 0,
       otherData[index] || 0,
     ]),

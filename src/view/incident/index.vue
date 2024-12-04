@@ -522,9 +522,35 @@ const alarmEventsFormData = ref({
 const alarmEventslist = ref<any[]>([]);
 const alarmEventslistFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
-  let imgList = [img1, img2, img3, img4];
+  let imgList = [
+    {
+      level: "轻微",
+      img: "/img/wuji_back.png",
+    },
+    {
+      level: "一般",
+      img: "/img/siji_back.png",
+    },
+    {
+      level: "中度",
+      img: "/img/sanji_back.png",
+    },
+    {
+      level: "重要",
+      img: "/img/erji_back.png",
+    },
+    {
+      level: "紧急",
+      img: "/img/yiji_back.png",
+    },
+  ];
   alarmEventslist.value = data.data.rows.map((item, index) => {
-    return { ...item, img: imgList[index % imgList.length], status: false };
+    const matchedLevel = imgList.find((v) => v.level === item.level);
+    return {
+      ...item,
+      img: matchedLevel ? matchedLevel.img : "",
+      status: false,
+    };
   });
 };
 
