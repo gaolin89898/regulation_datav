@@ -341,6 +341,7 @@ const rcClick = (item: any) => {
       v.status = false;
     }
   });
+  Paths.value = [];
   item.paths?.forEach((item) => {
     Paths.value.push({
       name: getShortFileName(item.path),

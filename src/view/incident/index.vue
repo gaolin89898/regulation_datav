@@ -491,6 +491,7 @@ const rcClcik = (item: any) => {
       v.status = false;
     }
   });
+  sopPaths.value = [];
   item.paths?.forEach((item) => {
     sopPaths.value.push({
       name: getShortFileName(item.path),
@@ -540,6 +541,7 @@ const rbClcik = (item: any) => {
       v.status = false;
     }
   });
+  Paths.value = [];
   item.paths?.forEach((item) => {
     Paths.value.push({
       name: getShortFileName(item.path),
