@@ -236,125 +236,32 @@
   </div>
 
   <template v-for="(item, index) in policieslist">
-    <div v-if="item.status" class="rbDialog">
-      <div class="rbDialog_top">
-        <span>政策法规弹窗</span>
-        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
+    <div v-if="item.status" class="preview">
+      <div class="preview_top">
+        <span>文件预览</span>
+        <img :src="img9" alt="" srcset="" @click="previewcanleClick(item)" />
       </div>
-      <div class="rbDialog_bottom">
-        <el-scrollbar
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          "
-        >
-          <div class="rbDialog_bottom_nei">
-            <span>政策法规编号：</span>
-            <span>{{ item.policiesId }}</span>
-          </div>
-          <div class="rbDialog_bottom_nei">
-            <span>名称：</span>
-            <span>{{ item.policiesName }}</span>
-          </div>
-          <div class="rbDialog_bottom_nei">
-            <span>发布时间：</span>
-            <span>{{ item.createTime }}</span>
-          </div>
-          <div class="rbDialog_bottom_nei">
-            <span>附件：</span>
-            <span>
-              <div class="file_list">
-                <div
-                  v-for="(item, index) in Paths"
-                  :key="index"
-                  class="file-item"
-                  style="width: 100%"
-                  @click="fileClick(item)"
-                >
-                  <span class="file-name text-ellipsis" style="width: 100%">{{
-                    item.name
-                  }}</span>
-                </div>
-              </div>
-            </span>
-          </div>
-        </el-scrollbar>
+      <div class="preview_bottom">
+        <div class="preview_bottom_nei">
+          <OfficePreview :file-url="previewVisibleUrl" />
+        </div>
       </div>
     </div>
   </template>
-  <div v-if="previewVisible" class="preview">
-    <div class="preview_top">
-      <span>文件预览</span>
-      <img :src="img9" alt="" srcset="" @click="previewcanleClick" />
-    </div>
-    <div class="preview_bottom">
-      <div class="preview_bottom_nei">
-        <OfficePreview :file-url="previewVisibleUrl" />
-      </div>
-    </div>
-  </div>
+
   <template v-for="(item, index) in soplist">
-    <div v-if="item.status" class="rcDialog">
-      <div class="rcDialog_top">
-        <span>SOP详情</span>
-        <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
+    <div v-if="item.status" class="preview2">
+      <div class="preview_top">
+        <span>文件预览</span>
+        <img :src="img9" alt="" srcset="" @click="previewcanleClick2(item)" />
       </div>
-      <div class="rcDialog_bottom">
-        <el-scrollbar
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-          "
-        >
-          <div class="rcDialog_bottom_item">
-            <span>SOP编号：</span>
-            <span>{{ item.sopId }}</span>
-          </div>
-          <div class="rcDialog_bottom_item">
-            <span>SOP名称：</span>
-            <span>{{ item.name }}</span>
-          </div>
-          <div class="rcDialog_bottom_item">
-            <span>适用范围：</span>
-            <span>{{ item.scope }}</span>
-          </div>
-          <div class="rcDialog_bottom_item">
-            <span>附件：</span>
-            <span>
-              <div class="file_list">
-                <div
-                  v-for="(item, index) in sopPaths"
-                  :key="index"
-                  class="file-item"
-                  style="width: 100%"
-                  @click="fileClick2(item)"
-                >
-                  <span class="file-name text-ellipsis" style="width: 100%">{{
-                    item.name
-                  }}</span>
-                </div>
-              </div>
-            </span>
-          </div>
-        </el-scrollbar>
+      <div class="preview_bottom">
+        <div class="preview_bottom_nei">
+          <OfficePreview :file-url="sopPreviewVisibleUrl" />
+        </div>
       </div>
     </div>
   </template>
-  <div v-if="previewVisible2" class="preview2">
-    <div class="preview_top">
-      <span>文件预览</span>
-      <img :src="img9" alt="" srcset="" @click="previewcanleClick2" />
-    </div>
-    <div class="preview_bottom">
-      <div class="preview_bottom_nei">
-        <OfficePreview :file-url="previewVisibleUrl2" />
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
@@ -478,7 +385,7 @@ const sopFormData = ref({
   orderDirection: "descending",
 });
 const soplist = ref<any[]>([]);
-const sopPaths = ref<any[]>([]);
+const sopPreviewVisibleUrl = ref("");
 const soplistFun = async () => {
   const { data } = await sopList(sopFormData.value);
   soplist.value = data.data.rows.slice(0, 5);
@@ -491,31 +398,13 @@ const rcClcik = (item: any) => {
       v.status = false;
     }
   });
-  sopPaths.value = [];
-  item.paths?.forEach((item) => {
-    sopPaths.value.push({
-      name: getShortFileName(item.path),
-      path: item.path,
-    });
-  });
-};
-const rccanleClick = (item: any) => {
-  item.status = false;
-};
-const previewVisible2 = ref(false);
-const previewVisibleUrl2 = ref("");
-const fileClick2 = (item: any) => {
-  if (!item.path.includes("/upload/")) {
-    item.path = "/upload/" + item.path;
+  if (item.paths.length > 0) {
+    sopPreviewVisibleUrl.value = "/upload/" + item.paths[0].path;
   }
+};
+const previewcanleClick2 = (item: any) => {
   item.status = false;
-  previewVisibleUrl2.value = item.path;
-  previewVisible2.value = true;
 };
-const previewcanleClick2 = () => {
-  previewVisible2.value = false;
-};
-
 //政策法规
 const policiesFormData = ref({
   policiesName: "",
@@ -525,7 +414,7 @@ const policiesFormData = ref({
   orderDirection: "descending",
 });
 const policieslist = ref<any[]>([]);
-const Paths = ref<any[]>([]);
+const previewVisibleUrl = ref("");
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
   let imgList = [img5, img6, img7];
@@ -541,45 +430,12 @@ const rbClcik = (item: any) => {
       v.status = false;
     }
   });
-  Paths.value = [];
-  item.paths?.forEach((item) => {
-    Paths.value.push({
-      name: getShortFileName(item.path),
-      path: item.path,
-    });
-  });
-};
-const rbcanleClick = (item: any) => {
-  item.status = false;
-};
-function getShortFileName(fileName: string): string {
-  // 找到最后一个下划线和最后一个点的位置
-  const lastUnderscoreIndex = fileName.lastIndexOf("_");
-  const secondLastUnderscoreIndex = fileName.lastIndexOf(
-    "_",
-    lastUnderscoreIndex - 1
-  );
-
-  // 提取需要的部分
-  const extractedName = fileName.substring(
-    secondLastUnderscoreIndex + 1, // 倒数第二个下划线后开始
-    lastUnderscoreIndex // 到最后一个下划线前
-  );
-  const fileExtension = fileName.substring(fileName.lastIndexOf("."));
-  return `${extractedName}${fileExtension}`;
-}
-const previewVisible = ref(false);
-const previewVisibleUrl = ref("");
-const fileClick = (item: any) => {
-  if (!item.path.includes("/upload/")) {
-    item.path = "/upload/" + item.path;
+  if (item.paths.length > 0) {
+    previewVisibleUrl.value = item.paths[0].path;
   }
-  item.status = false;
-  previewVisibleUrl.value = item.path;
-  previewVisible.value = true;
 };
-const previewcanleClick = () => {
-  previewVisible.value = false;
+const previewcanleClick = (item: any) => {
+  item.status = false;
 };
 
 //事件报告

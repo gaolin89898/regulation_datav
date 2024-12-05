@@ -165,25 +165,32 @@
           <span>领用人员</span>
           <span>领用数量</span>
         </div>
-        <div
-          :class="
-            item.status
-              ? 'bigscreen_rb_bottom_nei_active'
-              : 'bigscreen_rb_bottom_nei_b'
-          "
-          v-for="(item, index) in receivelist"
-        >
-          <span>
-            <img
-              src="/public/img/equipment/tableicon.png"
-              alt=""
-              v-if="item.status"
-            />
-            {{ item.materialsInfo.name }}
-          </span>
-          <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }} </span>
-          <span>{{ item.receiverInfo.name }}</span>
-          <span>{{ item.receiveNum }}</span>
+        <div class="bigscreen_rb_bottom_neib">
+          <Vue3SeamlessScroll
+            :list="receivelist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              class="bigscreen_rb_bottom_nei_b"
+              v-for="(item, index) in receivelist"
+            >
+              <span>
+                <img
+                  src="/public/img/equipment/tableicon.png"
+                  alt=""
+                  v-if="item.status"
+                />
+                {{ item.materialsInfo.name }}
+              </span>
+              <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }} </span>
+              <span>{{ item.receiverInfo.name }}</span>
+              <span>{{ item.receiveNum }}</span>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -203,41 +210,31 @@
         placeholder="请输入物料名称"
         :prefix-icon="Search"
       />
-      <div class="bigscreen_rc_bottom_nei">
+      <el-scrollbar class="bigscreen_rc_bottom_nei">
         <div class="bigscreen_rc_bottom_l">
-          <img src="/public/img/圆形标记.png" alt="" />
-          <img src="/public/img/圆形标记.png" alt="" />
           <img src="/public/img/圆形标记.png" alt="" />
         </div>
         <div class="bigscreen_rc_bottom_r">
-          <Vue3SeamlessScroll
-            :list="receivelist2"
-            :class-option="{
-              step: 5,
-            }"
-            class="scrool"
+          <div
+            v-for="(item, index) in receivelist2"
+            :key="index"
+            class="bigscreen_rc_bottom_rnei"
           >
+            <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
+              dayjs(item.createTime).format("YYYY-MM-DD")
+            }}</span>
             <div
-              v-for="(item, index) in receivelist2"
-              :key="index"
-              class="bigscreen_rc_bottom_rnei"
+              :style="{
+                background: `url(${item.background}) no-repeat`,
+                'background-size': '100% 100%',
+              }"
             >
-              <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
-                dayjs(item.createTime).format("YYYY-MM-DD")
-              }}</span>
-              <div
-                :style="{
-                  background: `url(${item.background}) no-repeat`,
-                  'background-size': '100% 100%',
-                }"
-              >
-                <span>领用人员：{{ item.receiverInfo.name }}</span>
-                <span>领用数量：{{ item.receiveNum }}</span>
-              </div>
+              <span>领用人员：{{ item.receiverInfo.name }}</span>
+              <span>领用数量：{{ item.receiveNum }}</span>
             </div>
-          </Vue3SeamlessScroll>
+          </div>
         </div>
-      </div>
+      </el-scrollbar>
     </div>
   </div>
 </template>
@@ -318,7 +315,7 @@ const receivelist = ref<any[]>([]);
 const rbstatus = ref(false);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
-  receivelist.value = data.data.rows.slice(0, 5);
+  receivelist.value = data.data.rows;
 };
 const rbClick = async () => {
   rbstatus.value = !rbstatus.value;
@@ -352,7 +349,9 @@ const bigscreenLCoption = {
     top: "24%",
     containLabel: true,
   },
-
+  tooltip: {
+    trigger: "axis",
+  },
   xAxis: {
     type: "category",
     data: [],
@@ -659,7 +658,9 @@ const bigscreenRCoption = {
     top: "24%",
     containLabel: true,
   },
-
+  tooltip: {
+    trigger: "axis",
+  },
   xAxis: {
     type: "category",
     data: [],
@@ -754,14 +755,6 @@ const timeRightClick = () => {
     .endOf("month")
     .format("YYYY-MM-DD");
   receivestatisticsFun(); // 更新数据
-};
-const materialsRCChange = async (val) => {
-  receivestatisticsData.value.materialsId = val;
-  await alarmInformationlistFun();
-  await receivestatisticsFun();
-  if (bigscreenRCRef.value) {
-    bigscreenRCChart.setOption(bigscreenRCoption);
-  }
 };
 
 window.onresize = function () {
@@ -1167,44 +1160,22 @@ $design-height: 1080;
           text-align: center;
         }
       }
-      .bigscreen_rb_bottom_nei_b {
+      .bigscreen_rb_bottom_neib {
         width: 100%;
-        height: adaptiveHeight(33);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: adaptiveHeight(5);
-        cursor: pointer;
-        span {
-          width: 25%;
-          color: #ffffff;
-          font-size: adaptiveFontSize(12);
-          text-align: center;
-        }
-      }
-      .bigscreen_rb_bottom_nei_active {
-        width: 100%;
-        height: adaptiveHeight(33);
-        background: url("/public/img/equipment/tableactive.png") no-repeat;
-        background-size: 100% 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: adaptiveHeight(8);
-        cursor: pointer;
-        span {
-          width: 25%;
-          color: #58a4cb;
-          text-align: center;
-          font-size: adaptiveFontSize(12);
-          position: relative;
-          &:nth-child(1) {
-            img {
-              position: absolute;
-              left: adaptiveWidth(10);
-              width: adaptiveWidth(18);
-              height: adaptiveHeight(17);
-            }
+        height: adaptiveHeight(200);
+        overflow: hidden;
+        .bigscreen_rb_bottom_nei_b {
+          width: 100%;
+          height: adaptiveHeight(33);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: adaptiveHeight(5);
+          span {
+            width: 25%;
+            color: #ffffff;
+            font-size: adaptiveFontSize(12);
+            text-align: center;
           }
         }
       }
@@ -1245,58 +1216,52 @@ $design-height: 1080;
     height: adaptiveHeight(200);
     margin: adaptiveHeight(10) auto;
     position: relative;
-    .bigscreen_rc_bottom_nei {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      .bigscreen_rc_bottom_l {
-        width: adaptiveWidth(20);
-        height: adaptiveHeight(187);
-        background: url("/img/线.png") no-repeat;
-        background-size: 2px 100%;
-        background-position: center;
+    :deep(.bigscreen_rc_bottom_nei) {
+      .el-scrollbar__view {
+        width: 100%;
+        height: 100%;
         display: flex;
-        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        img {
-          width: adaptiveWidth(8);
-          height: adaptiveHeight(8);
-          &:nth-child(2),
-          &:nth-child(3) {
-            margin-top: adaptiveHeight(50);
-          }
+        .bigscreen_rc_bottom_l {
+          width: adaptiveWidth(20);
+          height: adaptiveHeight(187);
+          background: url("/img/线.png") no-repeat;
+          background-size: 2px 100%;
+          background-position: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
-      }
-      .bigscreen_rc_bottom_r {
-        width: adaptiveWidth(381);
-        height: adaptiveHeight(187);
-        margin-left: adaptiveFontSize(15);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
-        .bigscreen_rc_bottom_rnei {
-          width: 100%;
-          height: adaptiveHeight(57);
-          margin-top: adaptiveHeight(5);
+        .bigscreen_rc_bottom_r {
+          width: adaptiveWidth(381);
+          height: adaptiveHeight(187);
+          margin-left: adaptiveFontSize(15);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          div {
+          overflow: hidden;
+          .bigscreen_rc_bottom_rnei {
             width: 100%;
-            height: adaptiveHeight(38);
+            height: adaptiveHeight(57);
+            margin-top: adaptiveHeight(5);
             display: flex;
-            align-items: center;
-            span {
-              color: rgba(255, 255, 255, 1);
-              font-size: adaptiveFontSize(12);
-              &:nth-child(1) {
-                margin-left: adaptiveWidth(10);
-              }
-              &:nth-child(2) {
-                margin-left: adaptiveWidth(20);
+            flex-direction: column;
+            justify-content: space-between;
+            div {
+              width: 100%;
+              height: adaptiveHeight(38);
+              display: flex;
+              align-items: center;
+              span {
+                color: rgba(255, 255, 255, 1);
+                font-size: adaptiveFontSize(12);
+                &:nth-child(1) {
+                  margin-left: adaptiveWidth(10);
+                }
+                &:nth-child(2) {
+                  margin-left: adaptiveWidth(20);
+                }
               }
             }
           }
