@@ -50,7 +50,7 @@
         <img src="/public/img/光标.png" alt="" />
         <span>区域报警统计</span>
       </div>
-      <el-radio-group
+      <!-- <el-radio-group
         v-model="powerStaticData.dayType"
         @change="powerStaticFun"
         class="group"
@@ -58,10 +58,10 @@
         <el-radio-button label="周" value="week" />
         <el-radio-button label="月" value="month" />
         <el-radio-button label="年" value="year" />
-      </el-radio-group>
+      </el-radio-group> -->
     </div>
     <div class="bigscreen_rt_bottom">
-      <el-select
+      <!-- <el-select
         size="small"
         class="selectcss"
         v-model="powerStaticData.type"
@@ -80,7 +80,7 @@
           :label="item.label"
           :value="item.value"
         />
-      </el-select>
+      </el-select> -->
       <div class="bigscreen_rt_bottom_nei" ref="bigscreenRTRef"></div>
     </div>
   </div>
@@ -90,18 +90,38 @@
         <img src="/public/img/光标.png" alt="" />
         <span>设备数据</span>
       </div>
-      <el-radio-group
-        v-model="powerByAreaTotalStaticData.dayType"
-        @change="powerByAreaTotalStaticFun"
-        class="group"
-      >
-        <el-radio-button label="周" value="week" />
-        <el-radio-button label="月" value="month" />
-        <el-radio-button label="年" value="year" />
-      </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">
-      <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
+      <div class="bigscreen_rb_bottom_nei">
+        <div class="bigscreen_rb_bottom_nei_t">
+          <span>设备编号</span>
+          <span>设备名称</span>
+          <span>设备型号</span>
+          <span>安装时间</span>
+        </div>
+        <div class="bigscreen_rb_bottom_neib">
+          <Vue3SeamlessScroll
+            :list="equipmentlist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              class="bigscreen_rb_bottom_nei_b"
+              v-for="item in equipmentlist"
+            >
+              <span>
+                {{ item.equipmentCode }}
+              </span>
+              <span>{{ item.equipmentName }}</span>
+              <span>{{ item.equipmentType }}</span>
+              <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
+            </div>
+          </Vue3SeamlessScroll>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -114,8 +134,11 @@ import {
   powerStatic,
   powerByAreaTotalStatic,
 } from "../../api/environment";
+import { equipmentList } from "../../api/equipment/index";
 import { getstatistics } from "../../api/incident";
 import center from "../../components/center.vue";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
+import dayjs from "dayjs";
 import img9 from "../../../public/img/叉号.png";
 
 const options2 = ref([
@@ -209,198 +232,25 @@ const historyStatistics = async () => {
   }
 };
 
-//历史功耗
+//设备数据
+const equipmentFormData = ref({
+  equipmentName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const equipmentlist = ref<any[]>([]);
+const equipmentListFun = async () => {
+  const { data } = await equipmentList(equipmentFormData.value);
+  let list = data.data.rows;
+  equipmentlist.value = list;
+};
+
 let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
-// 绘制左侧面
-const CubeLeft = echarts.graphic.extendShape({
-  shape: {
-    x: 0,
-    y: 0,
-  },
-  buildPath: function (ctx, shape) {
-    const xAxisPoint = shape.xAxisPoint;
-    const c0 = [shape.x, shape.y];
-    const c1 = [shape.x - 8, shape.y - 8];
-    const c2 = [xAxisPoint[0] - 8, xAxisPoint[1] - 8];
-    const c3 = [xAxisPoint[0], xAxisPoint[1]];
-    ctx
-      .moveTo(c0[0], c0[1])
-      .lineTo(c1[0], c1[1])
-      .lineTo(c2[0], c2[1])
-      .lineTo(c3[0], c3[1])
-      .closePath();
-  },
-});
-// 绘制右侧面
-const CubeRight = echarts.graphic.extendShape({
-  shape: {
-    x: 0,
-    y: 0,
-  },
-  buildPath: function (ctx, shape) {
-    const xAxisPoint = shape.xAxisPoint;
-    const c1 = [shape.x, shape.y];
-    const c2 = [xAxisPoint[0], xAxisPoint[1]];
-    const c3 = [xAxisPoint[0] + 13, xAxisPoint[1] - 4];
-    const c4 = [shape.x + 13, shape.y - 4];
-    ctx
-      .moveTo(c1[0], c1[1])
-      .lineTo(c2[0], c2[1])
-      .lineTo(c3[0], c3[1])
-      .lineTo(c4[0], c4[1])
-      .closePath();
-  },
-});
-// 绘制顶面
-const CubeTop = echarts.graphic.extendShape({
-  shape: {
-    x: 0,
-    y: 0,
-  },
-  buildPath: function (ctx, shape) {
-    const c1 = [shape.x, shape.y];
-    const c2 = [shape.x + 13, shape.y - 4];
-    const c3 = [shape.x + 5, shape.y - 12];
-    const c4 = [shape.x - 8, shape.y - 8];
-    ctx
-      .moveTo(c1[0], c1[1])
-      .lineTo(c2[0], c2[1])
-      .lineTo(c3[0], c3[1])
-      .lineTo(c4[0], c4[1])
-      .closePath();
-  },
-});
-echarts.graphic.registerShape("CubeLeft", CubeLeft);
-echarts.graphic.registerShape("CubeRight", CubeRight);
-echarts.graphic.registerShape("CubeTop", CubeTop);
 
 const bigscreenRToption = {
-  grid: {
-    left: "6%",
-    right: "6%",
-    bottom: "6%",
-    containLabel: true,
-  },
-  xAxis: {
-    type: "category",
-    data: [],
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  yAxis: {
-    type: "value",
-    nameTextStyle: {
-      color: "#ffffff",
-      padding: [0, 30, 5, 0],
-    },
-    splitLine: {
-      lineStyle: {
-        type: "dashed",
-        color: "rgba(255,255,255,0.14)",
-      },
-    },
-    axisLabel: {
-      color: "#ffffff",
-    },
-  },
-  series: [
-    {
-      data: [],
-      type: "bar",
-      label: {
-        normal: {
-          show: true,
-          position: "top",
-          fontSize: 14,
-          color: "#101010",
-          offset: [0, -10],
-        },
-      },
-      tooltip: {
-        show: false,
-      },
-      itemStyle: {
-        color: "transparent", // 线条颜色
-      },
-    },
-    {
-      type: "custom",
-      renderItem: (params, api) => {
-        const location = api.coord([api.value(0), api.value(1)]);
-        return {
-          type: "group",
-          children: [
-            {
-              type: "CubeLeft",
-              shape: {
-                api,
-                xValue: api.value(0),
-                yValue: api.value(1),
-                x: location[0],
-                y: location[1],
-                xAxisPoint: api.coord([api.value(0), 0]),
-              },
-              style: {
-                fill: "#549CF0",
-              },
-            },
-            {
-              type: "CubeRight",
-              shape: {
-                api,
-                xValue: api.value(0),
-                yValue: api.value(1),
-                x: location[0],
-                y: location[1],
-                xAxisPoint: api.coord([api.value(0), 0]),
-              },
-              style: {
-                fill: "#2070CE",
-              },
-            },
-            {
-              type: "CubeTop",
-              shape: {
-                api,
-                xValue: api.value(0),
-                yValue: api.value(1),
-                x: location[0],
-                y: location[1],
-                xAxisPoint: api.coord([api.value(0), 0]),
-              },
-              style: {
-                fill: "#8DC1FF",
-              },
-            },
-          ],
-        };
-      },
-      data: [2, 0.5, 1, 0.7, 3, 3.5, 1],
-    },
-  ],
-};
-const powerStaticData = ref({
-  des: "",
-  dayType: "week",
-  type: "电",
-});
-const powerStaticFun = async () => {
-  const { data } = await powerStatic(powerStaticData.value);
-  bigscreenRToption.xAxis.data = data.data.time;
-  bigscreenRToption.series[0].data = data.data.data;
-  bigscreenRToption.series[1].data = data.data.data;
-  if (bigscreenRTRef.value) {
-    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
-    bigscreenRTChart.setOption(bigscreenRToption);
-  }
-};
-
-let bigscreenRBChart: any = null;
-const bigscreenRBRef = ref();
-
-const bigscreenRBoption = {
   grid: {
     left: "6%",
     right: "6%",
@@ -449,11 +299,11 @@ const powerByAreaTotalStaticFun = async () => {
   const { data } = await powerByAreaTotalStatic(
     powerByAreaTotalStaticData.value
   );
-  bigscreenRBoption.xAxis.data = data.data.time;
-  bigscreenRBoption.series[0].data = data.data.data;
-  if (bigscreenRBRef.value) {
-    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    bigscreenRBChart.setOption(bigscreenRBoption);
+  bigscreenRToption.xAxis.data = data.data.time;
+  bigscreenRToption.series[0].data = data.data.data;
+  if (bigscreenRTRef.value) {
+    bigscreenRTChart = echarts.init(bigscreenRTRef.value);
+    bigscreenRTChart.setOption(bigscreenRToption);
   }
 };
 
@@ -464,8 +314,8 @@ window.onresize = function () {
 };
 
 onMounted(() => {
+  equipmentListFun();
   environmentFileFun();
-  powerStaticFun();
   historyStatistics();
   powerByAreaTotalStaticFun();
 });
@@ -686,6 +536,9 @@ $design-height: 1080;
   position: absolute;
   bottom: adaptiveHeight(85);
   right: adaptiveWidth(26);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .bigscreen_rb_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -730,8 +583,50 @@ $design-height: 1080;
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
     .bigscreen_rb_bottom_nei {
-      width: 100%;
-      height: 100%;
+      width: adaptiveWidth(407);
+      margin: 0 auto;
+      .bigscreen_rb_bottom_nei_t {
+        width: 100%;
+        height: adaptiveHeight(30);
+        margin-top: adaptiveHeight(15);
+        background: url("/public/img/equipment/tabletop.png") no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        span {
+          width: 25%;
+          color: #9eabb7;
+          font-size: adaptiveFontSize(14);
+          text-align: center;
+        }
+      }
+      .bigscreen_rb_bottom_neib {
+        width: 100%;
+        height: adaptiveHeight(350);
+        overflow: hidden;
+        .bigscreen_rb_bottom_nei_b {
+          width: 100%;
+          height: adaptiveHeight(33);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: adaptiveHeight(5);
+          span {
+            width: 25%;
+            color: #ffffff;
+            font-size: adaptiveFontSize(12);
+            white-space: nowrap; /* 禁止换行 */
+            overflow: hidden; /* 超出内容隐藏 */
+            text-overflow: ellipsis; /* 显示省略号 */
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4) {
+              text-align: center;
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -16,25 +16,6 @@
         </div>
         <div class="bigscreen_lt_bottom_tdiv">
           <div class="bigscreen_lt_bottom_tdiv_l">
-            <div style="background: #42c38f"></div>
-            <div
-              style="
-                border-left: 1px solid #42c38f;
-                border-bottom: 1px solid #42c38f;
-              "
-            ></div>
-          </div>
-          <div class="bigscreen_lt_bottom_tdiv_r">
-            <span>一级</span>
-            <span>
-              {{
-                alarmEventslist.filter((item) => item.level == "一级").length
-              }}
-            </span>
-          </div>
-        </div>
-        <div class="bigscreen_lt_bottom_tdiv">
-          <div class="bigscreen_lt_bottom_tdiv_l">
             <div style="background: #0574cb"></div>
             <div
               style="
@@ -44,10 +25,29 @@
             ></div>
           </div>
           <div class="bigscreen_lt_bottom_tdiv_r">
-            <span>二级</span>
+            <span>一般</span>
             <span>
               {{
-                alarmEventslist.filter((item) => item.level == "二级").length
+                alarmEventslist.filter((item) => item.level == "一般").length
+              }}
+            </span>
+          </div>
+        </div>
+        <div class="bigscreen_lt_bottom_tdiv">
+          <div class="bigscreen_lt_bottom_tdiv_l">
+            <div style="background: #f99b61"></div>
+            <div
+              style="
+                border-left: 1px solid #f99b61;
+                border-bottom: 1px solid #f99b61;
+              "
+            ></div>
+          </div>
+          <div class="bigscreen_lt_bottom_tdiv_r">
+            <span>重要</span>
+            <span>
+              {{
+                alarmEventslist.filter((item) => item.level == "重要").length
               }}
             </span>
           </div>
@@ -63,10 +63,10 @@
             ></div>
           </div>
           <div class="bigscreen_lt_bottom_tdiv_r">
-            <span>三级</span>
+            <span>紧急</span>
             <span>
               {{
-                alarmEventslist.filter((item) => item.level == "三级").length
+                alarmEventslist.filter((item) => item.level == "紧急").length
               }}
             </span>
           </div>
@@ -152,7 +152,7 @@
           <div style="display: flex; align-items: center">
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
-              processlist.length
+              processTotal
             }}</span>
           </div>
           <div>
@@ -688,8 +688,10 @@ const processFormData = ref({
 });
 const processlist = ref<any[]>([]);
 const processlist2 = ref<any[]>([]);
+const processTotal = ref<number>(0);
 const processlistFun = async () => {
   const { data } = await processList(processFormData.value);
+  processTotal.value = data.data.total;
   processlist.value = data.data.rows.slice(0, 3);
 };
 const rtClcik = (item) => {
