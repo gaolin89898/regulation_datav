@@ -2,6 +2,7 @@ import http from "../../utils/http";
 
 //获取领用记录列表
 export interface receiveListRes {
+  materialName: string;
   pageNum: number;
   pageSize: number;
   orderColumn: string;

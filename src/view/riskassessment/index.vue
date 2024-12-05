@@ -50,37 +50,8 @@
         <img src="/public/img/光标.png" alt="" />
         <span>区域报警统计</span>
       </div>
-      <!-- <el-radio-group
-        v-model="powerStaticData.dayType"
-        @change="powerStaticFun"
-        class="group"
-      >
-        <el-radio-button label="周" value="week" />
-        <el-radio-button label="月" value="month" />
-        <el-radio-button label="年" value="year" />
-      </el-radio-group> -->
     </div>
     <div class="bigscreen_rt_bottom">
-      <!-- <el-select
-        size="small"
-        class="selectcss"
-        v-model="powerStaticData.type"
-        @change="powerStaticFun"
-        style="
-          width: 80px;
-          position: absolute;
-          right: 20px;
-          top: 15px;
-          z-index: 99;
-        "
-      >
-        <el-option
-          v-for="item in options2"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select> -->
       <div class="bigscreen_rt_bottom_nei" ref="bigscreenRTRef"></div>
     </div>
   </div>
@@ -94,10 +65,10 @@
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei">
         <div class="bigscreen_rb_bottom_nei_t">
-          <span>设备编号</span>
-          <span>设备名称</span>
-          <span>设备型号</span>
-          <span>安装时间</span>
+          <span>传感器编号</span>
+          <span>传感器名称</span>
+          <span>传感器型号</span>
+          <span>时间</span>
         </div>
         <div class="bigscreen_rb_bottom_neib">
           <Vue3SeamlessScroll
@@ -113,10 +84,10 @@
               v-for="item in equipmentlist"
             >
               <span>
-                {{ item.equipmentCode }}
+                {{ item.thresholdId }}
               </span>
-              <span>{{ item.equipmentName }}</span>
-              <span>{{ item.equipmentType }}</span>
+              <span>{{ item.sensorName }}</span>
+              <span>{{ item.sensorModel }}</span>
               <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
             </div>
           </Vue3SeamlessScroll>
@@ -131,15 +102,13 @@ import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 import {
   environmentalFilesList,
-  powerStatic,
   powerByAreaTotalStatic,
 } from "../../api/environment";
-import { equipmentList } from "../../api/equipment/index";
+import { thresholdList } from "../../api/riskassessment";
 import { getstatistics } from "../../api/incident";
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import dayjs from "dayjs";
-import img9 from "../../../public/img/叉号.png";
 
 const options2 = ref([
   {
@@ -234,7 +203,6 @@ const historyStatistics = async () => {
 
 //设备数据
 const equipmentFormData = ref({
-  equipmentName: "",
   pageNum: 1,
   pageSize: 10000,
   orderColumn: "createTime",
@@ -242,7 +210,7 @@ const equipmentFormData = ref({
 });
 const equipmentlist = ref<any[]>([]);
 const equipmentListFun = async () => {
-  const { data } = await equipmentList(equipmentFormData.value);
+  const { data } = await thresholdList(equipmentFormData.value);
   let list = data.data.rows;
   equipmentlist.value = list;
 };

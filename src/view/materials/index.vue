@@ -153,6 +153,9 @@
         <img src="/public/img/光标.png" alt="" />
         <span>领用记录</span>
       </div>
+      <div class="bigscreen_rb_top_r" @click="rbClick">
+        <span>领用统计分析</span>
+      </div>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei">
@@ -169,7 +172,6 @@
               : 'bigscreen_rb_bottom_nei_b'
           "
           v-for="(item, index) in receivelist"
-          @click="rbClick(item)"
         >
           <span>
             <img
@@ -187,51 +189,57 @@
     </div>
   </div>
 
-  <template v-for="item in list3">
-    <div v-if="item.status" class="rbDialog">
-      <div class="rbDialog_top">
-        <span>领用统计分析</span>
-        <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
-      </div>
-      <div class="rbDialog_bottom">
-        <div class="bigscreen_rc_bottom_nei">
-          <div class="bigscreen_rc_bottom_l">
-            <img src="/public/img/圆形标记.png" alt="" />
-            <img src="/public/img/圆形标记.png" alt="" />
-            <img src="/public/img/圆形标记.png" alt="" />
-          </div>
-          <div class="bigscreen_rc_bottom_r">
-            <Vue3SeamlessScroll
-              :list="list3"
-              :class-option="{
-                step: 5,
-              }"
-              class="scrool"
+  <div v-if="rbstatus" class="rbDialog">
+    <div class="rbDialog_top">
+      <span>领用统计分析</span>
+      <img :src="img9" alt="" srcset="" @click="rbcanleClick" />
+    </div>
+    <div class="rbDialog_bottom">
+      <el-input
+        class="inputcss"
+        v-model="receiveFormData2.materialName"
+        @change="receivelistFun2"
+        style="width: 148px; height: 24px"
+        placeholder="请输入物料名称"
+        :prefix-icon="Search"
+      />
+      <div class="bigscreen_rc_bottom_nei">
+        <div class="bigscreen_rc_bottom_l">
+          <img src="/public/img/圆形标记.png" alt="" />
+          <img src="/public/img/圆形标记.png" alt="" />
+          <img src="/public/img/圆形标记.png" alt="" />
+        </div>
+        <div class="bigscreen_rc_bottom_r">
+          <Vue3SeamlessScroll
+            :list="receivelist2"
+            :class-option="{
+              step: 5,
+            }"
+            class="scrool"
+          >
+            <div
+              v-for="(item, index) in receivelist2"
+              :key="index"
+              class="bigscreen_rc_bottom_rnei"
             >
+              <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
+                dayjs(item.createTime).format("YYYY-MM-DD")
+              }}</span>
               <div
-                v-for="(item, index) in list3"
-                :key="index"
-                class="bigscreen_rc_bottom_rnei"
+                :style="{
+                  background: `url(${item.background}) no-repeat`,
+                  'background-size': '100% 100%',
+                }"
               >
-                <span style="color: rgba(172, 223, 255, 1); font-size: 11px"
-                  >2024年09月23日 22:15:53</span
-                >
-                <div
-                  :style="{
-                    background: `url(${item.background}) no-repeat`,
-                    'background-size': '100% 100%',
-                  }"
-                >
-                  <span>领用人员：{{ item.name }}</span>
-                  <span>领用数量：{{ item.danwei }}</span>
-                </div>
+                <span>领用人员：{{ item.receiverInfo.name }}</span>
+                <span>领用数量：{{ item.receiveNum }}</span>
               </div>
-            </Vue3SeamlessScroll>
-          </div>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
-  </template>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -252,63 +260,7 @@ import { alarmEventsList } from "../../api/incident/index";
 import dayjs from "dayjs";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
-import img7 from "../../../public/img/弹窗文案背景.png";
-
-const list3 = ref([
-  {
-    code: "物料一",
-    time: "2024-10-09",
-    name: "王凯",
-    danwei: "1mg",
-    status: false,
-    background: img7,
-  },
-  {
-    code: "物料二",
-    time: "2024-10-09",
-    name: "王凯",
-    danwei: "1mg",
-    status: false,
-    background: img7,
-  },
-  {
-    code: "物料三",
-    time: "2024-10-09",
-    name: "王凯",
-    danwei: "1mg",
-    status: false,
-    background: img7,
-  },
-  {
-    code: "物料四",
-    time: "2024-10-09",
-    name: "王凯",
-    danwei: "1mg",
-    status: false,
-    background: img7,
-  },
-  {
-    code: "物料五",
-    time: "2024-10-09",
-    name: "王凯",
-    danwei: "1mg",
-    status: false,
-    background: img7,
-  },
-]);
-
-const rbClick = (item) => {
-  list3.value.forEach((v) => {
-    if (item.code == v.code) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
-};
-const rbcanleClick = (item) => {
-  item.status = false;
-};
+import { Search } from "@element-plus/icons-vue";
 
 //报警信息
 const alarmInformationData = ref({
@@ -356,15 +308,37 @@ const alarmInformationlistFun = async () => {
 
 //领用记录
 const receiveFormData = ref({
+  materialName: "",
   pageNum: 1,
   pageSize: 10000,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
 const receivelist = ref<any[]>([]);
+const rbstatus = ref(false);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
   receivelist.value = data.data.rows.slice(0, 5);
+};
+const rbClick = async () => {
+  rbstatus.value = !rbstatus.value;
+  await receivelistFun2();
+};
+const rbcanleClick = () => {
+  rbstatus.value = false;
+};
+
+const receiveFormData2 = ref({
+  materialName: "",
+  pageNum: 1,
+  pageSize: 10000,
+  orderColumn: "createTime",
+  orderDirection: "descending",
+});
+const receivelist2 = ref<any[]>([]);
+const receivelistFun2 = async () => {
+  const { data } = await receiveList(receiveFormData2.value);
+  receivelist2.value = data.data.rows;
 };
 
 //库存分析
@@ -545,7 +519,6 @@ const typeStatisticsFun = async () => {
 };
 
 //用量类型分析
-type DatasetSource = [string, ...Array<string | number>[]];
 let bigscreenRTChart: any = null;
 const bigscreenRTRef = ref();
 const bigscreenRToption = {
@@ -1163,6 +1136,9 @@ $design-height: 1080;
     .bigscreen_rb_top_r {
       display: flex;
       align-items: center;
+      color: #ffffff;
+      cursor: pointer;
+      font-size: adaptiveFontSize(12);
       margin-right: adaptiveWidth(11);
     }
   }
@@ -1268,6 +1244,7 @@ $design-height: 1080;
     width: adaptiveWidth(420);
     height: adaptiveHeight(200);
     margin: adaptiveHeight(10) auto;
+    position: relative;
     .bigscreen_rc_bottom_nei {
       width: 100%;
       height: 100%;
@@ -1276,7 +1253,7 @@ $design-height: 1080;
       align-items: center;
       .bigscreen_rc_bottom_l {
         width: adaptiveWidth(20);
-        height: adaptiveHeight(207);
+        height: adaptiveHeight(187);
         background: url("/img/线.png") no-repeat;
         background-size: 2px 100%;
         background-position: center;
@@ -1288,13 +1265,13 @@ $design-height: 1080;
           height: adaptiveHeight(8);
           &:nth-child(2),
           &:nth-child(3) {
-            margin-top: adaptiveHeight(70);
+            margin-top: adaptiveHeight(50);
           }
         }
       }
       .bigscreen_rc_bottom_r {
         width: adaptiveWidth(381);
-        height: adaptiveHeight(207);
+        height: adaptiveHeight(187);
         margin-left: adaptiveFontSize(15);
         display: flex;
         flex-direction: column;
@@ -1314,7 +1291,7 @@ $design-height: 1080;
             align-items: center;
             span {
               color: rgba(255, 255, 255, 1);
-              font-size: adaptiveFontSize(14);
+              font-size: adaptiveFontSize(12);
               &:nth-child(1) {
                 margin-left: adaptiveWidth(10);
               }
@@ -1358,13 +1335,20 @@ $design-height: 1080;
   }
 }
 
+.inputcss {
+  position: absolute;
+  height: adaptiveHeight(24);
+  right: 0;
+  z-index: 2;
+}
 .inputcss :deep(.el-input__wrapper) {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+  font-size: adaptiveFontSize(12);
 }
 .scroll {
-  height: 195px;
+  height: adaptiveHeight(155);
   width: 100%;
   overflow: hidden;
 }
