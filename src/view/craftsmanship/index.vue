@@ -115,7 +115,15 @@
           v-for="item in nodelist"
           @click="lbClick(item)"
         >
-          <img :src="item.img" alt="" />
+          <div
+            class="bigscreen_lb_bottom_nei_t_l"
+            :style="{
+              background: `url(${item.img}) no-repeat`,
+              'background-size': '100% 100%',
+            }"
+          >
+            {{ item.nodeOrder }}
+          </div>
           <div class="bigscreen_lb_bottom_neis_r">
             <span>{{ item.nodeName }}</span>
             <span>{{ item.craftArchive.craftArchiveName }}</span>
@@ -989,6 +997,14 @@ $design-height: 1080;
         margin-top: adaptiveHeight(15);
         display: flex;
         cursor: pointer;
+        .bigscreen_lb_bottom_nei_t_l {
+          width: adaptiveWidth(37);
+          height: adaptiveHeight(40);
+          color: #ffffff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         .bigscreen_lb_bottom_neis_r {
           width: calc(100% - adaptiveWidth(48));
           height: 100%;
