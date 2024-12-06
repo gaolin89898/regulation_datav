@@ -7,25 +7,38 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div
-        class="bigscreen_lt_bottom_nei"
-        v-for="(item, index) in ltequipmentlist"
-      >
-        <img :src="item.img" alt="" />
-        <div
-          :style="{
-            background: `url('${item.back}') no-repeat`,
-            backgroundSize: '100% 100%',
+      <div class="bigscreen_lt_bottomnei">
+        <Vue3SeamlessScroll
+          :list="ltequipmentlist"
+          :class-option="{
+            step: 1,
+            singleHeight: 30,
+            waitTime: 1000,
           }"
+          hover
+          class="scrool"
         >
-          <span>{{ item.equipmentCode }}</span>
-          <span
-            :style="{
-              color: index % 2 === 0 ? '#00FFF9' : '#FFBCC0',
-            }"
-            >{{ item.equipmentName }}</span
+          <div
+            class="bigscreen_lt_bottom_nei"
+            v-for="(item, index) in ltequipmentlist"    
           >
-        </div>
+            <img :src="item.img" alt="" />
+            <div
+              :style="{
+                background: `url('${item.back}') no-repeat`,
+                backgroundSize: '100% 100%',
+              }"
+            >
+              <span>{{ item.equipmentCode }}</span>
+              <span
+                :style="{
+                  color: index % 2 === 0 ? '#00FFF9' : '#FFBCC0',
+                }"
+                >{{ item.equipmentName }}</span
+              >
+            </div>
+          </div>
+        </Vue3SeamlessScroll>
       </div>
     </div>
   </div>
@@ -388,7 +401,7 @@ const ltequipmentFormData = ref({
 const ltequipmentlist = ref<any[]>([]);
 const ltequipmentListFun = async () => {
   const { data } = await equipmentList(ltequipmentFormData.value);
-  let list = data.data.rows.slice(0, 3);
+  let list = data.data.rows;
   let img = ["/img/正常状态.png", "/img/异常状态.png"];
   let back = ["/img/绿色背景.png", "/img/红色背景.png"];
   ltequipmentlist.value = list.map((item, index) => {
@@ -732,31 +745,35 @@ $design-height: 1080;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    .bigscreen_lt_bottom_nei {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      img {
-        width: adaptiveWidth(66);
-        height: adaptiveHeight(60);
-      }
-      div {
-        width: adaptiveWidth(324);
-        height: adaptiveHeight(39);
+    .bigscreen_lt_bottomnei {
+      overflow: hidden;
+      height: adaptiveHeight(251);
+      .bigscreen_lt_bottom_nei {
         display: flex;
+        justify-content: center;
         align-items: center;
-        &:nth-child(2) {
-          margin: adaptiveHeight(18) 0;
+        img {
+          width: adaptiveWidth(66);
+          height: adaptiveHeight(60);
         }
-        span {
-          &:nth-child(1) {
-            font-size: adaptiveFontSize(12);
-            color: #ffffff;
-            padding: 0 adaptiveWidth(32);
-          }
+        div {
+          width: adaptiveWidth(324);
+          height: adaptiveHeight(39);
+          display: flex;
+          align-items: center;
           &:nth-child(2) {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
+            margin: adaptiveHeight(18) 0;
+          }
+          span {
+            &:nth-child(1) {
+              font-size: adaptiveFontSize(12);
+              color: #ffffff;
+              padding: 0 adaptiveWidth(32);
+            }
+            &:nth-child(2) {
+              font-family: youshe;
+              font-size: adaptiveFontSize(20);
+            }
           }
         }
       }

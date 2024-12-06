@@ -116,15 +116,15 @@
     </div>
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
-  <template v-for="item in environmentFileList">
+  <template v-for="(item, index) in environmentFileList">
     <div v-if="item.status" class="ltTrendDialog">
       <div class="ltTrendDialog_top">
         <span>趋势分析</span>
-        <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item)" />
+        <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item, index)" />
       </div>
       <div
         class="ltTrendDialog_bottom"
-        :ref="(el) => (bigscreenLtdialogRef2s[index] = el)"
+        :ref="(el) => (ltDialogRefs[index] = el)"
       ></div>
     </div>
   </template>
@@ -325,9 +325,9 @@ const ltcloneClick = () => {
 };
 
 //趋势分析
-let bigscreenLtdialogChart2: any = null;
-let bigscreenLtdialogRef2s = ref<(HTMLElement | null)[]>([]);
-const bigscreenLtdialogoption2 = {
+let ltDialogChart: any = null;
+let ltDialogRefs = ref<(HTMLElement | null)[]>([]);
+const ltDialogoption = {
   grid: {
     left: "6%",
     right: "6%",
@@ -398,12 +398,10 @@ const historyStatisticsFormData = ref({
 });
 const historyStatisticsFun = async () => {
   const { data } = await historyStatistics(historyStatisticsFormData.value);
-  console.log(data);
-
-  bigscreenLtdialogoption2.xAxis.data = data.time;
-  bigscreenLtdialogoption2.series[0].data = data.data;
+  ltDialogoption.xAxis.data = data.time;
+  ltDialogoption.series[0].data = data.data;
 };
-const ltClick2 = async (item, index) => {
+const ltClick2 = async (item: any, index: number) => {
   environmentFileList.value.forEach(
     (v) => (v.status = v.environmentId === item.environmentId)
   );
@@ -412,18 +410,24 @@ const ltClick2 = async (item, index) => {
   await historyStatisticsFun();
 
   nextTick(() => {
-    const dom = bigscreenLtdialogRef2s.value[index];
+    const dom = ltDialogRefs.value[index];
     if (dom) {
-      if (bigscreenLtdialogChart2) {
-        bigscreenLtdialogChart2.disabled();
+      if (ltDialogChart) {
+        ltDialogChart.dispose();
       }
-      bigscreenLtdialogChart2 = echarts.init(dom);
-      bigscreenLtdialogChart2.setOption(bigscreenLtdialogoption2);
+
+      ltDialogChart = echarts.init(dom);
+      ltDialogChart.setOption(ltDialogoption);
     }
   });
 };
-const ltcanleClick2 = (item: any) => {
+const ltcanleClick2 = (item: any, index: number) => {
   item.status = false;
+  if (ltDialogRefs.value[index]) {
+    if (ltDialogChart) {
+      ltDialogChart.dispose();
+    }
+  }
 };
 
 //历史功耗
