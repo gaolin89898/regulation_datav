@@ -176,7 +176,7 @@
   </template>
 
   <template v-for="(item, index) in healthylist">
-    <div v-show="item.status" class="lbDialog">
+    <div v-if="item.status" class="lbDialog">
       <div class="lbDialog_top">
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />

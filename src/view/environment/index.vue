@@ -117,13 +117,13 @@
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
   <template v-for="item in environmentFileList">
-    <div v-if="item.status" class="ltDialog">
-      <div class="ltDialog_top">
+    <div v-if="item.status" class="ltTrendDialog">
+      <div class="ltTrendDialog_top">
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item)" />
       </div>
       <div
-        class="ltDialog_bottom"
+        class="ltTrendDialog_bottom"
         :ref="(el) => (bigscreenLtdialogRef2s[index] = el)"
       ></div>
     </div>
@@ -230,6 +230,7 @@ const powerByTypeStatisticsData = ref({
 });
 const powerByTypeStatisticsFun = async () => {
   const { data } = await powerByTypeStatistics(powerByTypeStatisticsData.value);
+  console.log(data);
   bigscreenLBoption.xAxis.data = data.data.time;
   bigscreenLBoption.series[0].data = data.data.data;
   if (bigscreenLBRef.value) {
@@ -323,6 +324,7 @@ const ltcloneClick = () => {
   ltstatus.value = false;
 };
 
+//趋势分析
 let bigscreenLtdialogChart2: any = null;
 let bigscreenLtdialogRef2s = ref<(HTMLElement | null)[]>([]);
 const bigscreenLtdialogoption2 = {
@@ -335,14 +337,13 @@ const bigscreenLtdialogoption2 = {
 
   xAxis: {
     type: "category",
-    data: ["01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00"],
+    data: [],
     axisLabel: {
       color: "#ffffff",
     },
   },
   yAxis: {
     type: "value",
-    name: "km/h",
     nameTextStyle: {
       color: "#ffffff",
       padding: [0, 40, 5, 0],
@@ -361,7 +362,7 @@ const bigscreenLtdialogoption2 = {
   },
   series: [
     {
-      data: [50, 100, 160, 60, 200, 90, 250],
+      data: [],
       type: "line",
       smooth: true,
       symbol: "none",
@@ -392,22 +393,22 @@ const bigscreenLtdialogoption2 = {
   ],
 };
 const historyStatisticsFormData = ref({
-  description: "",
+  environmentId: 0,
   dayType: "week",
 });
 const historyStatisticsFun = async () => {
   const { data } = await historyStatistics(historyStatisticsFormData.value);
-  bigscreenLtdialogoption2.xAxis.data = data.data.unitNames;
-  bigscreenLtdialogoption2.series[0].data = data.data.datas;
+  console.log(data);
+
+  bigscreenLtdialogoption2.xAxis.data = data.time;
+  bigscreenLtdialogoption2.series[0].data = data.data;
 };
 const ltClick2 = async (item, index) => {
-  environmentFileList.value.forEach((v) => {
-    if (item.environmentId == v.environmentId) {
-      v.status = !v.status;
-    } else {
-      v.status = false;
-    }
-  });
+  environmentFileList.value.forEach(
+    (v) => (v.status = v.environmentId === item.environmentId)
+  );
+  if (!item.status) return;
+  historyStatisticsFormData.value.environmentId = item.environmentId;
   await historyStatisticsFun();
 
   nextTick(() => {
@@ -982,6 +983,39 @@ $design-height: 1080;
     }
   }
   .ltDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(215);
+  }
+}
+.ltTrendDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  .ltTrendDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+  .ltTrendDialog_bottom {
     width: adaptiveWidth(420);
     height: adaptiveHeight(215);
   }

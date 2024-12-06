@@ -13,10 +13,10 @@ export function environmentalFilesList(params: environmentalFilesListRes) {
 
 //数据大屏获取环境档案区域的历史报警数量
 export function historyStatistics(params: {
-  description: string;
+  environmentId: number;
   dayType: string;
 }) {
-  return http.get("/manage/event/envrionment", { params });
+  return http.get("/manage/detection/environmentDay", { params });
 }
 
 //当前总功耗
