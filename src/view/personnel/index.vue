@@ -73,7 +73,7 @@
               {{ item.personnel.name }}
             </div>
             <div style="color: #ffffff; margin-top: 10px">
-              {{ item.healthyId }}
+              {{ item.personnel.code }}
             </div>
           </div>
           <div class="right">
@@ -125,9 +125,9 @@
         <img src="/public/img/光标.png" alt="" />
         <span>异常健康指标统计</span>
       </div>
-      <el-radio-group v-model="radio1" class="group">
-        <el-radio-button label="周" value="zhou" />
-        <el-radio-button label="月" value="ri" />
+      <el-radio-group v-model="radio1" @change="changeRadio1" class="group">
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
       </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">
@@ -175,22 +175,28 @@
     </div>
   </template>
 
-  <template v-for="(item, index) in healthylist">
-    <div v-if="item.status" class="lbDialog">
+  <!-- <template v-for="(item, index) in healthylist"> -->
+    <div v-show="showPersonnelDialog" class="lbDialog">
       <div class="lbDialog_top">
         <span>趋势分析</span>
+        <div class="lbDialog_select" >
+          <ElSelect v-model="healthyValue" @change="changeHealthValue" >
+            <ElOption v-for="item in healthySelect" :key="item.value" :label="item.label" :value="item.value" />
+          </ElSelect>
+        </div>
         <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />
       </div>
       <div
+      ref="showPersonnelDialogRef"
         class="lbDialog_bottom"
-        :ref="(el) => (lbDialogRefs[index] = el)"
       ></div>
+        <!-- :ref="(el) => (lbDialogRefs[index] = el)" -->
     </div>
-  </template>
+  <!-- </template> -->
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick,reactive } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
@@ -207,8 +213,11 @@ import {
   accesscontrolList,
 } from "../../api/personnel/index";
 
-const radio1 = ref("zhou");
+const radio1 = ref("week");
 const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
+const changeRadio1 = ()=>{
+  indicatorStatisticsList();
+}
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -408,7 +417,7 @@ const bigscreenRBoption = {
 };
 const indicatorStatisticsList = () => {
   indicatorStatistics({
-    dayType: "week",
+    dayType: radio1.value,
   }).then((res) => {
     val.data1 = res.data.data[0].data;
     val.data2 = res.data.data[1].data;
@@ -417,8 +426,8 @@ const indicatorStatisticsList = () => {
     xBar3 = val.data1.map((item) => Number(item));
     bigscreenRBoption.series[0].data = val.data2;
     bigscreenRBoption.series[1].data = val.data1;
-    bigscreenRBChart?.setOption(bigscreenRBoption);
     bigscreenRBoption.xAxis.data = res.data.data[0].time;
+    bigscreenRBChart?.setOption(bigscreenRBoption);
   });
 };  
 
@@ -469,9 +478,10 @@ const ltcanleClick = (item: any) => {
 const healthyFormData = ref({
   name: "",
   pageNum: 1,
-  pageSize: 10000,
+  pageSize: 3,
   orderColumn: "createTime",
   orderDirection: "descending",
+  isGroup: true,
 });
 const healthylist = ref<any[]>([]);
 const healthylistFun = async () => {
@@ -486,9 +496,15 @@ const healthylistFun = async () => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
+const changeHealthValue = async (val)=>{
+  healthyStatisticsData.value.type = healthyValue.value;
+  await  healthyStatisticsFun();
+  lbDialogBottomChart.setOption(lbDialogBottomoption);
+}
 const healthyChange = () => {
   healthylistFun();
 };
+
 
 //特征指标
 const lbDialogRefs = ref<(HTMLElement | null)[]>([]);
@@ -552,6 +568,25 @@ const lbDialogBottomoption = {
     },
   ],
 };
+const healthyValue = ref("温度");
+// 特征指标下的趋势分析选择器
+const healthySelect = reactive([
+  {
+    value:"温度",
+    label:"温度"
+  },
+  {
+    value:"收缩压",
+    label:"收缩压"
+  },{
+    value:"舒张压",
+    label:"舒张压"
+  },{
+    value:"心率",
+    label:"心率"
+  }
+])
+
 const healthyStatisticsFun = async () => {
   const { data } = await healthyStatistics(healthyStatisticsData.value);
   lbDialogBottomoption.xAxis.data = data.data.time;
@@ -559,44 +594,59 @@ const healthyStatisticsFun = async () => {
 };
 
 const lbClick = async (item, index) => {
-  healthylist.value.forEach(
-    (v) => (v.status = v.personnelId === item.personnelId)
-  );
-  if (!item.status) return;
   healthyStatisticsData.value.personnelId = item.personnelId;
+  healthyStatisticsData.value.type = healthyValue.value;
   await healthyStatisticsFun();
+  if(!showPersonnelDialog.value){
+    showPersonnelDialog.value = true;
+  }
+  lbDialogBottomChart.setOption(lbDialogBottomoption);
+  // console.log("showPersonnelDialogRef.value",showPersonnelDialogRef.value)
+  // healthylist.value.forEach(
+  //   (v) => (v.status = v.personnelId === item.personnelId)
+  // );
+  // if (!item.status) return;
+  // healthyStatisticsData.value.personnelId = item.personnelId;
+  // healthyStatisticsData.value.type = healthyValue.value;
+  // await healthyStatisticsFun();
 
-  nextTick(() => {
-    const dom = lbDialogRefs.value[index];
-    if (dom) {
-      if (lbDialogBottomChart) {
-        lbDialogBottomChart.dispose();
-      }
+  // nextTick(() => {
+  //   const dom = lbDialogRefs.value[index];
+  //   if (dom) {
+  //     if (lbDialogBottomChart) {
+  //       lbDialogBottomChart.dispose();
+  //     }
 
-      lbDialogBottomChart = echarts.init(dom);
-      lbDialogBottomChart.setOption(lbDialogBottomoption);
-    }
-  });
+  //     lbDialogBottomChart = echarts.init(dom);
+  //     lbDialogBottomChart.setOption(lbDialogBottomoption);
+  //   }
+  // });
 };
 const lbcanleClick = (item, index) => {
-  item.status = false;
-  if (lbDialogRefs.value[index]) {
-    if (lbDialogBottomChart) {
-      lbDialogBottomChart.dispose();
-    }
-  }
+  showPersonnelDialog.value = false;
+  // item.status = false;
+  // if (lbDialogRefs.value[index]) {
+  //   if (lbDialogBottomChart) {
+  //     lbDialogBottomChart.dispose();
+  //   }
+  // }
 };
 
 window.onresize = function () {
   bigscreenRBChart.resize();
 };
 
+
+// ============================我自己写的=======================
+const showPersonnelDialog = ref(false);
+const showPersonnelDialogRef = ref(null);
+
 onMounted(() => {
   // if (bigscreenLBRef.value) {
   //   const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
   //   bigscreenLBChart.setOption(bigscreenLBoption);
   // }
-
+  lbDialogBottomChart = echarts.init(showPersonnelDialogRef.value);
   initChart();
   indicatorStatisticsList();
   healthylistFun();
@@ -1063,6 +1113,13 @@ $design-height: 1080;
     top: adaptiveHeight(55);
     right: adaptiveWidth(10);
   }
+}
+
+.lbDialog_select{
+  position: absolute;
+  right: 2vw;
+  top: 1.4vh;
+  width: 100px;
 }
 
 :deep(.selectcss) {

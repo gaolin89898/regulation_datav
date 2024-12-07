@@ -116,18 +116,18 @@
     </div>
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
-  <template v-for="(item, index) in environmentFileList">
-    <div v-if="item.status" class="ltTrendDialog">
+  <!-- <template v-for="(item, index) in environmentFileList"> -->
+    <div v-show="environmentFileDialog" class="ltTrendDialog">
       <div class="ltTrendDialog_top">
         <span>趋势分析</span>
         <img :src="img9" alt="" srcset="" @click="ltcanleClick2(item, index)" />
       </div>
       <div
         class="ltTrendDialog_bottom"
-        :ref="(el) => (ltDialogRefs[index] = el)"
+        ref="environmentFileDialogRef"
       ></div>
     </div>
-  </template>
+  <!-- </template> -->
 </template>
 
 <script lang="ts" setup>
@@ -257,6 +257,8 @@ const environmentFileFun = async () => {
     };
   });
 };
+const environmentFileDialog = ref(false);
+const environmentFileDialogRef = ref(null);
 
 //报警历史分析
 const ltstatus = ref(false);
@@ -408,26 +410,27 @@ const ltClick2 = async (item: any, index: number) => {
   if (!item.status) return;
   historyStatisticsFormData.value.environmentId = item.environmentId;
   await historyStatisticsFun();
+  environmentFileDialog.value = true;
+  ltDialogChart.setOption(ltDialogoption);
 
-  nextTick(() => {
-    const dom = ltDialogRefs.value[index];
-    if (dom) {
-      if (ltDialogChart) {
-        ltDialogChart.dispose();
-      }
+  // nextTick(() => {
+  //   const dom = ltDialogRefs.value[index];
+  //   if (dom) {
+  //     if (ltDialogChart) {
+  //       ltDialogChart.dispose();
+  //     }
 
-      ltDialogChart = echarts.init(dom);
-      ltDialogChart.setOption(ltDialogoption);
-    }
-  });
+  //   }
+  // });
 };
 const ltcanleClick2 = (item: any, index: number) => {
-  item.status = false;
-  if (ltDialogRefs.value[index]) {
-    if (ltDialogChart) {
-      ltDialogChart.dispose();
-    }
-  }
+  environmentFileDialog.value = false;
+  // item.status = false;
+  // if (ltDialogRefs.value[index]) {
+  //   if (ltDialogChart) {
+  //     ltDialogChart.dispose();
+  //   }
+  // }
 };
 
 //历史功耗
@@ -685,6 +688,8 @@ window.onresize = function () {
 };
 
 onMounted(() => {
+  ltDialogChart = echarts.init(environmentFileDialogRef.value);
+
   environmentFileFun();
   historyStatisticsFun();
   powerStaticFun();

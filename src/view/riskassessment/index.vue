@@ -186,13 +186,15 @@ const historyStatistics = async () => {
   const { data } = await getstatistics({
     dayType: historyStatisticsData.value.dayType,
   });
-  let sum = new Array(12).fill(0);
-  data.data.forEach((item) => {
-    // 遍历每个数据集的 `data` 数组并进行累加
-    item.data.forEach((value, index) => {
-      sum[index] += value;
+
+  let sum = new Array(data.data[0].times.length).fill(0);
+  sum.forEach(item=>{
+    data.data.forEach((value) => {
+      value.data.forEach((d,i)=>{
+        sum[i] += d;
+      })
     });
-  });
+  })
   bigscreenLBoption.xAxis.data = data.data[0].times;
   bigscreenLBoption.series[0].data = sum;
   if (bigscreenLBRef.value) {

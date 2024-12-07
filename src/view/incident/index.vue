@@ -75,12 +75,19 @@
         <img src="/public/img/光标.png" alt="" />
         <span>报警历史</span>
       </div>
-      <el-input
+      <ElSelect @change="zxChangeSelect" v-model="zxSelect" class="inputcss">
+        <ElOption label="环境报警" value="环境报警"/>
+        <ElOption label="工艺节点报警" value="工艺节点报警"/>
+        <ElOption label="设备报警" value="设备报警"/>
+        <ElOption label="物料报警" value="物料报警"/>
+      </ElSelect>
+
+      <!-- <el-input
         class="inputcss"
         placeholder="请输入报警类型"
         :prefix-icon="Search"
         clearable
-      />
+      /> -->
       <!-- v-model="alarmInformationFormData.eventName"
         @change="historyStatistics" -->
     </div>
@@ -495,6 +502,11 @@ const alarmInformationlistFun = async () => {
   alarmInformationlist.value = data.data.rows.slice(0, 5);
 };
 
+const zxSelect = ref("环境报警")
+const zxChangeSelect = ()=>{
+  historyStatistics();
+}
+
 const areaStatisticsFormData = ref({
   startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
   endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
@@ -549,10 +561,17 @@ const historyStatistics = async () => {
   });
   let sum = new Array(12).fill(0);
   data.data.forEach((item) => {
-    // 遍历每个数据集的 `data` 数组并进行累加
-    item.data.forEach((value, index) => {
+    if(item.type == zxSelect.value){
+      item.data.forEach((value, index) => {
+        sum[index] = value;
+      });
+    }else{
+      item.data.forEach((value, index) => {
       sum[index] += value;
     });
+    }
+    // 遍历每个数据集的 `data` 数组并进行累加
+    
   });
   bigscreenLBoption.series[0].data = sum;
   if (bigscreenLBRef.value) {
