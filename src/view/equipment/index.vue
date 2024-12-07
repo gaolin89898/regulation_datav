@@ -20,7 +20,7 @@
         >
           <div
             class="bigscreen_lt_bottom_nei"
-            v-for="(item, index) in ltequipmentlist"    
+            v-for="(item, index) in ltequipmentlist"
           >
             <img :src="item.img" alt="" />
             <div
@@ -34,8 +34,9 @@
                 :style="{
                   color: index % 2 === 0 ? '#00FFF9' : '#FFBCC0',
                 }"
-                >{{ item.equipmentName }}</span
               >
+                {{ item.equipmentName }}
+              </span>
             </div>
           </div>
         </Vue3SeamlessScroll>

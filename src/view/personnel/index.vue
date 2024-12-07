@@ -420,7 +420,7 @@ const indicatorStatisticsList = () => {
     bigscreenRBChart?.setOption(bigscreenRBoption);
     bigscreenRBoption.xAxis.data = res.data.data[0].time;
   });
-};
+};  
 
 const initChart = () => {
   if (!bigscreenRBRef.value) return;
