@@ -110,17 +110,6 @@ import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import dayjs from "dayjs";
 
-const options2 = ref([
-  {
-    label: "电",
-    value: "电",
-  },
-  {
-    label: "水",
-    value: "水",
-  },
-]);
-
 //环境信息
 const environmentFileFormData = ref({
   pageNum: 1,
@@ -188,13 +177,13 @@ const historyStatistics = async () => {
   });
 
   let sum = new Array(data.data[0].times.length).fill(0);
-  sum.forEach(item=>{
+  sum.forEach((item) => {
     data.data.forEach((value) => {
-      value.data.forEach((d,i)=>{
+      value.data.forEach((d, i) => {
         sum[i] += d;
-      })
+      });
     });
-  })
+  });
   bigscreenLBoption.xAxis.data = data.data[0].times;
   bigscreenLBoption.series[0].data = sum;
   if (bigscreenLBRef.value) {
@@ -279,7 +268,6 @@ const powerByAreaTotalStaticFun = async () => {
 
 window.onresize = function () {
   bigscreenLBChart.resize();
-  bigscreenRBChart.resize();
   bigscreenRTChart.resize();
 };
 
@@ -589,11 +577,7 @@ $design-height: 1080;
             white-space: nowrap; /* 禁止换行 */
             overflow: hidden; /* 超出内容隐藏 */
             text-overflow: ellipsis; /* 显示省略号 */
-            &:nth-child(2),
-            &:nth-child(3),
-            &:nth-child(4) {
-              text-align: center;
-            }
+            text-align: center;
           }
         }
       }

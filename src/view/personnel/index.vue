@@ -175,28 +175,32 @@
     </div>
   </template>
 
-  <!-- <template v-for="(item, index) in healthylist"> -->
-    <div v-show="showPersonnelDialog" class="lbDialog">
-      <div class="lbDialog_top">
-        <span>趋势分析</span>
-        <div class="lbDialog_select" >
-          <ElSelect v-model="healthyValue" @change="changeHealthValue" >
-            <ElOption v-for="item in healthySelect" :key="item.value" :label="item.label" :value="item.value" />
-          </ElSelect>
-        </div>
-        <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />
+  <div v-show="showPersonnelDialog" class="lbDialog">
+    <div class="lbDialog_top">
+      <span>趋势分析</span>
+      <div class="lbDialog_select">
+        <ElSelect
+          v-model="healthyValue"
+          @change="changeHealthValue"
+          class="selectcss"
+          size="small"
+        >
+          <ElOption
+            v-for="item in healthySelect"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </ElSelect>
       </div>
-      <div
-      ref="showPersonnelDialogRef"
-        class="lbDialog_bottom"
-      ></div>
-        <!-- :ref="(el) => (lbDialogRefs[index] = el)" -->
+      <img :src="img9" alt="" srcset="" @click="lbcanleClick(item, index)" />
     </div>
-  <!-- </template> -->
+    <div ref="showPersonnelDialogRef" class="lbDialog_bottom"></div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick,reactive } from "vue";
+import { ref, onMounted, nextTick, reactive } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
@@ -215,9 +219,9 @@ import {
 
 const radio1 = ref("week");
 const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
-const changeRadio1 = ()=>{
+const changeRadio1 = () => {
   indicatorStatisticsList();
-}
+};
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -429,7 +433,7 @@ const indicatorStatisticsList = () => {
     bigscreenRBoption.xAxis.data = res.data.data[0].time;
     bigscreenRBChart?.setOption(bigscreenRBoption);
   });
-};  
+};
 
 const initChart = () => {
   if (!bigscreenRBRef.value) return;
@@ -496,18 +500,16 @@ const healthylistFun = async () => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
-const changeHealthValue = async (val)=>{
+const changeHealthValue = async (val) => {
   healthyStatisticsData.value.type = healthyValue.value;
-  await  healthyStatisticsFun();
+  await healthyStatisticsFun();
   lbDialogBottomChart.setOption(lbDialogBottomoption);
-}
+};
 const healthyChange = () => {
   healthylistFun();
 };
 
-
 //特征指标
-const lbDialogRefs = ref<(HTMLElement | null)[]>([]);
 let lbDialogBottomChart: any = null;
 const healthyStatisticsData = ref({ personnelId: null, type: "" });
 const lbDialogBottomoption = {
@@ -572,20 +574,22 @@ const healthyValue = ref("温度");
 // 特征指标下的趋势分析选择器
 const healthySelect = reactive([
   {
-    value:"温度",
-    label:"温度"
+    value: "温度",
+    label: "温度",
   },
   {
-    value:"收缩压",
-    label:"收缩压"
-  },{
-    value:"舒张压",
-    label:"舒张压"
-  },{
-    value:"心率",
-    label:"心率"
-  }
-])
+    value: "收缩压",
+    label: "收缩压",
+  },
+  {
+    value: "舒张压",
+    label: "舒张压",
+  },
+  {
+    value: "心率",
+    label: "心率",
+  },
+]);
 
 const healthyStatisticsFun = async () => {
   const { data } = await healthyStatistics(healthyStatisticsData.value);
@@ -597,55 +601,24 @@ const lbClick = async (item, index) => {
   healthyStatisticsData.value.personnelId = item.personnelId;
   healthyStatisticsData.value.type = healthyValue.value;
   await healthyStatisticsFun();
-  if(!showPersonnelDialog.value){
+  if (!showPersonnelDialog.value) {
     showPersonnelDialog.value = true;
   }
   lbDialogBottomChart.setOption(lbDialogBottomoption);
-  // console.log("showPersonnelDialogRef.value",showPersonnelDialogRef.value)
-  // healthylist.value.forEach(
-  //   (v) => (v.status = v.personnelId === item.personnelId)
-  // );
-  // if (!item.status) return;
-  // healthyStatisticsData.value.personnelId = item.personnelId;
-  // healthyStatisticsData.value.type = healthyValue.value;
-  // await healthyStatisticsFun();
-
-  // nextTick(() => {
-  //   const dom = lbDialogRefs.value[index];
-  //   if (dom) {
-  //     if (lbDialogBottomChart) {
-  //       lbDialogBottomChart.dispose();
-  //     }
-
-  //     lbDialogBottomChart = echarts.init(dom);
-  //     lbDialogBottomChart.setOption(lbDialogBottomoption);
-  //   }
-  // });
 };
 const lbcanleClick = (item, index) => {
   showPersonnelDialog.value = false;
-  // item.status = false;
-  // if (lbDialogRefs.value[index]) {
-  //   if (lbDialogBottomChart) {
-  //     lbDialogBottomChart.dispose();
-  //   }
-  // }
 };
 
 window.onresize = function () {
   bigscreenRBChart.resize();
 };
 
-
 // ============================我自己写的=======================
 const showPersonnelDialog = ref(false);
 const showPersonnelDialogRef = ref(null);
 
 onMounted(() => {
-  // if (bigscreenLBRef.value) {
-  //   const bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-  //   bigscreenLBChart.setOption(bigscreenLBoption);
-  // }
   lbDialogBottomChart = echarts.init(showPersonnelDialogRef.value);
   initChart();
   indicatorStatisticsList();
@@ -1108,21 +1081,14 @@ $design-height: 1080;
     width: adaptiveWidth(440);
     height: adaptiveHeight(230);
   }
-  .selectcss {
-    position: absolute;
-    top: adaptiveHeight(55);
-    right: adaptiveWidth(10);
-  }
-}
-
-.lbDialog_select{
-  position: absolute;
-  right: 2vw;
-  top: 1.4vh;
-  width: 100px;
 }
 
 :deep(.selectcss) {
+  position: absolute;
+  z-index: 10;
+  width: 100px;
+  top: adaptiveHeight(55);
+  right: adaptiveWidth(25);
   .el-select__wrapper {
     background-color: transparent !important;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;

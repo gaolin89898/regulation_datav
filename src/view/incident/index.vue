@@ -75,21 +75,17 @@
         <img src="/public/img/光标.png" alt="" />
         <span>报警历史</span>
       </div>
-      <ElSelect @change="zxChangeSelect" v-model="zxSelect" class="inputcss">
-        <ElOption label="环境报警" value="环境报警"/>
-        <ElOption label="工艺节点报警" value="工艺节点报警"/>
-        <ElOption label="设备报警" value="设备报警"/>
-        <ElOption label="物料报警" value="物料报警"/>
+      <ElSelect
+        @change="zxChangeSelect"
+        v-model="zxSelect"
+        size="small"
+        class="selectcss"
+      >
+        <ElOption label="环境报警" value="环境报警" />
+        <ElOption label="工艺节点报警" value="工艺节点报警" />
+        <ElOption label="设备报警" value="设备报警" />
+        <ElOption label="物料报警" value="物料报警" />
       </ElSelect>
-
-      <!-- <el-input
-        class="inputcss"
-        placeholder="请输入报警类型"
-        :prefix-icon="Search"
-        clearable
-      /> -->
-      <!-- v-model="alarmInformationFormData.eventName"
-        @change="historyStatistics" -->
     </div>
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
@@ -502,10 +498,10 @@ const alarmInformationlistFun = async () => {
   alarmInformationlist.value = data.data.rows.slice(0, 5);
 };
 
-const zxSelect = ref("环境报警")
-const zxChangeSelect = ()=>{
+const zxSelect = ref("环境报警");
+const zxChangeSelect = () => {
   historyStatistics();
-}
+};
 
 const areaStatisticsFormData = ref({
   startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
@@ -561,17 +557,16 @@ const historyStatistics = async () => {
   });
   let sum = new Array(12).fill(0);
   data.data.forEach((item) => {
-    if(item.type == zxSelect.value){
+    if (item.type == zxSelect.value) {
       item.data.forEach((value, index) => {
         sum[index] = value;
       });
-    }else{
+    } else {
       item.data.forEach((value, index) => {
-      sum[index] += value;
-    });
+        sum[index] += value;
+      });
     }
     // 遍历每个数据集的 `data` 数组并进行累加
-    
   });
   bigscreenLBoption.series[0].data = sum;
   if (bigscreenLBRef.value) {
@@ -1447,6 +1442,22 @@ $design-height: 1080;
   height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
+}
+
+:deep(.selectcss) {
+  width: adaptiveWidth(100);
+  right: adaptiveWidth(11);
+  .el-select__wrapper {
+    background-color: transparent !important;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  }
+  .el-select__placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .el-select__selected-item {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
 }
 
 .group
