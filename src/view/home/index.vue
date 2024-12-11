@@ -6,17 +6,12 @@
         <span>报警信息</span>
       </div>
     </div>
-    <div class="bigscreen_lt_bottom">
+    <div class="bigscreen_lt_bottom" @mouseenter="mouseEnterBaoJingXinxi" @mouseleave="mouseLeaveBaoJingXinxi">
       <div class="bigscreen_lt_bottom_nei">
-        <div
-          v-for="item in alarmEvnetListLt"
-          class="bigscreen_lt_nei"
-          :style="{
-            background: `url(${item.back}) no-repeat`,
-            'background-size': '100% 100%',
-          }"
-          @click="neiClick(item)"
-        >
+        <div v-for="item in alarmEvnetListLt" class="bigscreen_lt_nei" :style="{
+          background: `url(${item.back}) no-repeat`,
+          'background-size': '100% 100%',
+        }" @click="neiClick(item)">
           <span class="bigscreen_lt_nei_span">{{ item.type }}</span>
           <span class="bigscreen_lt_nei_span">{{ item.level }}</span>
           <span class="bigscreen_lt_nei_span">{{ item.createTime }}</span>
@@ -30,39 +25,24 @@
         <img src="/public/img/光标.png" alt="" />
         <span>事件报告</span>
       </div>
-      <el-input
-        class="inputcss"
-        placeholder="请输入事件类型"
-        v-model="alarmEventsFormData.type"
-        @change="alarmEventslistFun"
-        clearable
-        :prefix-icon="Search"
-      />
+      <el-input class="inputcss" placeholder="请输入事件类型" v-model="alarmEventsFormData.type" @change="alarmEventslistFun"
+        clearable :prefix-icon="Search" />
     </div>
     <div class="bigscreen_lc_bottom">
       <div class="bigscreen_lc_bottom_nei">
         <img src="/public/img/事件报告图标.png" alt="" />
         <div class="bigscreen_lc_bottom_r">
-          <Vue3SeamlessScroll
-            :list="alarmEventslist"
-            :class-option="{
-              step: 5,
-            }"
-            hover
-            class="scrool"
-          >
-            <div
-              v-for="(item, index) in alarmEventslist"
-              :key="index"
-              class="bigscreen_lc_bottom_rnei"
-            >
-              <span>{{ item.description }}</span>
-              <div
-                :style="{
-                  background: ` url(${item.img}) no-repeat`,
-                  'background-size': '100% 100%',
-                }"
-              >
+          <Vue3SeamlessScroll :list="alarmEventslist" :class-option="{
+            step: 5,
+          }" hover class="scrool">
+            <div v-for="(item, index) in alarmEventslist" :key="index" class="bigscreen_lc_bottom_rnei">
+              <ElTooltip :content="item.description">
+                <span>{{ item.description }}</span>
+              </ElTooltip>
+              <div :style="{
+                background: ` url(${item.img}) no-repeat`,
+                'background-size': '100% 100%',
+              }">
                 <span v-if="item.type == '工艺节点报警'">工艺节点</span>
                 <span v-else>{{ item.type }}</span>
               </div>
@@ -94,12 +74,8 @@
         <img src="/public/img/光标.png" alt="" />
         <span>监控报告</span>
       </div>
-      <el-input
-        class="inputcss"
-        style="width: 148px; height: 24px; margin-right: 11px"
-        placeholder="请输入监控点位"
-        :prefix-icon="Search"
-      />
+      <el-input class="inputcss" style="width: 148px; height: 24px; margin-right: 11px" placeholder="请输入监控点位"
+        :prefix-icon="Search" />
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei">
@@ -118,14 +94,8 @@
         <img src="/public/img/光标.png" alt="" />
         <span>政策法规</span>
       </div>
-      <el-input
-        class="inputcss"
-        placeholder="请输入政策法规名称"
-        :prefix-icon="Search"
-        clearable
-        v-model="policiesFormData.policiesName"
-        @change="policieslistFun"
-      />
+      <el-input class="inputcss" placeholder="请输入政策法规名称" :prefix-icon="Search" clearable
+        v-model="policiesFormData.policiesName" @change="policieslistFun" />
     </div>
     <div class="bigscreen_rc_bottom">
       <div class="bigscreen_rc_bottom_nei">
@@ -135,35 +105,20 @@
           <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
         </div>
         <div class="bigscreen_rc_bottom_r">
-          <Vue3SeamlessScroll
-            :list="policieslist"
-            :class-option="{
-              step: 5,
-            }"
-            hover
-            class="scrool"
-          >
-            <div
-              v-for="(item, index) in policieslist"
-              @click="rcClick(item)"
-              :key="index"
-              class="bigscreen_rc_bottom_rnei"
-            >
+          <Vue3SeamlessScroll :list="policieslist" :class-option="{
+            step: 5,
+          }" hover class="scrool">
+            <div v-for="(item, index) in policieslist" @click="rcClick(item)" :key="index"
+              class="bigscreen_rc_bottom_rnei">
               <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
                 dayjs(item.createTime).format("YYYY-MM-DD")
               }}</span>
-              <div
-                :style="{
-                  background: `url(${item.img}) no-repeat`,
-                  'background-size': '100% 100%',
-                }"
-              >
+              <div :style="{
+                background: `url(${item.img}) no-repeat`,
+                'background-size': '100% 100%',
+              }">
                 <span style="margin-left: 10px">{{ item.policiesName }}</span>
-                <img
-                  style="margin-right: 18px; cursor: pointer"
-                  src="/public/img/查看详情.png"
-                  alt=""
-                />
+                <img style="margin-right: 18px; cursor: pointer" src="/public/img/查看详情.png" alt="" />
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -188,7 +143,7 @@
   </div>
 
   <template v-for="item in alarmEvnetListLt">
-    <div v-if="item.status" class="ltDialog">
+    <div v-if="item.status" class="ltDialog" @mouseenter="mouseEnterBaoJingXinxi" @mouseleave="mouseLeaveBaoJingXinxi">
       <div class="ltDialog_top">
         <span>报警信息详情</span>
         <img :src="img9" alt="" srcset="" @click="canleClick(item)" />
@@ -235,7 +190,14 @@
   <template v-for="(item, index) in policieslist">
     <div v-if="item.status" class="preview">
       <div class="preview_top">
-        <span>文件预览</span>
+        <span>文件预览
+          <ElButton size="large" @click="()=>download(item.paths[0].path)" link type="success" text="success">
+            <el-icon style="vertical-align: middle;font-size: 25px;">
+              <Download />
+            </el-icon>
+          </ElButton>
+        </span>
+
         <img :src="img9" alt="" srcset="" @click="previewcanleClick(item)" />
       </div>
       <div class="preview_bottom">
@@ -262,11 +224,15 @@ import {
 } from "../../api/incident";
 import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
+import {download} from "../../api/login.ts"
+import { Download } from "@element-plus/icons-vue";
 
 import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
+import { useIntervalFn } from '@vueuse/core'
+
 
 const rtStatus = ref(false);
 const rtClick = () => {
@@ -318,6 +284,7 @@ const ltalarmEventsFormData = ref({
   orderDirection: "descending",
 });
 const alarmEvnetListLt = ref<any[]>([]);
+// 获取报警信息
 const alarmEventslistFunLt = async () => {
   const { data } = await alarmEventsList(ltalarmEventsFormData.value);
   let list = data.data.rows.slice(0, 4);
@@ -373,6 +340,22 @@ const alarmEventslistFunLt = async () => {
     };
   });
 };
+const mouseEnterBaoJingXinxi = () => {
+  if (isActive.value) {
+    pause()
+  }
+}
+const mouseLeaveBaoJingXinxi = () => {
+  if (!isActive.value) {
+    resume()
+  }
+}
+const { pause, resume, isActive } = useIntervalFn(() => {
+  pause()
+  alarmEventslistFunLt().finally(() => {
+    resume()
+  });
+}, 3000)
 const neiClick = (item) => {
   alarmEvnetListLt.value.forEach((v) => {
     if (item.eventId == v.eventId) {
@@ -702,10 +685,12 @@ $design-height: 1080;
   width: adaptiveWidth(443);
   height: adaptiveHeight(292);
 }
+
 .bigscreen_lt {
   position: absolute;
   top: adaptiveHeight(91);
   left: adaptiveWidth(26);
+
   .bigscreen_lt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -713,41 +698,48 @@ $design-height: 1080;
     background-size: 110% 110%;
     display: flex;
     align-items: center;
+
     .bigscreen_lt_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
       }
     }
   }
+
   .bigscreen_lt_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_lt_bottom_nei {
       width: 100%;
       height: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .bigscreen_lt_nei {
         width: adaptiveWidth(93);
         height: adaptiveHeight(210);
@@ -755,12 +747,15 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
         cursor: pointer;
+
         &:nth-child(1) {
           margin-left: adaptiveWidth(18);
         }
+
         &:nth-child(4) {
           margin-right: adaptiveWidth(18);
         }
+
         .bigscreen_lt_nei_span {
           &:nth-child(1) {
             color: rgba(255, 255, 255, 0.8);
@@ -768,11 +763,13 @@ $design-height: 1080;
             font-weight: 400;
             padding-top: adaptiveHeight(97);
           }
+
           &:nth-child(2) {
             color: #ffffff;
             font-size: adaptiveFontSize(20);
             font-weight: 500;
           }
+
           &:nth-child(3) {
             color: rgba(255, 255, 255, 0.8);
             font-size: adaptiveFontSize(8);
@@ -788,6 +785,7 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(395);
   left: adaptiveWidth(26);
+
   .bigscreen_lc_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -796,45 +794,53 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .bigscreen_lc_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveHeight(10);
       }
     }
   }
+
   .bigscreen_lc_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_lc_bottom_nei {
       width: 100%;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         width: adaptiveWidth(164);
         height: adaptiveHeight(159);
       }
+
       .bigscreen_lc_bottom_r {
         width: adaptiveWidth(256);
         height: adaptiveHeight(195);
@@ -853,15 +859,20 @@ $design-height: 1080;
           align-items: center;
           justify-content: space-between;
           cursor: pointer;
+
           span {
             width: adaptiveWidth(140);
             color: rgba(244, 249, 255, 1);
             font-size: adaptiveFontSize(11);
             margin-left: adaptiveWidth(20);
-            white-space: nowrap; /* 禁止换行 */
-            overflow: hidden; /* 超出内容隐藏 */
-            text-overflow: ellipsis; /* 显示省略号 */
+            white-space: nowrap;
+            /* 禁止换行 */
+            overflow: hidden;
+            /* 超出内容隐藏 */
+            text-overflow: ellipsis;
+            /* 显示省略号 */
           }
+
           div {
             width: adaptiveWidth(80);
             height: adaptiveHeight(35);
@@ -870,6 +881,7 @@ $design-height: 1080;
             display: flex;
             justify-content: center;
             align-items: center;
+
             span {
               padding-bottom: adaptiveHeight(5);
             }
@@ -884,6 +896,7 @@ $design-height: 1080;
   position: absolute;
   bottom: adaptiveHeight(85);
   left: adaptiveWidth(26);
+
   .bigscreen_lb_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -892,35 +905,41 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .bigscreen_lb_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
       }
     }
   }
+
   .bigscreen_lb_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_lb_bottom_nei {
       width: 100%;
       height: 100%;
@@ -932,6 +951,7 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(91);
   right: adaptiveWidth(26);
+
   .bigscreen_rt_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -940,52 +960,61 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .bigscreen_rt_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
       }
     }
   }
+
   .bigscreen_rt_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_rt_bottom_nei {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: 100%;
+
       img {
         width: adaptiveWidth(126);
         height: adaptiveHeight(176);
         margin-right: adaptiveWidth(28);
       }
+
       .bigscreen_rt_bottom_r {
         width: adaptiveWidth(218);
         height: adaptiveHeight(167);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
         div {
           width: 100%;
           height: adaptiveHeight(41);
@@ -994,6 +1023,7 @@ $design-height: 1080;
           display: flex;
           align-items: center;
           justify-content: center;
+
           span {
             font-size: adaptiveFontSize(14);
             color: rgba(255, 255, 255, 1);
@@ -1009,6 +1039,7 @@ $design-height: 1080;
   position: absolute;
   top: adaptiveHeight(395);
   right: adaptiveWidth(26);
+
   .bigscreen_rc_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -1017,41 +1048,48 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .bigscreen_rc_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
       }
     }
   }
+
   .bigscreen_rc_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_rc_bottom_nei {
       width: 100%;
       height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
+
       .bigscreen_rc_bottom_l {
         width: adaptiveWidth(20);
         height: adaptiveHeight(207);
@@ -1062,6 +1100,7 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
       }
+
       .bigscreen_rc_bottom_r {
         width: adaptiveWidth(381);
         height: adaptiveHeight(207);
@@ -1070,18 +1109,21 @@ $design-height: 1080;
         flex-direction: column;
         justify-content: space-between;
         overflow: hidden;
+
         .bigscreen_rc_bottom_rnei {
           width: 100%;
           height: adaptiveHeight(57);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+
           div {
             width: 100%;
             height: adaptiveHeight(38);
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             span {
               color: rgba(255, 255, 255, 1);
               font-size: adaptiveFontSize(14);
@@ -1097,6 +1139,7 @@ $design-height: 1080;
   position: absolute;
   bottom: adaptiveHeight(85);
   right: adaptiveWidth(26);
+
   .bigscreen_rb_top {
     width: 100%;
     height: adaptiveHeight(40);
@@ -1105,46 +1148,54 @@ $design-height: 1080;
     justify-content: space-between;
     align-items: center;
     background-size: 110% 110%;
+
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
+
       img {
         margin-left: adaptiveWidth(11);
       }
+
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(
-          to bottom,
-          #c7e5fd 42%,
-          #3582c7 100%
-        ); /* 渐变背景 */
-        background-clip: text; /* 让背景应用到文本 */
-        -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
       }
     }
+
     .bigscreen_rb_top_r {
       display: flex;
       align-items: center;
       margin-right: adaptiveWidth(11);
     }
   }
+
   .bigscreen_rb_bottom {
     width: 100%;
     height: adaptiveHeight(251);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
+
     .bigscreen_rb_bottom_nei {
       width: 100%;
       height: 100%;
     }
   }
 }
+
 .ltDialog {
   width: adaptiveWidth(440);
   background: url("/public/img/弹窗背景.png") no-repeat;
@@ -1153,18 +1204,21 @@ $design-height: 1080;
   top: adaptiveHeight(100);
   left: adaptiveWidth(480);
   z-index: 10;
+
   .ltDialog_top {
     width: 100%;
     height: adaptiveHeight(45);
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     span {
       font-size: adaptiveFontSize(20);
       color: #ffffff;
       padding-left: adaptiveWidth(15);
       font-family: youshe;
     }
+
     img {
       width: adaptiveWidth(8);
       height: adaptiveHeight(8);
@@ -1172,6 +1226,7 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .ltDialog_bottom {
     width: adaptiveWidth(380);
     // height: adaptiveHeight(230);
@@ -1179,25 +1234,32 @@ $design-height: 1080;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     img {
       width: adaptiveWidth(99);
       height: adaptiveHeight(99);
     }
+
     .ltDialog_bottomr {
       width: adaptiveWidth(266);
       margin: adaptiveHeight(40) 0;
+
       .ltDialog_bottomr_nei {
         margin-top: adaptiveHeight(10);
         display: flex;
+
         &:nth-child(1) {
           margin-top: 0;
         }
+
         span {
           font-size: adaptiveFontSize(14);
+
           &:nth-child(1) {
             width: adaptiveWidth(75);
             color: #687f92;
           }
+
           &:nth-child(2) {
             width: adaptiveWidth(191);
             color: #ffffff;
@@ -1217,18 +1279,21 @@ $design-height: 1080;
   top: adaptiveHeight(100);
   right: adaptiveWidth(480);
   z-index: 10;
+
   .rtDialog_top {
     width: 100%;
     height: adaptiveHeight(45);
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     span {
       font-size: adaptiveFontSize(20);
       color: #ffffff;
       padding-left: adaptiveWidth(15);
       font-family: youshe;
     }
+
     img {
       width: adaptiveWidth(8);
       height: adaptiveHeight(8);
@@ -1236,6 +1301,7 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .rtDialog_bottom {
     width: adaptiveWidth(420);
     height: adaptiveHeight(215);
@@ -1244,16 +1310,19 @@ $design-height: 1080;
     flex-direction: column;
     // align-items: center;
     justify-content: center;
+
     img {
       width: 100%;
       height: adaptiveHeight(195);
     }
+
     div {
       font-size: adaptiveFontSize(14);
       color: #ffffff;
     }
   }
 }
+
 .rcDialog {
   width: adaptiveWidth(440);
   background: url("/public/img/弹窗背景.png") no-repeat;
@@ -1262,18 +1331,21 @@ $design-height: 1080;
   bottom: adaptiveHeight(400);
   right: adaptiveWidth(480);
   z-index: 10;
+
   .rcDialog_top {
     width: 100%;
     height: adaptiveHeight(45);
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     span {
       font-size: adaptiveFontSize(20);
       color: #ffffff;
       padding-left: adaptiveWidth(15);
       font-family: youshe;
     }
+
     img {
       width: adaptiveWidth(8);
       height: adaptiveHeight(8);
@@ -1281,24 +1353,31 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .rcDialog_bottom {
     width: 100%;
     display: flex;
     justify-content: center;
+
     .rcDialog_bottom_neis {
       margin: adaptiveHeight(50) 0;
+
       .rcDialog_bottom_nei {
         display: flex;
         margin-top: adaptiveHeight(30);
+
         &:nth-child(1) {
           margin-top: 0;
         }
+
         span {
           font-size: adaptiveFontSize(14);
+
           &:nth-child(1) {
             width: adaptiveWidth(105);
             color: #687f92;
           }
+
           &:nth-child(2) {
             width: adaptiveWidth(191);
             color: #ffffff;
@@ -1308,6 +1387,7 @@ $design-height: 1080;
     }
   }
 }
+
 .preview {
   width: adaptiveWidth(640);
   position: absolute;
@@ -1316,18 +1396,21 @@ $design-height: 1080;
   bottom: adaptiveHeight(400);
   right: adaptiveWidth(480);
   z-index: 10;
+
   .preview_top {
     width: 100%;
     height: adaptiveHeight(90);
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     span {
       font-size: adaptiveFontSize(20);
       color: #ffffff;
       padding-left: adaptiveWidth(15);
       font-family: youshe;
     }
+
     img {
       width: adaptiveWidth(12);
       height: adaptiveHeight(12);
@@ -1335,10 +1418,12 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .preview_bottom {
     width: adaptiveWidth(625);
     height: adaptiveHeight(450);
     margin: 0 auto;
+
     .preview_bottom_nei {
       height: adaptiveHeight(420);
       overflow: hidden;
@@ -1348,6 +1433,7 @@ $design-height: 1080;
 
 .file_list {
   width: 100%;
+
   .file-item {
     // 改用 file-item class
     width: 300px;
@@ -1361,13 +1447,18 @@ $design-height: 1080;
     padding: 0 10px; // 移动padding到父元素
     transition: all 0.3s;
     cursor: pointer;
+
     &:last-child {
       margin-bottom: 0;
     }
+
     span {
-      white-space: nowrap; /* 禁止换行 */
-      overflow: hidden; /* 超出内容隐藏 */
-      text-overflow: ellipsis; /* 显示省略号 */
+      white-space: nowrap;
+      /* 禁止换行 */
+      overflow: hidden;
+      /* 超出内容隐藏 */
+      text-overflow: ellipsis;
+      /* 显示省略号 */
     }
   }
 
@@ -1382,14 +1473,17 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(10);
 }
+
 .inputcss :deep(.el-input__wrapper) {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
+
   .el-input__inner {
     font-size: adaptiveFontSize(12);
   }
 }
+
 .scroll {
   height: adaptiveHeight(195);
   width: 100%;
@@ -1404,20 +1498,18 @@ $design-height: 1080;
   justify-content: center;
   padding: adaptiveWidth(3) adaptiveHeight(2);
 }
+
 .group {
   margin-right: adaptiveWidth(11);
 }
-.group
-  :deep(
-    .el-radio-button.is-active
-      .el-radio-button__original-radio:not(:disabled)
-      + .el-radio-button__inner
-  ) {
+
+.group :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
   background: rgba(255, 255, 255, 0.8);
   color: rgba(7, 36, 57, 1);
   border-color: rgba(255, 255, 255, 0);
   font-size: adaptiveFontSize(12);
 }
+
 .group :deep(.el-radio-button .el-radio-button__inner) {
   padding: adaptiveWidth(2) adaptiveHeight(6);
   background: rgba(255, 255, 255, 0);
