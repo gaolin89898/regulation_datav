@@ -19,6 +19,10 @@
   </div>
   <div class="bigscreen_cb">
     <div class="bigscreen_cb_nei"></div>
+    <div class="bigscreen_cb_dialog">
+      <div class="bigscreen_cb_dialog_top"></div>
+      <div class="bigscreen_cb_dialog_bottom"></div>
+    </div>
   </div>
 </template>
 
@@ -164,6 +168,12 @@ $design-height: 1080;
     height: adaptiveHeight(642);
     background: url("/public/img/主体图片.png") no-repeat;
     background-size: 100% 100%;
+  }
+  .bigscreen_cb_dialog {
+    position: absolute;
+    width: adaptiveWidth(850);
+    height: adaptiveHeight(600);
+    border: 1px solid red;
   }
 }
 </style>

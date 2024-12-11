@@ -22,5 +22,9 @@ declare module 'vue' {
     Officereview: typeof import('./src/components/officereview.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Tufour: typeof import('./src/components/tufour/index.vue')['default']
+    Tuone: typeof import('./src/components/tuone/index.vue')['default']
+    Tuthree: typeof import('./src/components/tuthree/index.vue')['default']
+    Tutwo: typeof import('./src/components/tutwo/index.vue')['default']
   }
 }
