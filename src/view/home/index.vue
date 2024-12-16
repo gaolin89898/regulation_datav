@@ -74,16 +74,20 @@
         <img src="/public/img/光标.png" alt="" />
         <span>监控报告</span>
       </div>
-      <el-input class="inputcss" style="width: 148px; height: 24px; margin-right: 11px" placeholder="请输入监控点位"
-        :prefix-icon="Search" />
+      <el-input class="inputcss" @keyup.enter="getVideoList" v-model="channelQuery.name"
+        style="width: 148px; height: 24px; margin-right: 11px" placeholder="请输入监控点位" :prefix-icon="Search" />
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
+          <div @click="rtClick(item)" v-for="item in videoList">
+            <span>{{ item.name }}</span>
+          </div>
+
+          <!-- <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
-          <div><span>JK218 科学大道点位1</span></div>
+          <div><span>JK218 科学大道点位1</span></div> -->
         </div>
       </div>
     </div>
@@ -112,7 +116,7 @@
               class="bigscreen_rc_bottom_rnei">
               <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
                 dayjs(item.createTime).format("YYYY-MM-DD")
-              }}</span>
+                }}</span>
               <div :style="{
                 background: `url(${item.img}) no-repeat`,
                 'background-size': '100% 100%',
@@ -182,7 +186,8 @@
       <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
     </div>
     <div class="rtDialog_bottom">
-      <img src="/public/img/监控视频尺寸.png" alt="" />
+      <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
+      <Video style="margin: 0 auto;" ref="videoRef" />
       <div>倍速播放×1</div>
     </div>
   </div>
@@ -191,7 +196,7 @@
     <div v-if="item.status" class="preview">
       <div class="preview_top">
         <span>文件预览
-          <ElButton size="large" @click="()=>download(item.paths[0].path)" link type="success" text="success">
+          <ElButton size="large" @click="() => download(item.paths[0].path)" link type="success" text="success">
             <el-icon style="vertical-align: middle;font-size: 25px;">
               <Download />
             </el-icon>
@@ -210,7 +215,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import * as echarts from "echarts";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
@@ -224,7 +229,7 @@ import {
 } from "../../api/incident";
 import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
-import {download} from "../../api/login.ts"
+import { download } from "../../api/login.ts"
 import { Download } from "@element-plus/icons-vue";
 
 import img5 from "../../../public/img/红色背景框.png";
@@ -232,11 +237,24 @@ import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
 import { useIntervalFn } from '@vueuse/core'
+import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
+import Video from "./components/Video.vue";
 
 
 const rtStatus = ref(false);
-const rtClick = () => {
+const videoRef = ref(null)
+const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
+  if (rtStatus.value) {
+    nextTick(() => {
+      getStreamUrlApi(item.channelid).then(res => {
+        console.log("res.data.data.wsflv",res.data.data.wsflv)
+        videoRef.value.play(res.data.data.wsflv)
+        videoRef.value.setChannelId(res.data.data.channelId)
+      })
+ 
+    })
+  }
 };
 const rtcanleClick = () => {
   rtStatus.value = false;
@@ -647,7 +665,20 @@ const lbRadioChange = (val) => {
   geteventTotalFun();
 };
 
+const videoList = ref([])
+const channelQuery = ref({
+  name: "",
+  pageNum: 1,
+  pageSize: 3,
+})
+const getVideoList = () => {
+  getChannelListApi(channelQuery.value).then(res => {
+    videoList.value = res.data.data.List
+  })
+}
+
 onMounted(() => {
+  getVideoList();
   policieslistFun();
   alarmEventslistFun();
   alarmEventslistFunLt();
