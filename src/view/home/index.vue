@@ -355,7 +355,7 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   alarmEventslistFunLt().finally(() => {
     resume()
   });
-}, 3000)
+}, 10000)
 const neiClick = (item) => {
   alarmEvnetListLt.value.forEach((v) => {
     if (item.eventId == v.eventId) {
