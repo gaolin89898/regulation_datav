@@ -6,12 +6,21 @@
         <span>报警信息</span>
       </div>
     </div>
-    <div class="bigscreen_lt_bottom" @mouseenter="mouseEnterBaoJingXinxi" @mouseleave="mouseLeaveBaoJingXinxi">
+    <div
+      class="bigscreen_lt_bottom"
+      @mouseenter="mouseEnterBaoJingXinxi"
+      @mouseleave="mouseLeaveBaoJingXinxi"
+    >
       <div class="bigscreen_lt_bottom_nei">
-        <div v-for="item in alarmEvnetListLt" class="bigscreen_lt_nei" :style="{
-          background: `url(${item.back}) no-repeat`,
-          'background-size': '100% 100%',
-        }" @click="neiClick(item)">
+        <div
+          v-for="item in alarmEvnetListLt"
+          class="bigscreen_lt_nei"
+          :style="{
+            background: `url(${item.back}) no-repeat`,
+            'background-size': '100% 100%',
+          }"
+          @click="neiClick(item)"
+        >
           <span class="bigscreen_lt_nei_span">{{ item.type }}</span>
           <span class="bigscreen_lt_nei_span">{{ item.level }}</span>
           <span class="bigscreen_lt_nei_span">{{ item.createTime }}</span>
@@ -25,24 +34,41 @@
         <img src="/public/img/光标.png" alt="" />
         <span>事件报告</span>
       </div>
-      <el-input class="inputcss" placeholder="请输入事件类型" v-model="alarmEventsFormData.type" @change="alarmEventslistFun"
-        clearable :prefix-icon="Search" />
+      <el-input
+        class="inputcss"
+        placeholder="请输入事件类型"
+        v-model="alarmEventsFormData.type"
+        @change="alarmEventslistFun"
+        clearable
+        :prefix-icon="Search"
+      />
     </div>
     <div class="bigscreen_lc_bottom">
       <div class="bigscreen_lc_bottom_nei">
         <img src="/public/img/事件报告图标.png" alt="" />
         <div class="bigscreen_lc_bottom_r">
-          <Vue3SeamlessScroll :list="alarmEventslist" :class-option="{
-            step: 5,
-          }" hover class="scrool">
-            <div v-for="(item, index) in alarmEventslist" :key="index" class="bigscreen_lc_bottom_rnei">
+          <Vue3SeamlessScroll
+            :list="alarmEventslist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              v-for="(item, index) in alarmEventslist"
+              :key="index"
+              class="bigscreen_lc_bottom_rnei"
+            >
               <ElTooltip :content="item.description">
                 <span>{{ item.description }}</span>
               </ElTooltip>
-              <div :style="{
-                background: ` url(${item.img}) no-repeat`,
-                'background-size': '100% 100%',
-              }">
+              <div
+                :style="{
+                  background: ` url(${item.img}) no-repeat`,
+                  'background-size': '100% 100%',
+                }"
+              >
                 <span v-if="item.type == '工艺节点报警'">工艺节点</span>
                 <span v-else>{{ item.type }}</span>
               </div>
@@ -74,8 +100,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>监控报告</span>
       </div>
-      <el-input class="inputcss" @keyup.enter="getVideoList" v-model="channelQuery.name"
-        style="width: 148px; height: 24px; margin-right: 11px" placeholder="请输入监控点位" :prefix-icon="Search" />
+      <el-input
+        class="inputcss"
+        @keyup.enter="getVideoList"
+        v-model="channelQuery.name"
+        style="width: 148px; height: 24px; margin-right: 11px"
+        placeholder="请输入监控点位"
+        :prefix-icon="Search"
+      />
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei">
@@ -98,8 +130,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>政策法规</span>
       </div>
-      <el-input class="inputcss" placeholder="请输入政策法规名称" :prefix-icon="Search" clearable
-        v-model="policiesFormData.policiesName" @change="policieslistFun" />
+      <el-input
+        class="inputcss"
+        placeholder="请输入政策法规名称"
+        :prefix-icon="Search"
+        clearable
+        v-model="policiesFormData.policiesName"
+        @change="policieslistFun"
+      />
     </div>
     <div class="bigscreen_rc_bottom">
       <div class="bigscreen_rc_bottom_nei">
@@ -109,20 +147,35 @@
           <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
         </div>
         <div class="bigscreen_rc_bottom_r">
-          <Vue3SeamlessScroll :list="policieslist" :class-option="{
-            step: 5,
-          }" hover class="scrool">
-            <div v-for="(item, index) in policieslist" @click="rcClick(item)" :key="index"
-              class="bigscreen_rc_bottom_rnei">
+          <Vue3SeamlessScroll
+            :list="policieslist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
+            <div
+              v-for="(item, index) in policieslist"
+              @click="rcClick(item)"
+              :key="index"
+              class="bigscreen_rc_bottom_rnei"
+            >
               <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
                 dayjs(item.createTime).format("YYYY-MM-DD")
-                }}</span>
-              <div :style="{
-                background: `url(${item.img}) no-repeat`,
-                'background-size': '100% 100%',
-              }">
+              }}</span>
+              <div
+                :style="{
+                  background: `url(${item.img}) no-repeat`,
+                  'background-size': '100% 100%',
+                }"
+              >
                 <span style="margin-left: 10px">{{ item.policiesName }}</span>
-                <img style="margin-right: 18px; cursor: pointer" src="/public/img/查看详情.png" alt="" />
+                <img
+                  style="margin-right: 18px; cursor: pointer"
+                  src="/public/img/查看详情.png"
+                  alt=""
+                />
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -147,7 +200,12 @@
   </div>
 
   <template v-for="item in alarmEvnetListLt">
-    <div v-if="item.status" class="ltDialog" @mouseenter="mouseEnterBaoJingXinxi" @mouseleave="mouseLeaveBaoJingXinxi">
+    <div
+      v-if="item.status"
+      class="ltDialog"
+      @mouseenter="mouseEnterBaoJingXinxi"
+      @mouseleave="mouseLeaveBaoJingXinxi"
+    >
       <div class="ltDialog_top">
         <span>报警信息详情</span>
         <img :src="img9" alt="" srcset="" @click="canleClick(item)" />
@@ -187,17 +245,24 @@
     </div>
     <div class="rtDialog_bottom">
       <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
-      <Video style="margin: 0 auto;" ref="videoRef" />
-      <div>倍速播放×1</div>
+      <Video class="rtDialog_bottom_video" ref="videoRef" />
+      <!-- <div>倍速播放×1</div> -->
     </div>
   </div>
   <!-- 政策法规 -->
   <template v-for="(item, index) in policieslist">
     <div v-if="item.status" class="preview">
       <div class="preview_top">
-        <span>文件预览
-          <ElButton size="large" @click="() => download(item.paths[0].path)" link type="success" text="success">
-            <el-icon style="vertical-align: middle;font-size: 25px;">
+        <span
+          >文件预览
+          <ElButton
+            size="large"
+            @click="() => download(item.paths[0].path)"
+            link
+            type="success"
+            text="success"
+          >
+            <el-icon style="vertical-align: middle; font-size: 25px">
               <Download />
             </el-icon>
           </ElButton>
@@ -229,31 +294,29 @@ import {
 } from "../../api/incident";
 import dayjs from "dayjs";
 import "../../assets/scss/index.scss";
-import { download } from "../../api/login.ts"
+import { download } from "../../api/login.ts";
 import { Download } from "@element-plus/icons-vue";
 
 import img5 from "../../../public/img/红色背景框.png";
 import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
-import { useIntervalFn } from '@vueuse/core'
+import { useIntervalFn } from "@vueuse/core";
 import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
 import Video from "./components/Video.vue";
 
-
 const rtStatus = ref(false);
-const videoRef = ref(null)
+const videoRef = ref(null);
 const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
   if (rtStatus.value) {
     nextTick(() => {
-      getStreamUrlApi(item.channelid).then(res => {
-        console.log("res.data.data.wsflv",res.data.data.wsflv)
-        videoRef.value.play(res.data.data.wsflv)
-        videoRef.value.setChannelId(res.data.data.channelId)
-      })
- 
-    })
+      getStreamUrlApi(item.channelid).then((res) => {
+        console.log("res.data.data.wsflv", res.data.data.wsflv);
+        videoRef.value.play(res.data.data.wsflv);
+        videoRef.value.setChannelId(res.data.data.channelId);
+      });
+    });
   }
 };
 const rtcanleClick = () => {
@@ -360,20 +423,20 @@ const alarmEventslistFunLt = async () => {
 };
 const mouseEnterBaoJingXinxi = () => {
   if (isActive.value) {
-    pause()
+    pause();
   }
-}
+};
 const mouseLeaveBaoJingXinxi = () => {
   if (!isActive.value) {
-    resume()
+    resume();
   }
-}
+};
 const { pause, resume, isActive } = useIntervalFn(() => {
-  pause()
+  pause();
   alarmEventslistFunLt().finally(() => {
-    resume()
+    resume();
   });
-}, 10000)
+}, 10000);
 const neiClick = (item) => {
   alarmEvnetListLt.value.forEach((v) => {
     if (item.eventId == v.eventId) {
@@ -665,17 +728,17 @@ const lbRadioChange = (val) => {
   geteventTotalFun();
 };
 
-const videoList = ref([])
+const videoList = ref([]);
 const channelQuery = ref({
   name: "",
   pageNum: 1,
   pageSize: 3,
-})
+});
 const getVideoList = () => {
-  getChannelListApi(channelQuery.value).then(res => {
-    videoList.value = res.data.data.List
-  })
-}
+  getChannelListApi(channelQuery.value).then((res) => {
+    videoList.value = res.data.data.List;
+  });
+};
 
 onMounted(() => {
   getVideoList();
@@ -744,9 +807,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -840,9 +901,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -951,9 +1010,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -1006,9 +1063,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -1094,9 +1149,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -1194,9 +1247,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        background: linear-gradient(to bottom,
-            #c7e5fd 42%,
-            #3582c7 100%);
+        background: linear-gradient(to bottom, #c7e5fd 42%, #3582c7 100%);
         /* 渐变背景 */
         background-clip: text;
         /* 让背景应用到文本 */
@@ -1341,16 +1392,24 @@ $design-height: 1080;
     flex-direction: column;
     // align-items: center;
     justify-content: center;
-
+    overflow: hidden;
+    :deep(.rtDialog_bottom_video) {
+      #container[data-v-39551662] {
+        width: adaptiveWidth(420);
+        height: adaptiveHeight(215);
+        object-fit: cover;
+      }
+      object-fit: cover;
+    }
     img {
       width: 100%;
       height: adaptiveHeight(195);
     }
 
-    div {
-      font-size: adaptiveFontSize(14);
-      color: #ffffff;
-    }
+    // div {
+    //   font-size: adaptiveFontSize(14);
+    //   color: #ffffff;
+    // }
   }
 }
 
@@ -1534,7 +1593,12 @@ $design-height: 1080;
   margin-right: adaptiveWidth(11);
 }
 
-.group :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
+.group
+  :deep(
+    .el-radio-button.is-active
+      .el-radio-button__original-radio:not(:disabled)
+      + .el-radio-button__inner
+  ) {
   background: rgba(255, 255, 255, 0.8);
   color: rgba(7, 36, 57, 1);
   border-color: rgba(255, 255, 255, 0);

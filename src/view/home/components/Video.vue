@@ -62,7 +62,7 @@ defineExpose({
 <style scoped>
 #container {
   background: rgba(13, 14, 27, 0.7);
-  width: 360px;
-  height: 597px;
+  /* width: 360px;
+  height: 597px; */
 }
 </style>
