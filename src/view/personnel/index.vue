@@ -7,31 +7,42 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div
-        class="bigscreen_lt_bottom_nei"
-        v-for="item in accesscontrollist"
-        @click="ltClick(item)"
-      >
-        <img src="/public/img/personnel/人物图标.png" alt="" />
-        <div
-          class="bigscreen_lt_bottom_nei_r"
-          :style="{
-            background: `url(${item.img}) no-repeat`,
-            'background-size': '100% 100%',
+      <div class="bigscreen_lt_bottom_neis">
+        <Vue3SeamlessScroll
+          :list="accesscontrollist"
+          :class-option="{
+            step: 5,
           }"
+          hover
+          class="scrool"
         >
-          <div>
-            <span>{{ item.personnel?.name }}</span>
-            <span>进入</span>
+          <div
+            class="bigscreen_lt_bottom_nei"
+            v-for="item in accesscontrollist"
+            @click="ltClick(item)"
+          >
+            <img src="/public/img/personnel/人物图标.png" alt="" />
+            <div
+              class="bigscreen_lt_bottom_nei_r"
+              :style="{
+                background: `url(${item.img}) no-repeat`,
+                'background-size': '100% 100%',
+              }"
+            >
+              <div>
+                <span>{{ item.personnel?.name }}</span>
+                <span>进入</span>
+              </div>
+              <div>
+                <span>员工编号：{{ item.personnel?.code }}</span>
+                <span>门禁地点：{{ item.doorPlace }}</span>
+              </div>
+              <div>
+                <span>刷卡时间：{{ item.createTime }}</span>
+              </div>
+            </div>
           </div>
-          <div>
-            <span>员工编号：{{ item.personnel?.code }}</span>
-            <span>门禁地点：{{ item.doorPlace }}</span>
-          </div>
-          <div>
-            <span>刷卡时间：{{ item.createTime }}</span>
-          </div>
-        </div>
+        </Vue3SeamlessScroll>
       </div>
     </div>
   </div>
@@ -50,51 +61,62 @@
       />
     </div>
     <div class="bigscreen_lb_bottom">
-      <div
-        class="bigscreen_lb_bottom_nei"
-        v-for="(item, index) in healthylist"
-        @click="lbClick(item, index)"
-      >
-        <div class="bigscreen_lb_bottom_nei_count">
-          <div class="left">
-            <div
-              :style="{
-                width: '79px',
-                height: '27px',
-                background: `url(${item.img}) no-repeat`,
-                backgroundSize: '100% 100%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '13px',
-                color: '#ffffff',
-              }"
-            >
-              {{ item.personnel.name }}
+      <div class="bigscreen_lb_bottom_neis">
+        <Vue3SeamlessScroll
+          :list="healthylist"
+          :class-option="{
+            step: 5,
+          }"
+          hover
+          class="scrool"
+        >
+          <div
+            class="bigscreen_lb_bottom_nei"
+            v-for="(item, index) in healthylist"
+            @click="lbClick(item, index)"
+          >
+            <div class="bigscreen_lb_bottom_nei_count">
+              <div class="left">
+                <div
+                  :style="{
+                    width: '79px',
+                    height: '27px',
+                    background: `url(${item.img}) no-repeat`,
+                    backgroundSize: '100% 100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '13px',
+                    color: '#ffffff',
+                  }"
+                >
+                  {{ item.personnel.name }}
+                </div>
+                <div style="color: #ffffff; margin-top: 10px">
+                  {{ item.personnel.code }}
+                </div>
+              </div>
+              <div class="right">
+                <span class="right_text">
+                  <span>体温：{{ item.temperature }}℃</span>
+                  <span style="padding-left: 15px"
+                    >心率：{{ item.heartRate }}/分钟</span
+                  >
+                </span>
+                <span class="right_text">
+                  <span>血压：{{ item.lowBloodPressure }}mmHg</span>
+                  <span style="padding-left: 15px"
+                    >{{ item.highBloodPressure }}mmHg</span
+                  >
+                </span>
+                <span class="right_text">
+                  <span>监测时间：{{ item.createTime }}</span>
+                </span>
+              </div>
             </div>
-            <div style="color: #ffffff; margin-top: 10px">
-              {{ item.personnel.code }}
-            </div>
+            <div class="bigscreen_lb_bottom_nei_dizuo"></div>
           </div>
-          <div class="right">
-            <span class="right_text">
-              <span>体温：{{ item.temperature }}℃</span>
-              <span style="padding-left: 15px"
-                >心率：{{ item.heartRate }}/分钟</span
-              >
-            </span>
-            <span class="right_text">
-              <span>血压：{{ item.lowBloodPressure }}mmHg</span>
-              <span style="padding-left: 15px"
-                >{{ item.highBloodPressure }}mmHg</span
-              >
-            </span>
-            <span class="right_text">
-              <span>监测时间：{{ item.createTime }}</span>
-            </span>
-          </div>
-        </div>
-        <div class="bigscreen_lb_bottom_nei_dizuo"></div>
+        </Vue3SeamlessScroll>
       </div>
     </div>
   </div>
@@ -216,6 +238,7 @@ import {
   accesscontrolRes,
   accesscontrolList,
 } from "../../api/personnel/index";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 
 const radio1 = ref("week");
 const slides = [{ image: img1 }, { image: img1 }, { image: img1 }];
@@ -460,7 +483,7 @@ const accesscontrolFun = async () => {
     "/img/personnel/绿色背景.png",
     "/img/personnel/黄色背景.png",
   ];
-  let list = data.data.rows.slice(0, 3);
+  let list = data.data.rows;
   accesscontrollist.value = list.map((item, index) => {
     return { ...item, img: img[index % img.length], status: false };
   });
@@ -495,7 +518,7 @@ const healthylistFun = async () => {
     "/img/personnel/名字蓝色背景.png",
     "/img/personnel/名字棕色背景.png",
   ];
-  let list = data.data.rows.slice(0, 3);
+  let list = data.data.rows;
   healthylist.value = list.map((item, index) => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
@@ -694,61 +717,61 @@ $design-height: 1080;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    .bigscreen_lt_bottom_nei {
-      height: adaptiveHeight(92);
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      &:nth-child(1) {
+    .bigscreen_lt_bottom_neis {
+      margin-top: adaptiveHeight(20);
+      height: adaptiveHeight(366);
+      overflow: hidden;
+      .bigscreen_lt_bottom_nei {
         margin-top: adaptiveHeight(30);
-      }
-      &:nth-child(3) {
-        margin-bottom: adaptiveHeight(30);
-      }
-      .bigscreen_lt_bottom_nei_r {
-        width: adaptiveWidth(276);
-        height: adaptiveHeight(82);
-        margin-left: adaptiveWidth(15);
-        position: relative;
-        div {
-          display: flex;
-          &:nth-child(1) {
-            position: absolute;
-            top: adaptiveHeight(-5);
-            left: adaptiveWidth(15);
-            span {
-              &:nth-child(1) {
-                color: #ffffff;
-                font-size: adaptiveFontSize(13);
-              }
-              &:nth-child(2) {
-                font-size: adaptiveFontSize(10);
-                color: #00fff9;
-                border: 1px solid #00fff9;
-                padding: 0 adaptiveHeight(3);
-                margin-left: adaptiveWidth(10);
+        height: adaptiveHeight(92);
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        .bigscreen_lt_bottom_nei_r {
+          width: adaptiveWidth(276);
+          height: adaptiveHeight(82);
+          margin-left: adaptiveWidth(15);
+          position: relative;
+          div {
+            display: flex;
+            &:nth-child(1) {
+              position: absolute;
+              top: adaptiveHeight(-5);
+              left: adaptiveWidth(15);
+              span {
+                &:nth-child(1) {
+                  color: #ffffff;
+                  font-size: adaptiveFontSize(13);
+                }
+                &:nth-child(2) {
+                  font-size: adaptiveFontSize(10);
+                  color: #00fff9;
+                  border: 1px solid #00fff9;
+                  padding: 0 adaptiveHeight(3);
+                  margin-left: adaptiveWidth(10);
+                }
               }
             }
-          }
-          &:nth-child(2),
-          &:nth-child(3) {
-            color: #ffffff;
-            font-size: adaptiveFontSize(13);
-            display: flex;
-            justify-content: space-between;
-          }
-          &:nth-child(2) {
-            margin-top: adaptiveHeight(25);
-            span {
-              &:nth-child(1) {
+            &:nth-child(2),
+            &:nth-child(3) {
+              color: #ffffff;
+              font-size: adaptiveFontSize(13);
+              display: flex;
+              justify-content: space-between;
+            }
+            &:nth-child(2) {
+              margin-top: adaptiveHeight(25);
+              span {
+                &:nth-child(1) {
+                  margin-left: adaptiveWidth(15);
+                }
+              }
+            }
+            &:nth-child(3) {
+              margin-top: adaptiveHeight(5);
+              span {
                 margin-left: adaptiveWidth(15);
               }
-            }
-          }
-          &:nth-child(3) {
-            margin-top: adaptiveHeight(5);
-            span {
-              margin-left: adaptiveWidth(15);
             }
           }
         }
@@ -802,50 +825,50 @@ $design-height: 1080;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    .bigscreen_lb_bottom_nei {
-      width: adaptiveWidth(394);
-      height: adaptiveHeight(85);
-      position: relative;
-      cursor: pointer;
-      &:nth-child(1) {
-        margin-top: adaptiveHeight(40);
-      }
-      &:nth-child(3) {
-        margin-bottom: adaptiveHeight(60);
-      }
-      .bigscreen_lb_bottom_nei_count {
-        height: 100%;
-        display: flex;
-        position: absolute;
-        z-index: 100;
-        .left {
-          width: adaptiveWidth(79);
+    .bigscreen_lb_bottom_neis {
+      margin-top: adaptiveHeight(40);
+      height: adaptiveHeight(326);
+      overflow: hidden;
+      .bigscreen_lb_bottom_nei {
+        width: adaptiveWidth(394);
+        height: adaptiveHeight(85);
+        margin-top: adaptiveHeight(30);
+        position: relative;
+        cursor: pointer;
+        .bigscreen_lb_bottom_nei_count {
           height: 100%;
-          margin-left: adaptiveWidth(30);
           display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .right {
-          margin-left: adaptiveWidth(30);
-          height: adaptiveHeight(50);
-          display: flex;
-          flex-direction: column;
-          .right_text {
-            span {
-              color: #ffffff;
-              font-size: adaptiveFontSize(13);
+          position: absolute;
+          z-index: 100;
+          .left {
+            width: adaptiveWidth(79);
+            height: 100%;
+            margin-left: adaptiveWidth(30);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .right {
+            margin-left: adaptiveWidth(30);
+            height: adaptiveHeight(50);
+            display: flex;
+            flex-direction: column;
+            .right_text {
+              span {
+                color: #ffffff;
+                font-size: adaptiveFontSize(13);
+              }
             }
           }
         }
-      }
-      .bigscreen_lb_bottom_nei_dizuo {
-        position: absolute;
-        bottom: 0;
-        background: url("/public/img/personnel/特质指标底座.png") no-repeat;
-        background-size: 100% 100%;
-        width: 100%;
-        height: adaptiveHeight(49);
+        .bigscreen_lb_bottom_nei_dizuo {
+          position: absolute;
+          bottom: 0;
+          background: url("/public/img/personnel/特质指标底座.png") no-repeat;
+          background-size: 100% 100%;
+          width: 100%;
+          height: adaptiveHeight(49);
+        }
       }
     }
   }
