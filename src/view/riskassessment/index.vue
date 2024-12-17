@@ -52,6 +52,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>区域报警统计</span>
       </div>
+      <el-radio-group
+        v-model="powerByAreaTotalStaticData.dayType"
+        @change="powerByAreaTotalStaticFun"
+        class="group"
+      >
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
     </div>
     <div class="bigscreen_rt_bottom">
       <div class="bigscreen_rt_bottom_nei" ref="bigscreenRTRef"></div>
@@ -61,7 +69,7 @@
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>设备数据</span>
+        <span>传感器数据</span>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
@@ -69,7 +77,7 @@
         <div class="bigscreen_rb_bottom_nei_t">
           <span>传感器编号</span>
           <span>传感器名称</span>
-          <span>传感器型号</span>
+          <span>级别层级</span>
           <span>时间</span>
         </div>
         <div class="bigscreen_rb_bottom_neib">
@@ -89,7 +97,7 @@
                 {{ item.thresholdId }}
               </span>
               <span>{{ item.sensorName }}</span>
-              <span>{{ item.sensorModel }}</span>
+              <span>{{ item.values.length }}</span>
               <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
             </div>
           </Vue3SeamlessScroll>

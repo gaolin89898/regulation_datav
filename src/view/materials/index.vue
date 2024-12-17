@@ -68,15 +68,14 @@
         size="small"
         class="selectcss"
         v-model="materialsName"
-        @change="materialsChange2"
+        @change="dosagetypeStatisticsFun"
         style="width: 80px; position: absolute; right: 20px; z-index: 100"
       >
-        <el-option
-          v-for="item in materialFileslist"
-          :key="item.materialsId"
-          :label="item.name"
-          :value="item.materialsId"
-        />
+        <el-option label="营养物质类" value="营养物质类" />
+        <el-option label="反应调节类" value="反应调节类" />
+        <el-option label="监测分析类" value="监测分析类" />
+        <el-option label="生产核心原料类" value="生产核心原料类" />
+        <el-option label="耗材类" value="耗材类" />
       </el-select>
     </div>
     <div class="bigscreen_lb_bottom">
@@ -418,7 +417,6 @@ const materialFilesListFun = async () => {
   materialFileslist.value = data.data.rows;
   materialsStatisticsData.value.materialsId = data.data.rows[0].materialsId;
   receivestatisticsData.value.materialsId = data.data.rows[0].materialsId;
-  materialsName.value = data.data.rows[0].name;
   await materialsStatistics();
   await receivestatisticsFun();
   await dosagetypeStatisticsFun();
@@ -452,7 +450,7 @@ const materialsChange = async (val) => {
 //物料类型统计
 let bigscreenLBChart: any = null;
 const bigscreenLBRef = ref();
-const materialsName = ref<string>("");
+const materialsName = ref<string>("营养物质类");
 const bigscreenLBoption = {
   grid: {
     left: "6%",
@@ -506,11 +504,6 @@ const dosagetypeStatisticsFun = async () => {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
-};
-const materialsChange2 = async (val: number) => {
-  const { data } = await materialFilesInfo(val);
-  materialsName.value = data.data.name;
-  await dosagetypeStatisticsFun();
 };
 
 const typeStatisticsFun = async () => {
