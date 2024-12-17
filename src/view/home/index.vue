@@ -104,6 +104,7 @@
       <el-input
         class="inputcss"
         v-model="channelQuery.name"
+        @keyup.enter="getVideoList"
         style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入监控点位"
         :prefix-icon="Search"
@@ -113,9 +114,9 @@
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <!-- <div @click="rtClick(item)" v-for="item in videoList">
+          <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
-          </div> -->
+          </div>
 
           <!-- <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
@@ -238,17 +239,17 @@
     </div>
   </template>
 
-  <!-- <div v-if="rtStatus" class="rtDialog">
+  <div v-if="rtStatus" class="rtDialog">
     <div class="rtDialog_top">
       <span>查看监控视频</span>
       <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
     </div>
     <div class="rtDialog_bottom">
-      <img src="/public/img/监控视频尺寸.png" alt="" />
+      <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
       <Video class="rtDialog_bottom_video" ref="videoRef" />
-      <div>倍速播放×1</div>
+      <!-- <div>倍速播放×1</div> -->
     </div>
-  </div> -->
+  </div>
   <!-- 政策法规 -->
   <template v-for="(item, _index) in policieslist">
     <div v-if="item.status" class="preview">
@@ -302,26 +303,26 @@ import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
 import { useIntervalFn } from "@vueuse/core";
-// import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
-// import Video from "./components/Video.vue";
+import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
+import Video from "./components/Video.vue";
 
-// const rtStatus = ref(false);
-// const videoRef = ref(null);
-// const rtClick = (item: { channelid: string }) => {
-//   rtStatus.value = !rtStatus.value;
-//   if (rtStatus.value) {
-//     nextTick(() => {
-//       getStreamUrlApi(item.channelid).then((res) => {
-//         console.log("res.data.data.wsflv", res.data.data.wsflv);
-//         videoRef.value.play(res.data.data.wsflv);
-//         videoRef.value.setChannelId(res.data.data.channelId);
-//       });
-//     });
-//   }
-// };
-// const rtcanleClick = () => {
-//   rtStatus.value = false;
-// };
+const rtStatus = ref(false);
+const videoRef = ref(null);
+const rtClick = (item: { channelid: string }) => {
+  rtStatus.value = !rtStatus.value;
+  if (rtStatus.value) {
+    nextTick(() => {
+      getStreamUrlApi(item.channelid).then((res) => {
+        console.log("res.data.data.wsflv", res.data.data.wsflv);
+        videoRef.value.play(res.data.data.wsflv);
+        videoRef.value.setChannelId(res.data.data.channelId);
+      });
+    });
+  }
+};
+const rtcanleClick = () => {
+  rtStatus.value = false;
+};
 
 //政策法规
 const policiesFormData = ref({
@@ -736,14 +737,14 @@ const channelQuery = ref({
   pageNum: 1,
   pageSize: 3,
 });
-// const getVideoList = () => {
-//   getChannelListApi(channelQuery.value).then((res) => {
-//     videoList.value = res.data.data.List;
-//   });
-// };
+const getVideoList = () => {
+  getChannelListApi(channelQuery.value).then((res) => {
+    videoList.value = res.data.data.List;
+  });
+};
 
 onMounted(() => {
-  // getVideoList();
+  getVideoList();
   policieslistFun();
   alarmEventslistFun();
   alarmEventslistFunLt();
