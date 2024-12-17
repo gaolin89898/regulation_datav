@@ -127,7 +127,7 @@
       </div>
       <el-radio-group v-model="radio1" @change="changeRadio1" class="group">
         <el-radio-button label="周" value="week" />
-        <el-radio-button label="月" value="month" />
+        <el-radio-button label="年" value="year" />
       </el-radio-group>
     </div>
     <div class="bigscreen_rb_bottom">

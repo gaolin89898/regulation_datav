@@ -110,25 +110,41 @@
             <span>是否为高风险</span>
           </div>
         </div>
-        <div
-          class="bigscreen_lb_bottom_neis"
-          v-for="item in nodelist"
-          @click="lbClick(item)"
-        >
-          <div
-            class="bigscreen_lb_bottom_nei_t_l"
-            :style="{
-              background: `url(${item.img}) no-repeat`,
-              'background-size': '100% 100%',
+        <div class="bigscreen_lb_bottom_nei">
+          <Vue3SeamlessScroll
+            :list="nodelist"
+            :class-option="{
+              step: 5,
             }"
+            hover
+            class="scrool"
           >
-            {{ item.nodeOrder }}
-          </div>
-          <div class="bigscreen_lb_bottom_neis_r">
-            <span>{{ item.nodeName }}</span>
-            <span>{{ item.craftArchive.craftArchiveName }}</span>
-            <span>{{ item.isHighRisk ? "是" : "否" }}</span>
-          </div>
+            <div
+              class="bigscreen_lb_bottom_neis"
+              v-for="item in nodelist"
+              @click="lbClick(item)"
+            >
+              <div
+                class="bigscreen_lb_bottom_nei_t_l"
+                :style="{
+                  background: `url(${item.img}) no-repeat`,
+                  'background-size': '100% 100%',
+                }"
+              >
+                {{ item.nodeOrder }}
+              </div>
+              <div class="bigscreen_lb_bottom_neis_r">
+                <span
+                  :style="{
+                    color: item.isHighRisk ? 'red' : '#ffffff',
+                  }"
+                  >{{ item.nodeName }}</span
+                >
+                <span>{{ item.craftArchive.craftArchiveName }}</span>
+                <span>{{ item.isHighRisk ? "是" : "否" }}</span>
+              </div>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -179,15 +195,26 @@
           </div>
         </div>
       </div>
-      <div
-        class="bigscreen_rt_bottom_nei"
-        v-for="item in processlist"
-        @click="rtClcik(item)"
-      >
-        <span>{{ item.craftArchiveName }}</span>
-        <span>{{ item.personnelFactors }}</span>
-        <span>{{ item.materialFactors }}</span>
-        <span>{{ item.environmentFactors }}</span>
+      <div class="bigscreen_rt_bottom_neis">
+        <Vue3SeamlessScroll
+          :list="processlist"
+          :class-option="{
+            step: 5,
+          }"
+          hover
+          class="scrool"
+        >
+          <div
+            class="bigscreen_rt_bottom_nei"
+            v-for="item in processlist"
+            @click="rtClcik(item)"
+          >
+            <span>{{ item.craftArchiveName }}</span>
+            <span>{{ item.personnelFactors }}</span>
+            <span>{{ item.materialFactors }}</span>
+            <span>{{ item.environmentFactors }}</span>
+          </div>
+        </Vue3SeamlessScroll>
       </div>
     </div>
   </div>
@@ -205,34 +232,47 @@
           <span>版本号</span>
           <span>工艺制定人员</span>
         </div>
-        <div
-          class="bigscreen_rb_bottom_nei_item"
-          v-for="(item, index) in archivelist"
-          @click="rbClick(item)"
-        >
-          <div class="bigscreen_rb_bottom_nei_item1">
+        <div class="bigscreen_rb_bottom_nei_items">
+          <Vue3SeamlessScroll
+            :list="archivelist"
+            :class-option="{
+              step: 5,
+            }"
+            hover
+            class="scrool"
+          >
             <div
-              class="bigscreen_rb_bottom_nei_item1_div"
-              :style="{
-                border: `1px solid ${index % 2 === 0 ? '#01D1E7' : '#DF9819'}`,
-              }"
+              class="bigscreen_rb_bottom_nei_item"
+              v-for="(item, index) in archivelist"
+              @click="rbClick(item)"
             >
+              <div class="bigscreen_rb_bottom_nei_item1">
+                <div
+                  class="bigscreen_rb_bottom_nei_item1_div"
+                  :style="{
+                    border: `1px solid ${
+                      index % 2 === 0 ? '#01D1E7' : '#DF9819'
+                    }`,
+                  }"
+                >
+                  <div
+                    :style="{
+                      background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
+                    }"
+                  ></div>
+                </div>
+                {{ item.craftArchiveName }}
+              </div>
+              <div>{{ item.version }}</div>
               <div
                 :style="{
-                  background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
+                  color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
                 }"
-              ></div>
+              >
+                {{ item.creator }}
+              </div>
             </div>
-            {{ item.craftArchiveName }}
-          </div>
-          <div>{{ item.version }}</div>
-          <div
-            :style="{
-              color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-            }"
-          >
-            {{ item.creator }}
-          </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -367,6 +407,7 @@ import { archiveList, nodeList, processList } from "../../api/craftsmanship";
 import { alarmEventsList } from "../../api/incident";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
+import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 
 const bigscreenLBRef = ref();
 const bigscreenLBoption = {
@@ -564,7 +605,7 @@ const archiveFormData = ref({
 const archivelist = ref<any[]>([]);
 const archivelistFun = async () => {
   const { data } = await archiveList(archiveFormData.value);
-  let list = data.data.rows.slice(0, 5);
+  let list = data.data.rows;
   archivelist.value = list.map((item: any) => {
     return { ...item, status: false };
   });
@@ -700,7 +741,7 @@ const processTotal = ref<number>(0);
 const processlistFun = async () => {
   const { data } = await processList(processFormData.value);
   processTotal.value = data.data.total;
-  processlist.value = data.data.rows.slice(0, 3);
+  processlist.value = data.data.rows;
 };
 const rtClcik = (item) => {
   processlist.value.forEach((v) => {
@@ -988,38 +1029,44 @@ $design-height: 1080;
           }
         }
       }
-      .bigscreen_lb_bottom_neis {
+      .bigscreen_lb_bottom_nei {
         width: 100%;
-        height: adaptiveHeight(40);
-        background: url("/public/img/craftsmanship/jidianback.png") no-repeat;
-        background-size: 100% 100%;
-        background-position: 30px 0;
-        margin-top: adaptiveHeight(15);
-        display: flex;
-        cursor: pointer;
-        .bigscreen_lb_bottom_nei_t_l {
-          width: adaptiveWidth(37);
+        margin-top: adaptiveHeight(20);
+        height: adaptiveHeight(330);
+        overflow: hidden;
+        .bigscreen_lb_bottom_neis {
+          width: 100%;
           height: adaptiveHeight(40);
-          color: #ffffff;
+          background: url("/public/img/craftsmanship/jidianback.png") no-repeat;
+          background-size: 100% 100%;
+          background-position: 30px 0;
+          margin-top: adaptiveHeight(15);
           display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .bigscreen_lb_bottom_neis_r {
-          width: calc(100% - adaptiveWidth(48));
-          height: 100%;
-          margin-left: adaptiveWidth(10);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: #ffffff;
-          span {
-            width: 33%;
-            font-size: adaptiveFontSize(14);
-            text-align: center;
-            white-space: nowrap; /* 禁止换行 */
-            overflow: hidden; /* 超出内容隐藏 */
-            text-overflow: ellipsis; /* 显示省略号 */
+          cursor: pointer;
+          .bigscreen_lb_bottom_nei_t_l {
+            width: adaptiveWidth(37);
+            height: adaptiveHeight(40);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .bigscreen_lb_bottom_neis_r {
+            width: calc(100% - adaptiveWidth(48));
+            height: 100%;
+            margin-left: adaptiveWidth(10);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            span {
+              width: 33%;
+              font-size: adaptiveFontSize(14);
+              text-align: center;
+              white-space: nowrap; /* 禁止换行 */
+              overflow: hidden; /* 超出内容隐藏 */
+              text-overflow: ellipsis; /* 显示省略号 */
+            }
           }
         }
       }
@@ -1081,27 +1128,33 @@ $design-height: 1080;
       align-items: center;
       margin-top: adaptiveHeight(15);
     }
-    .bigscreen_rt_bottom_nei {
+    .bigscreen_rt_bottom_neis {
       width: adaptiveWidth(393);
-      height: adaptiveHeight(50);
-      background: url("/public/img/craftsmanship/yaosuback.png") no-repeat;
-      background-size: 100% 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #ffffff;
+      height: adaptiveHeight(210);
       margin-top: adaptiveHeight(20);
-      cursor: pointer;
-      span {
-        &:nth-child(1) {
-          width: 30%;
-          padding: adaptiveWidth(10) 0;
+      overflow: hidden;
+      .bigscreen_rt_bottom_nei {
+        width: 100%;
+        height: adaptiveHeight(50);
+        background: url("/public/img/craftsmanship/yaosuback.png") no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #ffffff;
+        margin-top: adaptiveHeight(20);
+        cursor: pointer;
+        span {
+          &:nth-child(1) {
+            width: 30%;
+            padding: adaptiveWidth(10) 0;
+          }
+          width: 23%;
+          text-align: center;
+          white-space: nowrap; /* 禁止换行 */
+          overflow: hidden; /* 超出内容隐藏 */
+          text-overflow: ellipsis; /* 显示省略号 */
         }
-        width: 23%;
-        text-align: center;
-        white-space: nowrap; /* 禁止换行 */
-        overflow: hidden; /* 超出内容隐藏 */
-        text-overflow: ellipsis; /* 显示省略号 */
       }
     }
   }
@@ -1173,36 +1226,42 @@ $design-height: 1080;
           text-align: center;
         }
       }
-      .bigscreen_rb_bottom_nei_item {
+      .bigscreen_rb_bottom_nei_items {
         width: 100%;
-        height: adaptiveHeight(50);
-        background: rgba(4, 30, 62);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-        div {
-          width: 33%;
-          text-align: center;
-          font-size: adaptiveFontSize(14);
-          &:nth-child(2) {
-            color: #ffffff;
-          }
-        }
-        .bigscreen_rb_bottom_nei_item1 {
-          color: #ffffff;
+        margin-top: adaptiveHeight(10);
+        height: adaptiveHeight(340);
+        overflow: hidden;
+        .bigscreen_rb_bottom_nei_item {
+          width: 100%;
+          height: adaptiveHeight(50);
+          background: rgba(4, 30, 62);
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          .bigscreen_rb_bottom_nei_item1_div {
-            width: adaptiveWidth(10);
-            height: adaptiveHeight(10);
+          cursor: pointer;
+          div {
+            width: 33%;
+            text-align: center;
+            font-size: adaptiveFontSize(14);
+            &:nth-child(2) {
+              color: #ffffff;
+            }
+          }
+          .bigscreen_rb_bottom_nei_item1 {
+            color: #ffffff;
             display: flex;
-            justify-content: center;
             align-items: center;
-            margin: 0 adaptiveWidth(10);
-            div {
-              width: adaptiveWidth(5);
-              height: adaptiveHeight(5);
+            .bigscreen_rb_bottom_nei_item1_div {
+              width: adaptiveWidth(10);
+              height: adaptiveHeight(10);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin: 0 adaptiveWidth(10);
+              div {
+                width: adaptiveWidth(5);
+                height: adaptiveHeight(5);
+              }
             }
           }
         }

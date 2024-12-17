@@ -11,9 +11,7 @@
         <Vue3SeamlessScroll
           :list="ltequipmentlist"
           :class-option="{
-            step: 1,
-            singleHeight: 30,
-            waitTime: 1000,
+            step: 5,
           }"
           hover
           class="scrool"

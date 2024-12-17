@@ -12,6 +12,7 @@
           <span>描述</span>
           <span>位号</span>
           <span>信号</span>
+          <span>时间</span>
         </div>
         <div
           class="bigscreen_lt_bottom_nei_b"
@@ -20,6 +21,7 @@
           <span>{{ `${item.description}-${item.unitName}` }}</span>
           <span>{{ item.tag }}</span>
           <span>{{ item.esignal }}</span>
+          <span>{{ item.createTime }}</span>
         </div>
       </div>
     </div>
@@ -36,7 +38,7 @@
         class="group"
       >
         <el-radio-button label="周" value="week" />
-        <el-radio-button label="月" value="month" />
+        <el-radio-button label="年" value="year" />
       </el-radio-group>
     </div>
     <div class="bigscreen_lb_bottom">

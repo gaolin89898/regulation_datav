@@ -100,9 +100,9 @@
         <img src="/public/img/光标.png" alt="" />
         <span>监控报告</span>
       </div>
+      <!-- @keyup.enter="getVideoList" -->
       <el-input
         class="inputcss"
-        @keyup.enter="getVideoList"
         v-model="channelQuery.name"
         style="width: 148px; height: 24px; margin-right: 11px"
         placeholder="请输入监控点位"
@@ -113,9 +113,9 @@
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <div @click="rtClick(item)" v-for="item in videoList">
+          <!-- <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
-          </div>
+          </div> -->
 
           <!-- <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
           <div><span>JK218 科学大道点位1</span></div>
@@ -238,19 +238,19 @@
     </div>
   </template>
 
-  <div v-if="rtStatus" class="rtDialog">
+  <!-- <div v-if="rtStatus" class="rtDialog">
     <div class="rtDialog_top">
       <span>查看监控视频</span>
       <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
     </div>
     <div class="rtDialog_bottom">
-      <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
+      <img src="/public/img/监控视频尺寸.png" alt="" />
       <Video class="rtDialog_bottom_video" ref="videoRef" />
-      <!-- <div>倍速播放×1</div> -->
+      <div>倍速播放×1</div>
     </div>
-  </div>
+  </div> -->
   <!-- 政策法规 -->
-  <template v-for="(item, index) in policieslist">
+  <template v-for="(item, _index) in policieslist">
     <div v-if="item.status" class="preview">
       <div class="preview_top">
         <span
@@ -302,26 +302,26 @@ import img6 from "../../../public/img/绿色背景框.png";
 import img7 from "../../../public/img/黄色背景框.png";
 import img9 from "../../../public/img/叉号.png";
 import { useIntervalFn } from "@vueuse/core";
-import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
-import Video from "./components/Video.vue";
+// import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
+// import Video from "./components/Video.vue";
 
-const rtStatus = ref(false);
-const videoRef = ref(null);
-const rtClick = (item) => {
-  rtStatus.value = !rtStatus.value;
-  if (rtStatus.value) {
-    nextTick(() => {
-      getStreamUrlApi(item.channelid).then((res) => {
-        console.log("res.data.data.wsflv", res.data.data.wsflv);
-        videoRef.value.play(res.data.data.wsflv);
-        videoRef.value.setChannelId(res.data.data.channelId);
-      });
-    });
-  }
-};
-const rtcanleClick = () => {
-  rtStatus.value = false;
-};
+// const rtStatus = ref(false);
+// const videoRef = ref(null);
+// const rtClick = (item: { channelid: string }) => {
+//   rtStatus.value = !rtStatus.value;
+//   if (rtStatus.value) {
+//     nextTick(() => {
+//       getStreamUrlApi(item.channelid).then((res) => {
+//         console.log("res.data.data.wsflv", res.data.data.wsflv);
+//         videoRef.value.play(res.data.data.wsflv);
+//         videoRef.value.setChannelId(res.data.data.channelId);
+//       });
+//     });
+//   }
+// };
+// const rtcanleClick = () => {
+//   rtStatus.value = false;
+// };
 
 //政策法规
 const policiesFormData = ref({
@@ -336,7 +336,7 @@ const previewVisibleUrl = ref("");
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
   let imgList = [img5, img6, img7];
-  policieslist.value = data.data.rows.map((item, index) => {
+  policieslist.value = data.data.rows.map((item: any, index: number) => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
@@ -352,7 +352,7 @@ const rcClick = (item: any) => {
     previewVisibleUrl.value = item.paths[0].path;
   }
 };
-const previewcanleClick = (item) => {
+const previewcanleClick = (item: { status: boolean }) => {
   item.status = false;
 };
 
@@ -409,7 +409,7 @@ const alarmEventslistFunLt = async () => {
       img: "/img/yiji_ticon.png",
     },
   ];
-  alarmEvnetListLt.value = list.map((item) => {
+  alarmEvnetListLt.value = list.map((item: { type: string; level: string }) => {
     const matchedEvent = evnetimglist.find((v) => v.type === item.type);
     const matchedLevel = levelList.find((v) => v.level === item.level);
 
@@ -436,8 +436,8 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   alarmEventslistFunLt().finally(() => {
     resume();
   });
-}, 10000);
-const neiClick = (item) => {
+}, 50000);
+const neiClick = (item: { eventId: any }) => {
   alarmEvnetListLt.value.forEach((v) => {
     if (item.eventId == v.eventId) {
       v.status = !v.status;
@@ -446,7 +446,7 @@ const neiClick = (item) => {
     }
   });
 };
-const canleClick = (item) => {
+const canleClick = (item: { status: boolean }) => {
   item.status = false;
 };
 
@@ -483,14 +483,16 @@ const alarmEventslistFun = async () => {
       img: "/img/yiji_back.png",
     },
   ];
-  alarmEventslist.value = data.data.rows.map((item, index) => {
-    const matchedLevel = imgList.find((v) => v.level === item.level);
-    return {
-      ...item,
-      img: matchedLevel ? matchedLevel.img : "",
-      status: false,
-    };
-  });
+  alarmEventslist.value = data.data.rows.map(
+    (item: { level: string }, _index: any) => {
+      const matchedLevel = imgList.find((v) => v.level === item.level);
+      return {
+        ...item,
+        img: matchedLevel ? matchedLevel.img : "",
+        status: false,
+      };
+    }
+  );
 };
 
 //安全生产曲线
@@ -621,7 +623,7 @@ const getstatisticsList = async () => {
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
 };
-const rbRadioChange = (val) => {
+const rbRadioChange = (val: string) => {
   rbRadio.value = val;
   getstatisticsList();
 };
@@ -723,7 +725,7 @@ const geteventTotalFun = async () => {
     bigscreenLBChart.setOption(bigscreenLBoption);
   }
 };
-const lbRadioChange = (val) => {
+const lbRadioChange = (val: string) => {
   lbRadio.value = val;
   geteventTotalFun();
 };
@@ -734,14 +736,14 @@ const channelQuery = ref({
   pageNum: 1,
   pageSize: 3,
 });
-const getVideoList = () => {
-  getChannelListApi(channelQuery.value).then((res) => {
-    videoList.value = res.data.data.List;
-  });
-};
+// const getVideoList = () => {
+//   getChannelListApi(channelQuery.value).then((res) => {
+//     videoList.value = res.data.data.List;
+//   });
+// };
 
 onMounted(() => {
-  getVideoList();
+  // getVideoList();
   policieslistFun();
   alarmEventslistFun();
   alarmEventslistFunLt();
