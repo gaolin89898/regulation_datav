@@ -10,9 +10,8 @@
       <div class="bigscreen_lt_bottomnei">
         <Vue3SeamlessScroll
           :list="ltequipmentlist"
-          :class-option="{
-            step: 5,
-          }"
+          :step="1"
+          :singleHeight="70"
           hover
           class="scrool"
         >
@@ -751,9 +750,11 @@ $design-height: 1080;
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 60px;
+        margin-top: 10px;
         img {
           width: adaptiveWidth(66);
-          height: adaptiveHeight(60);
+          height: 60px;
         }
         div {
           width: adaptiveWidth(324);

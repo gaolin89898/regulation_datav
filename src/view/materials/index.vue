@@ -7,15 +7,28 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div class="bigscreen_lt_bottom_nei" v-for="item in alarmInformationlist">
-        <img :src="item.img" alt="" />
-        <div class="bigscreen_lt_bottom_nei_r">
-          <span style="padding-left: 25px">{{ item.materials?.name }}</span>
-          <span>{{
-            dayjs(item.materials?.createTime).format("YYYY-MM-DD")
-          }}</span>
-          <span>{{ item.level }}</span>
-        </div>
+      <div class="bigscreen_lt_bottom_neis">
+        <Vue3SeamlessScroll
+          :list="alarmInformationlist"
+          :step="1"
+          :singleHeight="70"
+          hover
+          class="scrool"
+        >
+          <div
+            class="bigscreen_lt_bottom_nei"
+            v-for="item in alarmInformationlist"
+          >
+            <img :src="item.img" alt="" />
+            <div class="bigscreen_lt_bottom_nei_r">
+              <span style="padding-left: 25px">{{ item.materials?.name }}</span>
+              <span>{{
+                dayjs(item.materials?.createTime).format("YYYY-MM-DD")
+              }}</span>
+              <span>{{ item.level }}</span>
+            </div>
+          </div>
+        </Vue3SeamlessScroll>
       </div>
     </div>
   </div>
@@ -835,48 +848,52 @@ $design-height: 1080;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    .bigscreen_lt_bottom_nei {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      img {
-        width: adaptiveWidth(52);
-        height: adaptiveHeight(59);
-        margin-left: adaptiveWidth(40);
-      }
-
-      &:nth-child(2) {
-        margin: adaptiveHeight(15) 0;
-      }
-      .bigscreen_lt_bottom_nei_r {
-        width: calc(100% - adaptiveWidth(132));
-        margin-left: adaptiveWidth(20);
-        background: url("/public/img/back.png") no-repeat;
-        background-size: 100% 100%;
-        height: adaptiveHeight(33);
-        margin-right: adaptiveWidth(40);
+    .bigscreen_lt_bottom_neis {
+      overflow: hidden;
+      height: adaptiveHeight(251);
+      .bigscreen_lt_bottom_nei {
+        width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        span {
-          width: 33%;
-          color: #ffffff;
-          font-size: adaptiveFontSize(14);
-          text-align: center;
-          &:nth-child(3) {
-            font-size: adaptiveFontSize(20);
-            font-family: youshe;
-            text-align: end;
-            font-style: normal;
-            text-transform: none;
-            background: linear-gradient(
-              to bottom,
-              #ffffff 30%,
-              #3582c7 100%
-            ); /* 渐变背景 */
-            background-clip: text; /* 让背景应用到文本 */
-            -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+        img {
+          width: adaptiveWidth(52);
+          height: adaptiveHeight(59);
+          margin-left: adaptiveWidth(40);
+        }
+
+        &:nth-child(2) {
+          margin: adaptiveHeight(15) 0;
+        }
+        .bigscreen_lt_bottom_nei_r {
+          width: calc(100% - adaptiveWidth(132));
+          margin-left: adaptiveWidth(20);
+          background: url("/public/img/back.png") no-repeat;
+          background-size: 100% 100%;
+          height: adaptiveHeight(33);
+          margin-right: adaptiveWidth(40);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          span {
+            width: 33%;
+            color: #ffffff;
+            font-size: adaptiveFontSize(14);
+            text-align: center;
+            &:nth-child(3) {
+              font-size: adaptiveFontSize(20);
+              font-family: youshe;
+              text-align: end;
+              font-style: normal;
+              text-transform: none;
+              background: linear-gradient(
+                to bottom,
+                #ffffff 30%,
+                #3582c7 100%
+              ); /* 渐变背景 */
+              background-clip: text; /* 让背景应用到文本 */
+              -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+            }
           }
         }
       }
