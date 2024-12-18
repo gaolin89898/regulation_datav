@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseURL = "/api";
+export const baseURL = "/prod-api";
 const http = axios.create({
   // fit-office.singzer.cn:17779/dev-api 192.168.1.141:9020 home.icepie.net:9020
   baseURL: baseURL,
