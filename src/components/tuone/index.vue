@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import BgOne from "@/assets/screen/1_108.png";
+import BgOne from "../../assets/screen/1_108.png";
 import { useDeviceHook } from ".";
 import { useDeviceStore } from "../device";
 
@@ -17,6 +17,7 @@ watch(() => deviceStore.currentData, (newVal) => {
         item.thresholds.forEach(threshold => {
           if (threshold.thresholdId === newVal?.content.equipmentInfo.thresholdId) {
             threshold.sensorValue = newVal?.content.equipmentInfo.value;
+            useDeviceStore().isShowDetail = true;
           }
         });
       }
@@ -33,9 +34,9 @@ watch(() => deviceStore.currentData, (newVal) => {
 <template>
   <div class="main">
     <div class="my-container">
-      <img ref="tuRef" @load="urlInfo" :src="BgOne" alt="" srcset="">
+      <img ref="tuRef" style="max-width: 100%;" @load="urlInfo" :src="BgOne" alt="" srcset="">
       <template v-for="(item, index) in list">
-        <ElPopover :width="500">
+        <ElPopover  v-model:visible="deviceStyles[index].showPopover" :width="500">
           <template #reference>
             <div class="device-1" :style="deviceStyles[index]?.style"></div>
           </template>

@@ -1,5 +1,5 @@
-import { getThreshold } from "@/api/manage/threshold"
-import { http } from "@/utils/http"
+import { getThreshold } from "../../api/manage/threshold"
+import http from "../../utils/http"
 import { computed, onMounted, reactive, ref } from "vue"
 
 export function useDeviceHook() {
@@ -14,14 +14,15 @@ export function useDeviceHook() {
   const deviceStyles = ref([
     {
       style: {
-        'width': '100px',
-        'height': '50px',
+        'width': '50px',
+        'height': '25px',
         'backgroundColor': 'rgba(0, 0, 0, .1)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 3450,
       left: 2070,
+      showPopover: false
     },
     {
       style: {
@@ -33,6 +34,7 @@ export function useDeviceHook() {
       },
       top: 3650,
       left: 2070,
+      showPopover: false,
     },
     // {
     //   style: {
@@ -117,7 +119,7 @@ export function useDeviceHook() {
         pageSize: 10000
       }
     }).then((res) => {
-      res.data.rows.forEach((item: any) => {
+      res.data.data.rows.forEach((item: any) => {
         list.value.forEach((item2: any) => {
           if (item.equipment != null && item.equipment.equipmentId === item2.equipmentId) {
             item2.thresholds.push(item)
@@ -132,7 +134,9 @@ export function useDeviceHook() {
         pageSize: 10000
       }
     }).then((res) => {
-      res.data.rows.forEach((item: any) => {
+
+
+      res.data.data.rows.forEach((item: any) => {
         list.value.forEach((item2: any) => {
           if (item.environmentId === item2.environmentId) {
             item2.environment = item
@@ -147,13 +151,14 @@ export function useDeviceHook() {
         pageSize: 10000
       }
     }).then((res) => {
-      res.data.rows.forEach((item: any) => {
-        list.value.forEach((item2: any) => {
-          if (item.equipmentId === item2.equipmentId) {
-            item2.equipment = item
-          }
-        })
-      })
+      console.log("ressss", res)
+      // res.data.rows.forEach((item: any) => {
+      //   list.value.forEach((item2: any) => {
+      //     if (item.equipmentId === item2.equipmentId) {
+      //       item2.equipment = item
+      //     }
+      //   })
+      // })
     })
     console.log("list.value", list.value)
   })

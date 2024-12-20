@@ -1,5 +1,5 @@
-import { getThreshold } from "@/api/manage/threshold"
-import { http } from "@/utils/http"
+import { getThreshold } from "../../api/manage/threshold"
+import http from "../../utils/http"
 import { computed, onMounted, reactive, ref } from "vue"
 
 export function useThreeDeviceHook() {
@@ -22,6 +22,7 @@ export function useThreeDeviceHook() {
       },
       top: 2430,
       left: 1520,
+      showPopover: false
     },
     {
       style: {
@@ -33,6 +34,7 @@ export function useThreeDeviceHook() {
       },
       top: 2430,
       left: 2050,
+      showPopover: false
     },
     {
       style: {
@@ -44,6 +46,7 @@ export function useThreeDeviceHook() {
       },
       top: 2460,
       left: 2350,
+      showPopover: false
     },
     {
       style: {
@@ -55,6 +58,7 @@ export function useThreeDeviceHook() {
       },
       top: 4130,
       left: 2550,
+      showPopover: false
     },
     {
       style: {
@@ -66,6 +70,7 @@ export function useThreeDeviceHook() {
       },
       top: 1930,
       left: 2500,
+      showPopover: false
     }
   ])
 
@@ -176,7 +181,9 @@ export function useThreeDeviceHook() {
         pageSize: 10000
       }
     }).then((res) => {
-      res.data.rows.forEach((item: any) => {
+
+
+      res.data.data.rows.forEach((item: any) => {
         list.value.forEach((item2: any) => {
           if (item.environmentId === item2.environmentId) {
             item2.environment = item
@@ -190,7 +197,9 @@ export function useThreeDeviceHook() {
         pageSize: 10000
       }
     }).then((res) => {
-      res.data.rows.forEach((item: any) => {
+
+
+      res.data.data.rows.forEach((item: any) => {
         list.value.forEach((item2: any) => {
           if (item.equipmentId === item2.equipmentId) {
             item2.equipment = item
