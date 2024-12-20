@@ -73,13 +73,26 @@
         </div>
       </div>
       <div class="bigscreen_lt_bottom_b">
-        <div class="bigscreen_lt_bottom_b_nei" v-for="item in alarmEventslist">
-          <img :src="item.img" alt="" />
-          <div>
-            <span style="margin-left: 25px">{{ item.level }}</span>
-            <span>{{ item.craftNode?.nodeName }}</span>
-            <span>节点故障</span>
-          </div>
+        <div class="bigscreen_lt_bottom_b_neis">
+          <Vue3SeamlessScroll
+            :list="alarmEventslist"
+            :step="1"
+            :singleHeight="72"
+            hover
+            class="scrool"
+          >
+            <div
+              class="bigscreen_lt_bottom_b_nei"
+              v-for="item in alarmEventslist"
+            >
+              <img :src="item.img" alt="" />
+              <div>
+                <span style="margin-left: 25px">{{ item.level }}</span>
+                <span>{{ item.craftNode?.nodeName }}</span>
+                <span>节点故障</span>
+              </div>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -912,53 +925,58 @@ $design-height: 1080;
     .bigscreen_lt_bottom_b {
       width: adaptiveWidth(399);
       margin: adaptiveHeight(20) auto 0;
-      .bigscreen_lt_bottom_b_nei {
-        display: flex;
-        align-items: center;
-        img {
-          width: adaptiveWidth(52);
-          height: adaptiveHeight(59);
-          margin-left: adaptiveWidth(10);
-        }
-        div {
-          width: adaptiveWidth(305);
-          height: adaptiveHeight(28);
-          // margin-top: 20px;
-          background: url("/public/img/back.png") no-repeat;
-          background-size: 100% 100%;
+      .bigscreen_lt_bottom_b_neis {
+        overflow: hidden;
+        height: adaptiveHeight(240);
+        .bigscreen_lt_bottom_b_nei {
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          color: #ffffff;
-          margin-left: adaptiveWidth(15);
-          span {
-            font-size: adaptiveFontSize(14);
-            &:nth-child(1) {
-              width: 20%;
-              white-space: nowrap; /* 禁止换行 */
-              overflow: hidden; /* 超出内容隐藏 */
-              text-overflow: ellipsis; /* 显示省略号 */
-            }
-            &:nth-child(2) {
-              widows: 40%;
-              white-space: nowrap; /* 禁止换行 */
-              overflow: hidden; /* 超出内容隐藏 */
-              text-overflow: ellipsis; /* 显示省略号 */
-            }
-            &:nth-child(3) {
-              width: 40%;
-              font-size: adaptiveFontSize(20);
-              font-family: youshe;
-              text-align: end;
-              font-style: normal;
-              text-transform: none;
-              background: linear-gradient(
-                to bottom,
-                #ffffff 30%,
-                #3582c7 100%
-              ); /* 渐变背景 */
-              background-clip: text; /* 让背景应用到文本 */
-              -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+          margin-top: adaptiveHeight(10);
+          img {
+            width: adaptiveWidth(52);
+            height: adaptiveHeight(59);
+            margin-left: adaptiveWidth(10);
+          }
+          div {
+            width: adaptiveWidth(305);
+            height: adaptiveHeight(28);
+            // margin-top: 20px;
+            background: url("/public/img/back.png") no-repeat;
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffffff;
+            margin-left: adaptiveWidth(15);
+            span {
+              font-size: adaptiveFontSize(14);
+              &:nth-child(1) {
+                width: 20%;
+                white-space: nowrap; /* 禁止换行 */
+                overflow: hidden; /* 超出内容隐藏 */
+                text-overflow: ellipsis; /* 显示省略号 */
+              }
+              &:nth-child(2) {
+                widows: 40%;
+                white-space: nowrap; /* 禁止换行 */
+                overflow: hidden; /* 超出内容隐藏 */
+                text-overflow: ellipsis; /* 显示省略号 */
+              }
+              &:nth-child(3) {
+                width: 40%;
+                font-size: adaptiveFontSize(20);
+                font-family: youshe;
+                text-align: end;
+                font-style: normal;
+                text-transform: none;
+                background: linear-gradient(
+                  to bottom,
+                  #ffffff 30%,
+                  #3582c7 100%
+                ); /* 渐变背景 */
+                background-clip: text; /* 让背景应用到文本 */
+                -webkit-text-fill-color: transparent; /* 使文本颜色透明 */
+              }
             }
           }
         }
