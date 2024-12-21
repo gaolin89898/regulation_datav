@@ -14,27 +14,29 @@ export function useDeviceHook() {
   const deviceStyles = ref([
     {
       style: {
-        'width': '50px',
-        'height': '25px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'width': '100px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 3450,
       left: 2070,
-      showPopover: false
+      width: 300,
+      height: 100
     },
     {
       style: {
         'width': '100px',
         'height': '50px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 3650,
       left: 2070,
-      showPopover: false,
+      width: 300,
+      height: 100
     },
     // {
     //   style: {
@@ -48,6 +50,7 @@ export function useDeviceHook() {
     //   left: 1020,
     // }
   ])
+
 
   const list = ref([
     {
@@ -109,6 +112,8 @@ export function useDeviceHook() {
     deviceStyles.value.forEach((item) => {
       item.style.left = Math.floor(xAspectRatio.value * item.left) + "px"
       item.style.top = Math.floor(yAspectRatio.value * item.top) + "px"
+      item.style.width = Math.floor(xAspectRatio.value * item.width) + "px"
+      item.style.height = Math.floor(yAspectRatio.value * item.height) + "px"
     })
   }
 

@@ -504,8 +504,8 @@ const zxChangeSelect = () => {
 };
 
 const areaStatisticsFormData = ref({
-  startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
-  endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
+  startTime: dayjs().subtract(7,"day").format("YYYY-MM-DD"),
+  endTime: dayjs().format("YYYY-MM-DD"),
 });
 const areaStatisticsFun = async () => {
   const { data } = await areaStatistics(areaStatisticsFormData.value);
@@ -526,12 +526,9 @@ const timeLeftClick = () => {
     "YYYY-MM-DD"
   );
   areaStatisticsFormData.value.startTime = currentStart
-    .subtract(1, "month")
-    .startOf("month")
+    .subtract(7, "day")
     .format("YYYY-MM-DD");
   areaStatisticsFormData.value.endTime = currentStart
-    .subtract(1, "month")
-    .endOf("month")
     .format("YYYY-MM-DD");
   areaStatisticsFun(); // 更新数据
 };
@@ -541,12 +538,11 @@ const timeRightClick = () => {
     "YYYY-MM-DD"
   );
   areaStatisticsFormData.value.startTime = currentStart
-    .add(1, "month")
-    .startOf("month")
+    .add(7, "day")
     .format("YYYY-MM-DD");
   areaStatisticsFormData.value.endTime = currentStart
-    .add(1, "month")
-    .endOf("month")
+    .add(14, "day")
+    // .endOf("month")
     .format("YYYY-MM-DD");
   areaStatisticsFun(); // 更新数据
 };

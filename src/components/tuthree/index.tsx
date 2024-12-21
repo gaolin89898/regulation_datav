@@ -16,62 +16,382 @@ export function useThreeDeviceHook() {
       style: {
         'width': '70px',
         'height': '70px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '570px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 2430,
-      left: 1520,
-      showPopover: false
+      top: 2480,
+      left: 2350,
+      width: 150,
+      height: 150,
     },
     {
       style: {
         'width': '70px',
         'height': '150px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 2430,
-      left: 2050,
-      showPopover: false
+      top: 2480,
+      left: 2530,
+      width: 150,
+      height: 150,
     },
     {
       style: {
         'width': '50px',
         'height': '50px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 2460,
+      top: 2680,
       left: 2350,
-      showPopover: false
+      width: 150,
+      height: 150,
     },
     {
       style: {
         'width': '50px',
         'height': '50px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2680,
+      left: 2530,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3150,
+      left: 2350,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3150,
+      left: 2530,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3350,
+      left: 2350,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3350,
+      left: 2530,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3750,
+      left: 2350,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3750,
+      left: 2530,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 4130,
-      left: 2550,
-      showPopover: false
+      left: 2360,
+      width: 90,
+      height: 100,
     },
     {
       style: {
         'width': '50px',
         'height': '50px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 1930,
-      left: 2500,
-      showPopover: false
-    }
+      top: 4130,
+      left: 2470,
+      width: 100,
+      height: 100,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 4130,
+      left: 2570,
+      width: 100,
+      height: 100,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2280,
+      left: 2670,
+      width: 300,
+      height: 200,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 4130,
+      left: 1550,
+      width: 200,
+      height: 600,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 4230,
+      left: 1320,
+      width: 200,
+      height: 300,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2480,
+      left: 4080,
+      width: 150,
+      height: 150,
+    },
+
+
+    // 第二部分
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2480,
+      left: 4260,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2680,
+      left: 4080,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2680,
+      left: 4260,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3130,
+      left: 4080,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3130,
+      left: 4260,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3330,
+      left: 4080,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3330,
+      left: 4260,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3730,
+      left: 4080,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 3730,
+      left: 4260,
+      width: 150,
+      height: 150,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 4130,
+      left: 5000,
+      width: 150,
+      height: 550,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 4200,
+      left: 5200,
+      width: 200,
+      height: 280,
+    },
+    {
+      style: {
+        'width': '50px',
+        'height': '50px',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      top: 2300,
+      left: 3800,
+      width: 200,
+      height: 280,
+    },
   ])
 
   const list = ref([
@@ -127,20 +447,356 @@ export function useThreeDeviceHook() {
       thresholds: [],
       type: "设备档案"
     },
-    // {
-    //   style: {
-    //     'width': '100px',
-    //     'height': '200px',
-    //     'backgroundColor': 'rgba(0, 0, 0, .1)',
-    //     'top': '370px',
-    //     'left': Math.floor(xAspectRatio.value * 2000) + "px",
-    //   },
-    //   value: 0,
-    //   thresholds: [],
-    //   type: "环境档案",
-    //   environmentId: 4,
-    //   environment: {}
-    // },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 4,
+      environment: {}
+    },
   ])
 
   const urlInfo = (el) => {
@@ -156,6 +812,8 @@ export function useThreeDeviceHook() {
     deviceStyles.value.forEach((item) => {
       item.style.left = Math.floor(xAspectRatio.value * item.left) + "px"
       item.style.top = Math.floor(yAspectRatio.value * item.top) + "px"
+      item.style.width = Math.floor(xAspectRatio.value * item.width) + "px"
+      item.style.height = Math.floor(yAspectRatio.value * item.height) + "px"
     })
   }
 

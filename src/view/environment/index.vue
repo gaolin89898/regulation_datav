@@ -110,7 +110,13 @@
   <div v-if="ltstatus" class="ltDialog">
     <div class="ltDialog_top">
       <span>报警历史分析</span>
+      <el-radio-group v-model="envrionmentStatisticsData.dayType"  class="group yzRadio" @change="zsRadioChange">
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="月" value="month" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
       <img :src="img9" alt="" srcset="" @click="ltcloneClick" />
+    
     </div>
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
@@ -142,6 +148,10 @@ import {
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 
+const zsRadio =ref("week");
+const zsRadioChange = async () => {
+  zsEchartData();
+};
 const options2 = ref([
   {
     label: "电",
@@ -312,13 +322,16 @@ const envrionmentStatisticsFun = async () => {
   bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
   bigscreenLtdialogoption.series[0].data = data.data.datas;
 };
-const ltClick = async () => {
-  ltstatus.value = !ltstatus.value;
+const zsEchartData =async ()=>{
   await envrionmentStatisticsFun();
   if (bigscreenLtdialogRef.value) {
     bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
     bigscreenLtdialogChart.setOption(bigscreenLtdialogoption);
   }
+}
+const ltClick = async () => {
+  ltstatus.value = !ltstatus.value;
+  zsEchartData();
 };
 const ltcloneClick = () => {
   ltstatus.value = false;
@@ -1050,6 +1063,12 @@ $design-height: 1080;
   height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
+}
+
+.yzRadio{
+  position: relative;
+  left: adaptiveWidth(100);
+  top: adaptiveHeight(10);
 }
 
 .group {

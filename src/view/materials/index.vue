@@ -719,8 +719,8 @@ const bigscreenRCoption = {
 const receivestatisticsData = ref({
   materialsId: null,
   materialsName: "",
-  startTime: dayjs().startOf("month").format("YYYY-MM-DD"),
-  endTime: dayjs().endOf("month").format("YYYY-MM-DD"),
+  startTime: dayjs().subtract(7, 'day').format("YYYY-MM-DD"),
+  endTime: dayjs().format("YYYY-MM-DD"),
 });
 const receivestatisticsFun = async () => {
   const { data } = await receivestatistics(receivestatisticsData.value);
@@ -738,12 +738,12 @@ const timeLeftClick = () => {
     "YYYY-MM-DD"
   );
   receivestatisticsData.value.startTime = currentStart
-    .subtract(1, "month")
-    .startOf("month")
+    .subtract(7, "day")
+    // .startOf("month")
     .format("YYYY-MM-DD");
   receivestatisticsData.value.endTime = currentStart
-    .subtract(1, "month")
-    .endOf("month")
+    // .subtract(7, "day")
+    // .endOf("month")
     .format("YYYY-MM-DD");
   receivestatisticsFun(); // 更新数据
 };
@@ -753,12 +753,12 @@ const timeRightClick = () => {
     "YYYY-MM-DD"
   );
   receivestatisticsData.value.startTime = currentStart
-    .add(1, "month")
-    .startOf("month")
+    .add(7, "day")
+    // .startOf("month")
     .format("YYYY-MM-DD");
   receivestatisticsData.value.endTime = currentStart
-    .add(1, "month")
-    .endOf("month")
+    .add(14, "day")
+    // .endOf("month")
     .format("YYYY-MM-DD");
   receivestatisticsFun(); // 更新数据
 };

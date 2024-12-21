@@ -10,8 +10,9 @@
       <div class="bigscreen_lt_bottomnei">
         <Vue3SeamlessScroll
           :list="ltequipmentlist"
-          :step="1"
-          :singleHeight="70"
+          :class-option="{
+            step: 5,
+          }"
           hover
           class="scrool"
         >
@@ -346,6 +347,11 @@
   <div v-if="rcStatus" class="rctDialog">
     <div class="rctDialog_top">
       <span>维修统计分析</span>
+      <ElInput v-model="yzInput" @keydown.enter="yzRadioChange" class="inputcss yzInput"  />
+      <el-radio-group v-model="yzRadio"  class="group yzRadio" @change="yzRadioChange">
+        <el-radio-button label="周" value="week" />
+        <el-radio-button label="年" value="year" />
+      </el-radio-group>
       <img :src="img9" alt="" srcset="" @click="rctcanleClick" />
     </div>
     <div class="rctDialog_bottom" ref="bigscreenRCRef"></div>
@@ -357,7 +363,7 @@
     </div>
     <div class="rtDialog_bottom">
       <img src="/public/img/监控视频尺寸.png" alt="" />
-      <div>倍速播放×1</div>
+      <!-- <div>倍速播放×1</div> -->
     </div>
   </div>
 </template>
@@ -615,15 +621,22 @@ const rcStatus = ref(false);
 const repairStatisticsData = ref({
   dayType: "week",
 });
-const rctClick = async () => {
-  rcStatus.value = !rcStatus.value;
-  const { data } = await repairStatistics(repairStatisticsData.value);
+
+async function getYzData(){
+  const { data } = await repairStatistics({
+    dayType:yzRadio.value,
+    code:yzInput.value
+  });
   bigscreenRCoption.xAxis.data = data.data.times;
   bigscreenRCoption.series[0].data = data.data.data;
   if (bigscreenRCRef.value) {
     bigscreenRCChart = echarts.init(bigscreenRCRef.value);
     bigscreenRCChart.setOption(bigscreenRCoption);
   }
+}
+const rctClick = async () => {
+  rcStatus.value = !rcStatus.value;
+  getYzData();
 };
 const rctcanleClick = () => {
   rcStatus.value = false;
@@ -662,6 +675,12 @@ const rbcanleClick = (item: any) => {
   item.status = false;
 };
 
+const yzRadio = ref("week");
+const yzInput = ref("");
+function yzRadioChange(){
+  getYzData();
+}
+
 window.onresize = function () {
   bigscreenLBChart.resize();
 };
@@ -688,6 +707,12 @@ $design-height: 1080;
 
 @function adaptiveFontSize($px) {
   @return #{$px / $design-width * 100}vw;
+}
+
+.yzInput{
+    position: relative;
+    left: adaptiveWidth(20);
+    top: adaptiveHeight(5);
 }
 
 .bigscreen_lt,
@@ -750,11 +775,9 @@ $design-height: 1080;
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 60px;
-        margin-top: 10px;
         img {
           width: adaptiveWidth(66);
-          height: 60px;
+          height: adaptiveHeight(60);
         }
         div {
           width: adaptiveWidth(324);
@@ -1460,6 +1483,11 @@ $design-height: 1080;
   height: adaptiveHeight(195);
   width: 100%;
   overflow: hidden;
+}
+
+.yzRadio{
+  position: relative;
+  top: adaptiveHeight(5);
 }
 
 .group

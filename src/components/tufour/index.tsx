@@ -16,49 +16,53 @@ export function useFourDeviceHook() {
       style: {
         'width': '100px',
         'height': '180px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '570px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 3250,
-      left: 1550,
-      showPopover: false
+      left: 1600,
+      width: 200,
+      height: 400,
     },
     {
       style: {
         'width': '20px',
         'height': '20px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 3070,
-      left: 1980,
-      showPopover: false
+      left: 1400,
+      width: 180,
+      height: 400,
     },
     {
       style: {
         'width': '20px',
         'height': '20px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 1850,
-      left: 3780,
-      showPopover: false
+      top: 3200,
+      left: 5080,
+      width: 180,
+      height: 400,
     },
     {
       style: {
         'width': '20px',
         'height': '20px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
-      top: 1850,
-      left: 3860,
-      showPopover: false
+      top: 3200,
+      left: 5280,
+      width: 180,
+      height: 400,
     },
     {
       style: {
@@ -70,7 +74,6 @@ export function useFourDeviceHook() {
       },
       top: 1850,
       left: 3940,
-      showPopover: false
     }
   ])
 
@@ -93,7 +96,7 @@ export function useFourDeviceHook() {
       style: {
         'width': '100px',
         'height': '200px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .5)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
@@ -103,34 +106,34 @@ export function useFourDeviceHook() {
       thresholds: [],
       type: "设备档案"
     },
-    // {
-    //   style: {
-    //     'width': '100px',
-    //     'height': '200px',
-    //     'backgroundColor': 'rgba(0, 0, 0, .1)',
-    //     'top': '370px',
-    //     'left': Math.floor(xAspectRatio.value * 2000) + "px",
-    //   },
-    //   value: 0,
-    //   thresholds: [],
-    //   type: "环境档案",
-    //   environmentId: 2,
-    //   environment: {}
-    // },
-    // {
-    //   style: {
-    //     'width': '100px',
-    //     'height': '200px',
-    //     'backgroundColor': 'rgba(0, 0, 0, .1)',
-    //     'top': '370px',
-    //     'left': Math.floor(xAspectRatio.value * 2000) + "px",
-    //   },
-    //   value: 0,
-    //   thresholds: [],
-    //   type: "环境档案",
-    //   environmentId: 3,
-    //   environment: {}
-    // },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .5)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 2,
+      environment: {}
+    },
+    {
+      style: {
+        'width': '100px',
+        'height': '200px',
+        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'top': '370px',
+        'left': Math.floor(xAspectRatio.value * 2000) + "px",
+      },
+      value: 0,
+      thresholds: [],
+      type: "环境档案",
+      environmentId: 3,
+      environment: {}
+    },
     // {
     //   style: {
     //     'width': '100px',
@@ -160,6 +163,8 @@ export function useFourDeviceHook() {
     deviceStyles.value.forEach((item) => {
       item.style.left = Math.floor(xAspectRatio.value * item.left) + "px"
       item.style.top = Math.floor(yAspectRatio.value * item.top) + "px"
+      item.style.width = Math.floor(xAspectRatio.value * item.width) + "px"
+      item.style.height = Math.floor(yAspectRatio.value * item.height) + "px"
     })
   }
 

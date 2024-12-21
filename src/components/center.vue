@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="bigscreen_ct_r">
-      <span>历史报警数量</span>
+      <span @click=" useDeviceStore().isShowDetail = true;" >历史报警数量</span>
       <div class="bigscreen_ct_rb">
         <div v-for="item in count2.toString().split('')">
           <img :src="shuimg(item)" alt="" />
@@ -31,13 +31,13 @@
           <TuOne v-if="activeName == '一层'" />
         </ElTabPane>
         <ElTabPane label="二层" name="二层">
-          <TuTwo v-if="activeName == '二层'" />
+          <TuFour v-if="activeName == '二层'" />
         </ElTabPane>
         <ElTabPane label="三层" name="三层">
           <TuThree v-if="activeName == '三层'" />
         </ElTabPane>
         <ElTabPane label="四层" name="四层">
-          <TuFour v-if="activeName == '四层'" />
+          <TuTwo v-if="activeName == '四层'" />
         </ElTabPane>
       </ElTabs>
     </div>

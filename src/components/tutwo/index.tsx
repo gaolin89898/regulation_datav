@@ -16,25 +16,26 @@ export function useTwoDeviceHook() {
       style: {
         'width': '110px',
         'height': '80px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '570px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 2150,
       left: 2190,
-      showPopover: false
+      width: 350,
+      height: 200,
     },
     {
       style: {
         'width': '70px',
         'height': '50px',
-        'backgroundColor': 'rgba(0, 0, 0, .1)',
+        'backgroundColor': 'rgba(0, 0, 0, .8)',
         'top': '370px',
         'left': Math.floor(xAspectRatio.value * 2000) + "px",
       },
       top: 1450,
       left: 3720,
-      showPopover: false
+
     },
     {
       style: {
@@ -46,7 +47,6 @@ export function useTwoDeviceHook() {
       },
       top: 1680,
       left: 3720,
-      showPopover: false
     },
     {
       style: {
@@ -58,7 +58,6 @@ export function useTwoDeviceHook() {
       },
       top: 1940,
       left: 3720,
-      showPopover: false
     },
     {
       style: {
@@ -70,7 +69,6 @@ export function useTwoDeviceHook() {
       },
       top: 2180,
       left: 3720,
-      showPopover: false
     }
   ])
 
@@ -158,6 +156,8 @@ export function useTwoDeviceHook() {
     deviceStyles.value.forEach((item) => {
       item.style.left = Math.floor(xAspectRatio.value * item.left) + "px"
       item.style.top = Math.floor(yAspectRatio.value * item.top) + "px"
+      item.style.width = Math.floor(xAspectRatio.value * item.width) + "px"
+      item.style.height = Math.floor(yAspectRatio.value * item.height) + "px"
     })
   }
 
